@@ -1,3 +1,4 @@
+//go:generate mockgen -source=$GOFILE -destination=${GOFILE}_mock.go -package=$GOPACKAGE
 package service
 
 import (
@@ -6,6 +7,10 @@ import (
 
 type ExampleService struct {
 	BinanceApi api.BinanceApiInterface
+}
+
+type ExampleServiceInterface interface {
+	Exec(baseAsset string) (string, error)
 }
 
 func ProvideExampleService(binanceApi api.BinanceApiInterface) ExampleService {

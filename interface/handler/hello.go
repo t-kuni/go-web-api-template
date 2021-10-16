@@ -7,10 +7,10 @@ import (
 )
 
 type HelloHandler struct {
-	ExampleService service.ExampleService
+	ExampleService service.ExampleServiceInterface
 }
 
-func ProvideHello(exampleService service.ExampleService) HelloHandler {
+func ProvideHello(exampleService service.ExampleServiceInterface) HelloHandler {
 	return HelloHandler{exampleService}
 }
 

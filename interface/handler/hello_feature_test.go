@@ -7,13 +7,14 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
 	"github.com/t-kuni/go-web-api-skeleton/domain/infrastructure/api"
+	"github.com/t-kuni/go-web-api-skeleton/domain/service"
 	"github.com/t-kuni/go-web-api-skeleton/interface/handler"
-	"github.com/t-kuni/go-web-api-skeleton/wire"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 )
 
+// infrastructureをモック化するパターン
 func TestHello(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
@@ -22,9 +23,8 @@ func TestHello(t *testing.T) {
 	req := httptest.NewRequest(http.MethodGet, "/", nil)
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
-	app := wire.InitializeApp()
 
-	binanceApiMock := api.NewMockBinanceApi(ctrl)
+	binanceApiMock := api.NewMockBinanceApiInterface(ctrl)
 
 	binanceApiMock.
 		EXPECT().
@@ -37,9 +37,32 @@ func TestHello(t *testing.T) {
 			},
 		}, nil)
 
-	app.ExampleService.BinanceApi = binanceApiMock
+	h := handler.ProvideHello(service.ProvideExampleService(binanceApiMock))
+	err := h.Hello(c)
 
-	err := handler.Hello(app)(c)
+	assert.NoError(t, err)
+	assert.Contains(t, rec.Body.String(), "DUMMY")
+}
+
+// serviceをモック化するパターン
+func TestHello2(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	e := echo.New()
+	req := httptest.NewRequest(http.MethodGet, "/", nil)
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+
+	exampleServiceMock := service.NewMockExampleServiceInterface(ctrl)
+
+	exampleServiceMock.
+		EXPECT().
+		Exec(gomock.Eq("BNB")).
+		Return("DUMMY", nil)
+
+	h := handler.ProvideHello(exampleServiceMock)
+	err := h.Hello(c)
 
 	assert.NoError(t, err)
 	assert.Contains(t, rec.Body.String(), "DUMMY")

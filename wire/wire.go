@@ -12,22 +12,23 @@ import (
 	"github.com/t-kuni/go-web-api-skeleton/interface/handler"
 )
 
-type App struct {
-	handler.HelloHandler
-}
-
 var Providers = wire.NewSet(
 	handler.Providers,
 	service.Providers,
 	api.Providers,
 )
 
+type App struct {
+	handler.HelloHandler
+}
+
 func InitializeApp() App {
 	wire.Build(
 		wire.Struct(new(App), "*"),
 		Providers,
 
-		// Bindings
+		// Binding
+		wire.Bind(new(service.ExampleServiceInterface), new(service.ExampleService)),
 		wire.Bind(new(api2.BinanceApiInterface), new(api.BinanceApi)),
 	)
 	return App{}
