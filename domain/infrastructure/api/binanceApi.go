@@ -1,3 +1,4 @@
+//go:generate mockgen -source=$GOFILE -destination=${GOFILE}_mock.go -package=$GOPACKAGE
 package api
 
 type GetExchangeInfoResult struct {
@@ -11,6 +12,6 @@ type GetExchangeInfoResultSymbol struct {
 	QuoteAsset string
 }
 
-type BinanceApi interface {
+type BinanceApiInterface interface {
 	GetExchangeInfo(baseAsset string) (*GetExchangeInfoResult, error)
 }

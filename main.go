@@ -3,7 +3,6 @@ package main
 import (
 	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4/middleware"
-	"github.com/t-kuni/go-cli-app-skeleton/interface/handler"
 	"github.com/t-kuni/go-cli-app-skeleton/wire"
 	"os"
 
@@ -23,7 +22,7 @@ func main() {
 	app := wire.InitializeApp()
 
 	// Routes
-	e.GET("/", handler.Hello(app))
+	e.GET("/", app.HelloHandler.Hello)
 
 	// Start server
 	port := os.Getenv("SERVER_PORT")

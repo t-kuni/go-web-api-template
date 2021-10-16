@@ -5,10 +5,10 @@ import (
 )
 
 type ExampleService struct {
-	BinanceApi api.BinanceApi
+	BinanceApi api.BinanceApiInterface
 }
 
-func ProvideExampleService(binanceApi api.BinanceApi) ExampleService {
+func ProvideExampleService(binanceApi api.BinanceApiInterface) ExampleService {
 	return ExampleService{binanceApi}
 }
 

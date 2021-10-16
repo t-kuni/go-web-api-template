@@ -1,3 +1,4 @@
 /.idea
 wire_gen.go
 .env
+*_mock.go
