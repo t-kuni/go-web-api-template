@@ -3,7 +3,7 @@ package main
 import (
 	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4/middleware"
-	"github.com/t-kuni/go-cli-app-skeleton/wire"
+	"github.com/t-kuni/go-web-api-skeleton/wire"
 	"os"
 
 	"github.com/labstack/echo/v4"

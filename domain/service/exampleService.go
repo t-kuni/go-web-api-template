@@ -1,7 +1,7 @@
 package service
 
 import (
-	"github.com/t-kuni/go-cli-app-skeleton/domain/infrastructure/api"
+	"github.com/t-kuni/go-web-api-skeleton/domain/infrastructure/api"
 )
 
 type ExampleService struct {

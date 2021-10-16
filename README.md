@@ -22,6 +22,12 @@ go generate -x -tags wireinject ./...
 dockr-compose up -d
 ```
 
+Confirm
+
+```
+curl -XGET "http://localhost"
+```
+
 # Setting remote debug on GoLand
 
 https://gist.github.com/t-kuni/1ecec9d185aac837457ad9e583af53fb#golnad%E3%81%AE%E8%A8%AD%E5%AE%9A

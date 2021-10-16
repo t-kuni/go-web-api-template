@@ -1,4 +1,4 @@
-module github.com/t-kuni/go-cli-app-skeleton
+module github.com/t-kuni/go-web-api-skeleton
 
 go 1.17
 

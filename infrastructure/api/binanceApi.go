@@ -3,7 +3,7 @@ package api
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/t-kuni/go-cli-app-skeleton/domain/infrastructure/api"
+	"github.com/t-kuni/go-web-api-skeleton/domain/infrastructure/api"
 	"io/ioutil"
 	"net/http"
 )

@@ -6,10 +6,10 @@ package wire
 
 import (
 	"github.com/google/wire"
-	api2 "github.com/t-kuni/go-cli-app-skeleton/domain/infrastructure/api"
-	"github.com/t-kuni/go-cli-app-skeleton/domain/service"
-	"github.com/t-kuni/go-cli-app-skeleton/infrastructure/api"
-	"github.com/t-kuni/go-cli-app-skeleton/interface/handler"
+	api2 "github.com/t-kuni/go-web-api-skeleton/domain/infrastructure/api"
+	"github.com/t-kuni/go-web-api-skeleton/domain/service"
+	"github.com/t-kuni/go-web-api-skeleton/infrastructure/api"
+	"github.com/t-kuni/go-web-api-skeleton/interface/handler"
 )
 
 type App struct {
