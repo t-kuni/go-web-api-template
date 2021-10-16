@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/t-kuni/go-web-api-skeleton/wire"
@@ -19,7 +20,15 @@ func main() {
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 
-	app := wire.InitializeApp()
+	app, cleanup, err := wire.InitializeApp()
+	if err != nil {
+		panic(err)
+	}
+	defer cleanup()
+
+	if err := app.DBConnector.Migrate(context.Background()); err != nil {
+		panic(err)
+	}
 
 	// Routes
 	e.GET("/", app.HelloHandler.Hello)

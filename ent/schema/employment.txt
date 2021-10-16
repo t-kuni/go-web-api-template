@@ -1,0 +1,24 @@
+//package schema
+//
+//import (
+//	"entgo.io/ent"
+//	"entgo.io/ent/schema/edge"
+//)
+//
+//// Employment holds the schema definition for the Employment entity.
+//type Employment struct {
+//	ent.Schema
+//}
+//
+//// Fields of the Employment.
+//func (Employment) Fields() []ent.Field {
+//	return nil
+//}
+//
+//// Edges of the Employment.
+//func (Employment) Edges() []ent.Edge {
+//	return []ent.Edge{
+//		edge.From("users", User.Type).Ref("employments"),
+//		edge.From("companies", Company.Type).Ref("employments"),
+//	}
+//}

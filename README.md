@@ -28,13 +28,44 @@ Confirm
 curl -XGET "http://localhost"
 ```
 
+# Tests
+
+Unit test
+
+```
+go test ./...
+```
+
+Feature test
+
+```
+go test -tags feature ./...
+```
+
 # Setting remote debug on GoLand
 
 https://gist.github.com/t-kuni/1ecec9d185aac837457ad9e583af53fb#golnad%E3%81%AE%E8%A8%AD%E5%AE%9A
 
+# See Database
+
+http://localhost:8080
+
+# Seeding data
+
+```
+docker-compose exec app sh
+go run commands/seed/main.go
+```
+
+
+# Create Scheme
+
+```
+go run entgo.io/ent/cmd/ent init YourScheme
+```
+
 # 検討
 
-- DB接続に対応
 - リクエストをバインド
 - バリデーション
-- interfaceを作るのが面倒。wire.Bindも面倒。
+- 構造体の依存を全てポインタにする？

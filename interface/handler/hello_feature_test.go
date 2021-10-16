@@ -8,10 +8,12 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/t-kuni/go-web-api-skeleton/domain/infrastructure/api"
 	"github.com/t-kuni/go-web-api-skeleton/domain/service"
+	"github.com/t-kuni/go-web-api-skeleton/ent"
 	"github.com/t-kuni/go-web-api-skeleton/interface/handler"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+	"time"
 )
 
 // infrastructureをモック化するパターン
@@ -37,7 +39,7 @@ func TestHello(t *testing.T) {
 			},
 		}, nil)
 
-	h := handler.ProvideHello(service.ProvideExampleService(binanceApiMock))
+	h := handler.ProvideHello(service.ProvideExampleService(binanceApiMock, dbConnector))
 	err := h.Hello(c)
 
 	assert.NoError(t, err)
@@ -56,13 +58,24 @@ func TestHello2(t *testing.T) {
 
 	exampleServiceMock := service.NewMockExampleServiceInterface(ctrl)
 
+	createdAt, err := time.Parse("2006-01-02 15:04:05 MST", "2014-12-31 12:31:24 JST")
+	if err != nil {
+		return
+	}
 	exampleServiceMock.
 		EXPECT().
-		Exec(gomock.Eq("BNB")).
-		Return("DUMMY", nil)
+		Exec(gomock.Any(), gomock.Eq("BNB")).
+		Return("DUMMY", []*ent.Company{
+			{
+				ID:        1,
+				Name:      "TEST",
+				CreatedAt: createdAt,
+				Edges:     ent.CompanyEdges{},
+			},
+		}, nil)
 
 	h := handler.ProvideHello(exampleServiceMock)
-	err := h.Hello(c)
+	err = h.Hello(c)
 
 	assert.NoError(t, err)
 	assert.Contains(t, rec.Body.String(), "DUMMY")
