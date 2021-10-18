@@ -57,6 +57,12 @@ docker-compose exec app sh
 go run commands/seed/main.go
 ```
 
+# Migrate
+
+```
+docker-compose exec app sh
+go run commands/migrate/main.go
+```
 
 # Create Scheme
 
@@ -64,11 +70,18 @@ go run commands/seed/main.go
 go run entgo.io/ent/cmd/ent init YourScheme
 ```
 
-# 検討
+# タスク
 
-- リクエストをバインド
-- バリデーション
-- 構造体の依存を全てポインタにする？
-- マイグレーションの管理を切り出し
-- featureテストでテストケース毎にデータの用意
-- テスト対象の処理にコミットが含まれる場合の対処
+- [x] DIコンテナ導入（google/wire導入）
+- [x] モックライブラリ導入
+- [x] ent導入＆DB接続周り実装
+- [x] Featureテスト作成
+- [ ] リクエストをバインド
+- [ ] バリデーション
+- [ ] エラーハンドリング
+- [x] 構造体の依存を全てポインタにする？
+- [ ] マイグレーションの管理を切り出し
+- [x] featureテストでテストケース毎にデータの用意
+- [ ] テスト対象の処理にコミットが含まれる場合の対処
+- [ ] docker-composeをenvironmentsフォルダに移動
+- [ ] レスポンスがJSONではない処理のテスト（例えばファイルのダウンロードなど）

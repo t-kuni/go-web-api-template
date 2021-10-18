@@ -13,7 +13,8 @@ services:
     restart: always
 
   db:
-    image: mysql:8.0.26
+    build:
+      context: db
     ports:
       - 33060:3306
     restart: always
