@@ -11,11 +11,11 @@ import (
 type BinanceApi struct {
 }
 
-func ProvideBinanceApi() BinanceApi {
-	return BinanceApi{}
+func ProvideBinanceApi() *BinanceApi {
+	return &BinanceApi{}
 }
 
-func (b BinanceApi) GetExchangeInfo(baseAsset string) (*api.GetExchangeInfoResult, error) {
+func (b *BinanceApi) GetExchangeInfo(baseAsset string) (*api.GetExchangeInfoResult, error) {
 	url := fmt.Sprintf("https://api.binance.com/api/v3/exchangeInfo?symbol=%sBTC", baseAsset)
 
 	resp, err := http.Get(url)

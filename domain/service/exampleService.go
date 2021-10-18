@@ -20,8 +20,8 @@ type ExampleServiceInterface interface {
 func ProvideExampleService(
 	binanceApi api.BinanceApiInterface,
 	dbConnector db.ConnectorInterface,
-) ExampleService {
-	return ExampleService{binanceApi, dbConnector}
+) *ExampleService {
+	return &ExampleService{binanceApi, dbConnector}
 }
 
 func (s ExampleService) Exec(ctx context.Context, baseAsset string) (string, []*ent.Company, error) {

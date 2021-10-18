@@ -25,8 +25,8 @@ type HelloResponseUser struct {
 	Age  int    `json:"age"`
 }
 
-func ProvideHello(exampleService service.ExampleServiceInterface) HelloHandler {
-	return HelloHandler{exampleService}
+func ProvideHello(exampleService service.ExampleServiceInterface) *HelloHandler {
+	return &HelloHandler{exampleService}
 }
 
 func (h HelloHandler) Hello(c echo.Context) error {

@@ -24,7 +24,7 @@ var Providers = wire.NewSet(
 type App struct {
 	DBConnector db2.ConnectorInterface
 
-	HelloHandler handler.HelloHandler
+	HelloHandler *handler.HelloHandler
 }
 
 func InitializeApp() (App, func(), error) {
@@ -37,10 +37,10 @@ func InitializeApp() (App, func(), error) {
 		//
 
 		// Service
-		wire.Bind(new(service.ExampleServiceInterface), new(service.ExampleService)),
+		wire.Bind(new(service.ExampleServiceInterface), new(*service.ExampleService)),
 
 		// api
-		wire.Bind(new(api2.BinanceApiInterface), new(api.BinanceApi)),
+		wire.Bind(new(api2.BinanceApiInterface), new(*api.BinanceApi)),
 
 		// db
 		wire.Bind(new(db2.ConnectorInterface), new(*db.Connector)),
