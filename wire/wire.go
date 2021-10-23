@@ -24,7 +24,8 @@ var Providers = wire.NewSet(
 type App struct {
 	DBConnector db2.ConnectorInterface
 
-	HelloHandler *handler.HelloHandler
+	HelloHandler    *handler.HelloHandler
+	PostUserHandler *handler.PostUserHandler
 }
 
 func InitializeApp() (App, func(), error) {

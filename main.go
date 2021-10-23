@@ -27,6 +27,7 @@ func main() {
 
 	// Routes
 	e.GET("/", app.HelloHandler.Hello)
+	e.POST("/users", app.PostUserHandler.PostUser)
 
 	// Start server
 	port := os.Getenv("SERVER_PORT")

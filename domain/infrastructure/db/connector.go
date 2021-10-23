@@ -11,4 +11,8 @@ type ConnectorInterface interface {
 	GetDB() *sql.DB
 	GetEnt() *ent.Client
 	Migrate(ctx context.Context, opts ...schema.MigrateOption) error
+
+	BeginTx() error
+	Commit() error
+	Rollback() error
 }

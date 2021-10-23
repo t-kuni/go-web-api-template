@@ -26,6 +26,7 @@ Confirm
 
 ```
 curl -XGET "http://localhost"
+curl -XPOST -H "Content-Type: application/json" -d '{"name":"DUMMY", "age":50}' http://localhost/users
 ```
 
 # Tests
@@ -39,6 +40,7 @@ go test ./...
 Feature test
 
 ```
+DB_HOST=localhost DB_PORT=33060 DB_DATABASE=example_test go run commands/migrate/main.go
 go test -tags feature ./...
 ```
 
@@ -50,24 +52,24 @@ https://gist.github.com/t-kuni/1ecec9d185aac837457ad9e583af53fb#golnad%E3%81%AE%
 
 http://localhost:8080
 
-# Seeding data
+# See SQL Log
+
+```
+docker-compose exec db tail -f /tmp/query.log
+```
+
+# Migration and Seeding
 
 ```
 docker-compose exec app sh
-go run commands/seed/main.go
-```
-
-# Migrate
-
-```
-docker-compose exec app sh
-go run commands/migrate/main.go
+DB_HOST=localhost DB_PORT=33060 go run commands/migrate/main.go
+DB_HOST=localhost DB_PORT=33060 go run commands/seed/main.go
 ```
 
 # Create Scheme
 
 ```
-go run entgo.io/ent/cmd/ent init YourScheme
+go run entgo.io/ent/cmd/ent init [EntityName]
 ```
 
 # タスク
@@ -81,7 +83,11 @@ go run entgo.io/ent/cmd/ent init YourScheme
 - [ ] エラーハンドリング
 - [x] 構造体の依存を全てポインタにする？
 - [ ] マイグレーションの管理を切り出し
+- [ ] 認証処理のモック化
+- [ ] ロギング
 - [x] featureテストでテストケース毎にデータの用意
-- [ ] テスト対象の処理にコミットが含まれる場合の対処
+- [x] テスト対象の処理にコミットが含まれる場合のテスト
 - [ ] docker-composeをenvironmentsフォルダに移動
 - [ ] レスポンスがJSONではない処理のテスト（例えばファイルのダウンロードなど）
+- [ ] トランザクションが複数リクエストをまたがることはある？
+- [ ] テストのカバレッジの可視化
