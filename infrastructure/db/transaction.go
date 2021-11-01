@@ -3,34 +3,32 @@
 package db
 
 import (
-	"database/sql"
+	"context"
+	"github.com/t-kuni/go-web-api-skeleton/ent"
 )
 
 type TransactionInterface interface {
-	Begin() error
-	Commit() error
-	Rollback() error
+	Begin(ctx context.Context) (*ent.Tx, error)
+	Commit(tx *ent.Tx) error
+	Rollback(tx *ent.Tx) error
 }
 
 type Transaction struct {
-	DB *sql.DB
+	Client *ent.Client
 }
 
-func NewTransaction(db *sql.DB) *Transaction {
-	return &Transaction{DB: db}
+func NewTransaction(client *ent.Client) *Transaction {
+	return &Transaction{client}
 }
 
-func (c Transaction) Begin() error {
-	_, err := c.DB.Exec("START TRANSACTION")
-	return err
+func (c Transaction) Begin(ctx context.Context) (*ent.Tx, error) {
+	return c.Client.Tx(ctx)
 }
 
-func (c Transaction) Commit() error {
-	_, err := c.DB.Exec("COMMIT")
-	return err
+func (c Transaction) Commit(tx *ent.Tx) error {
+	return tx.Commit()
 }
 
-func (c Transaction) Rollback() error {
-	_, err := c.DB.Exec("ROLLBACK")
-	return err
+func (c Transaction) Rollback(tx *ent.Tx) error {
+	return tx.Rollback()
 }

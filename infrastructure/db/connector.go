@@ -41,7 +41,9 @@ func ProvideConnector() (*Connector, func(), error) {
 	}
 
 	drv := sql2.OpenDB("mysql", db)
-	return &Connector{DB: db, Client: ent.NewClient(ent.Driver(drv)), Tx: NewTransaction(db)}, cleanup, nil
+	client := ent.NewClient(ent.Driver(drv))
+	tx := NewTransaction(client)
+	return &Connector{DB: db, Client: client, Tx: tx}, cleanup, nil
 }
 
 func (c Connector) GetDB() *sql.DB {
@@ -56,14 +58,14 @@ func (c Connector) Migrate(ctx context.Context, opts ...schema.MigrateOption) er
 	return c.Client.Schema.Create(ctx, opts...)
 }
 
-func (c Connector) BeginTx() error {
-	return c.Tx.Begin()
+func (c Connector) Begin(ctx context.Context) (*ent.Tx, error) {
+	return c.Tx.Begin(ctx)
 }
 
-func (c Connector) Commit() error {
-	return c.Tx.Commit()
+func (c Connector) Commit(tx *ent.Tx) error {
+	return c.Tx.Commit(tx)
 }
 
-func (c Connector) Rollback() error {
-	return c.Tx.Rollback()
+func (c Connector) Rollback(tx *ent.Tx) error {
+	return c.Tx.Rollback(tx)
 }

@@ -37,7 +37,8 @@ Unit test
 go test ./...
 ```
 
-Feature test
+Feature test  
+https://localhost:8080 に接続し、`example_test`データベースを作成してから以下のコマンドを実行する
 
 ```
 DB_HOST=localhost DB_PORT=33060 DB_DATABASE=example_test go run commands/migrate/main.go
@@ -91,3 +92,4 @@ go run entgo.io/ent/cmd/ent init [EntityName]
 - [ ] レスポンスがJSONではない処理のテスト（例えばファイルのダウンロードなど）
 - [ ] トランザクションが複数リクエストをまたがることはある？
 - [ ] テストのカバレッジの可視化
+- [ ] コネクションプールについて

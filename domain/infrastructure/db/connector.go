@@ -12,7 +12,7 @@ type ConnectorInterface interface {
 	GetEnt() *ent.Client
 	Migrate(ctx context.Context, opts ...schema.MigrateOption) error
 
-	BeginTx() error
-	Commit() error
-	Rollback() error
+	Begin(ctx context.Context) (*ent.Tx, error)
+	Commit(tx *ent.Tx) error
+	Rollback(tx *ent.Tx) error
 }

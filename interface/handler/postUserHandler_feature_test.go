@@ -40,29 +40,30 @@ func TestPostUserHandler_PostUser(t *testing.T) {
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
 
-	// トランザクションをモック化
-	transactionMock := db2.NewMockTransactionInterface(ctrl)
-	dbConnector.Tx = transactionMock
-	transactionMock.EXPECT().Begin()
-	transactionMock.EXPECT().Commit()
-	transactionMock.EXPECT().Rollback()
-
 	db := dbConnector.GetDB()
 
 	_, err = db.Exec("SET FOREIGN_KEY_CHECKS = 0")
 	if err != nil {
 		t.Fatal(err)
 	}
-	_, err = db.Exec("START TRANSACTION")
+
+	tx, err := dbConnector.GetEnt().Tx(c.Request().Context())
 	if err != nil {
 		t.Fatal(err)
 	}
-	t.Cleanup(func() { db.Exec("ROLLBACK") })
+	t.Cleanup(func() { tx.Rollback() })
 
 	_, err = db.Exec("SET FOREIGN_KEY_CHECKS = 1")
 	if err != nil {
 		t.Fatal(err)
 	}
+
+	// トランザクションをモック化
+	transactionMock := db2.NewMockTransactionInterface(ctrl)
+	dbConnector.Tx = transactionMock
+	transactionMock.EXPECT().Begin(gomock.Any()).Return(tx, nil)
+	transactionMock.EXPECT().Commit(gomock.Any()).Return(nil)
+	transactionMock.EXPECT().Rollback(gomock.Any()).Return(nil)
 
 	//
 	// Execute
@@ -88,7 +89,7 @@ func TestPostUserHandler_PostUser(t *testing.T) {
 
 	assert.Equal(t, "OK", res.Status)
 
-	users, err := dbConnector.GetEnt().User.Query().
+	users, err := tx.User.Query().
 		Where(user.Name("TEST"), user.Age(10)).
 		All(c.Request().Context())
 	if err != nil {
