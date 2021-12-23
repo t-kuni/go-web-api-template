@@ -94,3 +94,4 @@ go run entgo.io/ent/cmd/ent init [EntityName]
   - ある
 - [ ] テストのカバレッジの可視化
 - [ ] DBを参照してからトランザクションを開始するケースに対応できるか
+- [ ] 現在日時のモック化
