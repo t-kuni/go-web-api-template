@@ -6,3 +6,4 @@ wire_gen.go
 /ent/*
 !/ent/schema
 !/ent/generate.go
+*.log

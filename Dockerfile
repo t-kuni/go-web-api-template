@@ -1,4 +1,4 @@
-FROM golang:alpine3.14
+FROM golang:1.17.13-alpine3.16
 
 # Install build tools
 RUN apk update \
@@ -11,6 +11,9 @@ RUN curl -sSfL https://raw.githubusercontent.com/cosmtrek/air/master/install.sh 
 
 # Install delve
 RUN go install github.com/go-delve/delve/cmd/dlv@latest
+RUN go install github.com/google/wire/cmd/wire@latest
+RUN go install github.com/golang/mock/mockgen@v1.6.0
+RUN go install gotest.tools/gotestsum@latest
 
 # Purge build tools
 RUN apk del --purge build-tools

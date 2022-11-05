@@ -21,6 +21,8 @@ services:
     environment:
       MYSQL_DATABASE: ${DB_DATABASE}
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - db-data:/var/lib/mysql/
 
   db-viewer:
     image: phpmyadmin/phpmyadmin:5.1.1
@@ -32,3 +34,6 @@ services:
       - PMA_USER=${DB_USER}
       - PMA_PASSWORD=${DB_PASSWORD}
     restart: always
+
+volumes:
+  db-data:
