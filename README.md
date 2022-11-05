@@ -82,3 +82,4 @@ go run entgo.io/ent/cmd/ent init [EntityName]
 - [ ] 現在日時のモック化
 - [ ] DB接続のタイムゾーン
 - [ ] 本番環境用コンテナ
+- [ ] vscode用devcontainer定義
