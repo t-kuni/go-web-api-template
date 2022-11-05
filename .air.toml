@@ -4,5 +4,5 @@ root = "."
 tmp_dir = "/tmp"
 
 [build]
-cmd = 'go build -gcflags "all=-N -l" -o /tmp/main'
+cmd = 'go build -buildvcs=false -gcflags "all=-N -l" -o /tmp/main'
 full_bin = "dlv --listen=:2345 --headless=true --api-version=2 --accept-multiclient exec --continue /tmp/main"
