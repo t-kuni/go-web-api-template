@@ -4,7 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"entgo.io/ent/dialect/sql/schema"
-	"github.com/t-kuni/go-web-api-skeleton/ent"
+	"github.com/t-kuni/go-web-api-template/ent"
 )
 
 type ConnectorInterface interface {

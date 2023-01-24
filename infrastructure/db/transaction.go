@@ -4,7 +4,7 @@ package db
 
 import (
 	"context"
-	"github.com/t-kuni/go-web-api-skeleton/ent"
+	"github.com/t-kuni/go-web-api-template/ent"
 )
 
 type TransactionInterface interface {

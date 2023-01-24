@@ -7,7 +7,7 @@ import (
 	"entgo.io/ent/dialect/sql/schema"
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/t-kuni/go-web-api-skeleton/ent"
+	"github.com/t-kuni/go-web-api-template/ent"
 	"os"
 )
 

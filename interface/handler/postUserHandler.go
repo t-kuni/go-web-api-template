@@ -2,7 +2,7 @@ package handler
 
 import (
 	"github.com/labstack/echo/v4"
-	"github.com/t-kuni/go-web-api-skeleton/domain/infrastructure/db"
+	"github.com/t-kuni/go-web-api-template/domain/infrastructure/db"
 	"net/http"
 )
 

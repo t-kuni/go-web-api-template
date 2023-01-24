@@ -4,7 +4,7 @@ package handler_test
 
 import (
 	"github.com/joho/godotenv"
-	"github.com/t-kuni/go-web-api-skeleton/infrastructure/db"
+	"github.com/t-kuni/go-web-api-template/infrastructure/db"
 	"os"
 	"path/filepath"
 	"testing"

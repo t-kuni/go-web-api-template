@@ -6,12 +6,12 @@ package wire
 
 import (
 	"github.com/google/wire"
-	api2 "github.com/t-kuni/go-web-api-skeleton/domain/infrastructure/api"
-	db2 "github.com/t-kuni/go-web-api-skeleton/domain/infrastructure/db"
-	"github.com/t-kuni/go-web-api-skeleton/domain/service"
-	"github.com/t-kuni/go-web-api-skeleton/infrastructure/api"
-	"github.com/t-kuni/go-web-api-skeleton/infrastructure/db"
-	"github.com/t-kuni/go-web-api-skeleton/interface/handler"
+	api2 "github.com/t-kuni/go-web-api-template/domain/infrastructure/api"
+	db2 "github.com/t-kuni/go-web-api-template/domain/infrastructure/db"
+	"github.com/t-kuni/go-web-api-template/domain/service"
+	"github.com/t-kuni/go-web-api-template/infrastructure/api"
+	"github.com/t-kuni/go-web-api-template/infrastructure/db"
+	"github.com/t-kuni/go-web-api-template/interface/handler"
 )
 
 var Providers = wire.NewSet(

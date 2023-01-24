@@ -6,7 +6,7 @@ import (
 	"github.com/ghodss/yaml"
 	"github.com/joho/godotenv"
 	"github.com/romanyx/polluter"
-	"github.com/t-kuni/go-web-api-skeleton/wire"
+	"github.com/t-kuni/go-web-api-template/wire"
 	"io/ioutil"
 	"path/filepath"
 )

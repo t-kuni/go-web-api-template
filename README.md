@@ -2,6 +2,11 @@
 
 This repository is project template for Go Web API application.
 
+# Requirements
+
+* go 1.19+
+  * [How to install and switch between multiple versions of golang](https://gist.github.com/t-kuni/4e23b59f16557d704974b1ce6b49e6bb)
+
 # Usage 
 
 ```

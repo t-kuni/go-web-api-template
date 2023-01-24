@@ -5,7 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"github.com/joho/godotenv"
-	"github.com/t-kuni/go-web-api-skeleton/wire"
+	"github.com/t-kuni/go-web-api-template/wire"
 	"os"
 	"path/filepath"
 )

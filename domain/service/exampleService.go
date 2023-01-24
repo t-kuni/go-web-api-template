@@ -3,9 +3,9 @@ package service
 
 import (
 	"context"
-	"github.com/t-kuni/go-web-api-skeleton/domain/infrastructure/api"
-	"github.com/t-kuni/go-web-api-skeleton/domain/infrastructure/db"
-	"github.com/t-kuni/go-web-api-skeleton/ent"
+	"github.com/t-kuni/go-web-api-template/domain/infrastructure/api"
+	"github.com/t-kuni/go-web-api-template/domain/infrastructure/db"
+	"github.com/t-kuni/go-web-api-template/ent"
 )
 
 type ExampleService struct {
