@@ -16,6 +16,14 @@ go generate -x -tags wireinject ./...
 docker compose up -d
 ```
 
+DB Migration and Seeding
+
+```
+docker compose exec app sh
+go run commands/migrate/main.go
+go run commands/seed/main.go
+```
+
 Confirm
 
 ```
@@ -52,14 +60,6 @@ http://localhost:8080
 
 ```
 docker compose exec db tail -f /tmp/query.log
-```
-
-# Migration and Seeding
-
-```
-docker compose exec app sh
-go run commands/migrate/main.go
-go run commands/seed/main.go
 ```
 
 # Create Scheme
