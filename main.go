@@ -1,34 +1,28 @@
 package main
 
 import (
+	"fmt"
 	"github.com/joho/godotenv"
-	"github.com/labstack/echo/v4/middleware"
 	"github.com/samber/do"
 	"github.com/t-kuni/go-web-api-template/di"
-	"github.com/t-kuni/go-web-api-template/interface/handler"
+	routerPackage "github.com/t-kuni/go-web-api-template/router"
+	serverPackage "github.com/t-kuni/go-web-api-template/server"
 	"os"
-
-	"github.com/labstack/echo/v4"
 )
 
 func main() {
 	godotenv.Load()
 
-	// Echo instance
-	e := echo.New()
-
-	// Middleware
-	e.Use(middleware.Logger())
-	e.Use(middleware.Recover())
-
 	container := di.NewContainer()
 	defer container.Shutdown()
 
-	// Routes
-	e.GET("/", do.MustInvoke[*handler.HelloHandler](container).Hello)
-	e.POST("/users", do.MustInvoke[*handler.PostUserHandler](container).PostUser)
+	server := do.MustInvoke[*serverPackage.Server](container)
+	router := do.MustInvoke[*routerPackage.Router](container)
 
-	// Start server
-	port := os.Getenv("SERVER_PORT")
-	e.Logger.Fatal(e.Start(":" + port))
+	router.Attach(server.Echo)
+	err := server.Start()
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
 }

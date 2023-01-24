@@ -6,10 +6,18 @@ import (
 	"github.com/t-kuni/go-web-api-template/infrastructure/api"
 	"github.com/t-kuni/go-web-api-template/infrastructure/db"
 	"github.com/t-kuni/go-web-api-template/interface/handler"
+	"github.com/t-kuni/go-web-api-template/router"
+	"github.com/t-kuni/go-web-api-template/server"
 )
 
 func NewContainer() *do.Injector {
 	injector := do.New()
+
+	// Server
+	do.Provide(injector, server.NewServer)
+
+	// Router
+	do.Provide(injector, router.NewRouter)
 
 	// Handler
 	do.Provide(injector, handler.NewHelloHandler)
