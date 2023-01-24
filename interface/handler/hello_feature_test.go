@@ -6,8 +6,11 @@ import (
 	"encoding/json"
 	"github.com/golang/mock/gomock"
 	"github.com/labstack/echo/v4"
+	"github.com/samber/do"
 	"github.com/stretchr/testify/assert"
+	"github.com/t-kuni/go-web-api-template/di"
 	"github.com/t-kuni/go-web-api-template/domain/infrastructure/api"
+	db2 "github.com/t-kuni/go-web-api-template/domain/infrastructure/db"
 	"github.com/t-kuni/go-web-api-template/domain/service"
 	"github.com/t-kuni/go-web-api-template/ent"
 	"github.com/t-kuni/go-web-api-template/interface/handler"
@@ -23,6 +26,9 @@ func TestHello(t *testing.T) {
 	//
 	// Prepare
 	//
+	container := di.NewContainer()
+	defer container.Shutdown()
+
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -31,23 +37,25 @@ func TestHello(t *testing.T) {
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
 
-	binanceApiMock := api.NewMockBinanceApiInterface(ctrl)
-
-	binanceApiMock.
-		EXPECT().
-		GetExchangeInfo(gomock.Eq("BNB")).
-		Return(&api.GetExchangeInfoResult{
-			Symbols: []api.GetExchangeInfoResultSymbol{
-				{
-					Status: "DUMMY",
+	{
+		mock := api.NewMockBinanceApiInterface(ctrl)
+		mock.
+			EXPECT().
+			GetExchangeInfo(gomock.Eq("BNB")).
+			Return(&api.GetExchangeInfoResult{
+				Symbols: []api.GetExchangeInfoResultSymbol{
+					{
+						Status: "DUMMY",
+					},
 				},
-			},
-		}, nil)
+			}, nil)
+		do.OverrideValue[api.BinanceApiInterface](container, mock)
+	}
 
 	//
 	// Execute
 	//
-	h := handler.ProvideHello(service.ProvideExampleService(binanceApiMock, dbConnector))
+	h := do.MustInvoke[*handler.HelloHandler](container)
 	err := h.Hello(c)
 
 	//
@@ -62,6 +70,9 @@ func TestHello2(t *testing.T) {
 	//
 	// Prepare
 	//
+	container := di.NewContainer()
+	defer container.Shutdown()
+
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -70,29 +81,31 @@ func TestHello2(t *testing.T) {
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
 
-	exampleServiceMock := service.NewMockExampleServiceInterface(ctrl)
-
-	createdAt, err := time.Parse("2006-01-02 15:04:05 MST", "2014-12-31 12:31:24 JST")
-	if err != nil {
-		return
+	{
+		mock := service.NewMockExampleServiceInterface(ctrl)
+		createdAt, err := time.Parse("2006-01-02 15:04:05 MST", "2014-12-31 12:31:24 JST")
+		if err != nil {
+			return
+		}
+		mock.
+			EXPECT().
+			Exec(gomock.Any(), gomock.Eq("BNB")).
+			Return("DUMMY", []*ent.Company{
+				{
+					ID:        1,
+					Name:      "TEST",
+					CreatedAt: createdAt,
+					Edges:     ent.CompanyEdges{},
+				},
+			}, nil)
+		do.OverrideValue[service.ExampleServiceInterface](container, mock)
 	}
-	exampleServiceMock.
-		EXPECT().
-		Exec(gomock.Any(), gomock.Eq("BNB")).
-		Return("DUMMY", []*ent.Company{
-			{
-				ID:        1,
-				Name:      "TEST",
-				CreatedAt: createdAt,
-				Edges:     ent.CompanyEdges{},
-			},
-		}, nil)
 
 	//
 	// Execute
 	//
-	h := handler.ProvideHello(exampleServiceMock)
-	err = h.Hello(c)
+	h := do.MustInvoke[*handler.HelloHandler](container)
+	err := h.Hello(c)
 
 	//
 	// Assert
@@ -106,6 +119,9 @@ func TestHello3(t *testing.T) {
 	//
 	// Prepare
 	//
+	container := di.NewContainer()
+	defer container.Shutdown()
+
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -114,18 +130,22 @@ func TestHello3(t *testing.T) {
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
 
-	binanceApiMock := api.NewMockBinanceApiInterface(ctrl)
-	binanceApiMock.
-		EXPECT().
-		GetExchangeInfo(gomock.Eq("BNB")).
-		Return(&api.GetExchangeInfoResult{
-			Symbols: []api.GetExchangeInfoResultSymbol{
-				{
-					Status: "DUMMY",
+	{
+		mock := api.NewMockBinanceApiInterface(ctrl)
+		mock.
+			EXPECT().
+			GetExchangeInfo(gomock.Eq("BNB")).
+			Return(&api.GetExchangeInfoResult{
+				Symbols: []api.GetExchangeInfoResultSymbol{
+					{
+						Status: "DUMMY",
+					},
 				},
-			},
-		}, nil)
+			}, nil)
+		do.OverrideValue[api.BinanceApiInterface](container, mock)
+	}
 
+	dbConnector := do.MustInvoke[db2.ConnectorInterface](container)
 	db := dbConnector.GetDB()
 
 	_, err := db.Exec("SET FOREIGN_KEY_CHECKS = 0")
@@ -145,7 +165,7 @@ func TestHello3(t *testing.T) {
 	//
 	// Execute
 	//
-	h := handler.ProvideHello(service.ProvideExampleService(binanceApiMock, dbConnector))
+	h := do.MustInvoke[*handler.HelloHandler](container)
 	err = h.Hello(c)
 
 	//

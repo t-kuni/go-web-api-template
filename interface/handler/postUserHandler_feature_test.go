@@ -7,9 +7,12 @@ import (
 	"encoding/json"
 	"github.com/golang/mock/gomock"
 	"github.com/labstack/echo/v4"
+	"github.com/samber/do"
 	"github.com/stretchr/testify/assert"
+	"github.com/t-kuni/go-web-api-template/di"
+	db2 "github.com/t-kuni/go-web-api-template/domain/infrastructure/db"
 	"github.com/t-kuni/go-web-api-template/ent/user"
-	db2 "github.com/t-kuni/go-web-api-template/infrastructure/db"
+	"github.com/t-kuni/go-web-api-template/infrastructure/db"
 	"github.com/t-kuni/go-web-api-template/interface/handler"
 	"io/ioutil"
 	"net/http"
@@ -22,8 +25,13 @@ func TestPostUserHandler_PostUser(t *testing.T) {
 	//
 	// Prepare
 	//
+	container := di.NewContainer()
+	defer container.Shutdown()
+
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
+
+	do.Override[db2.ConnectorInterface](container, db.NewTestConnector)
 
 	body, err := json.Marshal(handler.PostUserRequest{
 		Name:      "TEST",
@@ -40,6 +48,7 @@ func TestPostUserHandler_PostUser(t *testing.T) {
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
 
+	dbConnector := do.MustInvoke[db2.ConnectorInterface](container)
 	db := dbConnector.GetDB()
 
 	_, err = db.Exec("SET FOREIGN_KEY_CHECKS = 0")
@@ -58,17 +67,10 @@ func TestPostUserHandler_PostUser(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	// トランザクションをモック化
-	transactionMock := db2.NewMockTransactionInterface(ctrl)
-	dbConnector.Tx = transactionMock
-	transactionMock.EXPECT().Begin(gomock.Any()).Return(tx, nil)
-	transactionMock.EXPECT().Commit(gomock.Any()).Return(nil)
-	transactionMock.EXPECT().Rollback(gomock.Any()).Return(nil)
-
 	//
 	// Execute
 	//
-	h := handler.ProvidePostUserHandler(dbConnector)
+	h := do.MustInvoke[*handler.PostUserHandler](container)
 	err = h.PostUser(c)
 	if err != nil {
 		t.Fatal(err)

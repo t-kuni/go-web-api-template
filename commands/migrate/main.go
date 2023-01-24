@@ -5,7 +5,9 @@ import (
 	"flag"
 	"fmt"
 	"github.com/joho/godotenv"
-	"github.com/t-kuni/go-web-api-template/wire"
+	"github.com/samber/do"
+	"github.com/t-kuni/go-web-api-template/di"
+	"github.com/t-kuni/go-web-api-template/domain/infrastructure/db"
 	"os"
 	"path/filepath"
 )
@@ -24,13 +26,12 @@ func main() {
 
 	fmt.Println("Target Database: " + os.Getenv("DB_DATABASE"))
 
-	app, cleanup, err := wire.InitializeApp()
-	if err != nil {
-		panic(err)
-	}
-	defer cleanup()
+	container := di.NewContainer()
+	defer container.Shutdown()
 
-	if err := app.DBConnector.Migrate(context.Background()); err != nil {
+	dbConnector := do.MustInvoke[db.ConnectorInterface](container)
+
+	if err := dbConnector.Migrate(context.Background()); err != nil {
 		panic(err)
 	}
 

@@ -10,9 +10,6 @@ import (
 type ConnectorInterface interface {
 	GetDB() *sql.DB
 	GetEnt() *ent.Client
+	Transaction(ctx context.Context, fn func(tx *ent.Client) error) error
 	Migrate(ctx context.Context, opts ...schema.MigrateOption) error
-
-	Begin(ctx context.Context) (*ent.Tx, error)
-	Commit(tx *ent.Tx) error
-	Rollback(tx *ent.Tx) error
 }

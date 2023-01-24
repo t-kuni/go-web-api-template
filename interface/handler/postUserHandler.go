@@ -2,7 +2,9 @@ package handler
 
 import (
 	"github.com/labstack/echo/v4"
+	"github.com/samber/do"
 	"github.com/t-kuni/go-web-api-template/domain/infrastructure/db"
+	"github.com/t-kuni/go-web-api-template/ent"
 	"net/http"
 )
 
@@ -20,8 +22,10 @@ type PostUserResponse struct {
 	Status string `json:"status"`
 }
 
-func ProvidePostUserHandler(dbConnector db.ConnectorInterface) *PostUserHandler {
-	return &PostUserHandler{dbConnector}
+func NewPostUserHandler(i *do.Injector) (*PostUserHandler, error) {
+	return &PostUserHandler{
+		do.MustInvoke[db.ConnectorInterface](i),
+	}, nil
 }
 
 func (h PostUserHandler) PostUser(c echo.Context) error {
@@ -31,22 +35,16 @@ func (h PostUserHandler) PostUser(c echo.Context) error {
 		return c.String(http.StatusBadRequest, err.Error())
 	}
 
-	tx, err := h.DbConnector.Begin(c.Request().Context())
-	if err != nil {
-		return c.String(http.StatusInternalServerError, err.Error())
-	}
-	defer h.DbConnector.Rollback(tx)
-
-	//_, err = h.DbConnector.GetDB().Exec("INSERT INTO users(name, age, created_at) VALUES(?, ?, '2010-12-31 23:59:59')", req.Name, req.Age)
-	_, err = tx.User.Create().
-		SetAge(req.Age).
-		SetName(req.Name).
-		Save(c.Request().Context())
-	if err != nil {
-		return err
-	}
-
-	err = h.DbConnector.Commit(tx)
+	err := h.DbConnector.Transaction(c.Request().Context(), func(tx *ent.Client) error {
+		_, err := tx.User.Create().
+			SetAge(req.Age).
+			SetName(req.Name).
+			Save(c.Request().Context())
+		if err != nil {
+			return err
+		}
+		return nil
+	})
 	if err != nil {
 		return c.String(http.StatusInternalServerError, err.Error())
 	}

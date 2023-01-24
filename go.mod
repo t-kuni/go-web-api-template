@@ -16,6 +16,7 @@ require (
 
 require (
 	ariga.io/atlas v0.9.1-0.20230119123307-a3ab6808892b // indirect
+	github.com/DATA-DOG/go-txdb v0.1.5 // indirect
 	github.com/agext/levenshtein v1.2.3 // indirect
 	github.com/apparentlymart/go-textseg/v13 v13.0.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
@@ -37,6 +38,7 @@ require (
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/rogpeppe/go-internal v1.8.0 // indirect
 	github.com/romanyx/jwalk v1.0.0 // indirect
+	github.com/samber/do v1.5.1 // indirect
 	github.com/sirupsen/logrus v1.4.2 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasttemplate v1.2.2 // indirect

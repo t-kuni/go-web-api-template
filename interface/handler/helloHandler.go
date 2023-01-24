@@ -2,6 +2,7 @@ package handler
 
 import (
 	"github.com/labstack/echo/v4"
+	"github.com/samber/do"
 	"github.com/t-kuni/go-web-api-template/domain/service"
 	"net/http"
 )
@@ -25,8 +26,10 @@ type HelloResponseUser struct {
 	Age  int    `json:"age"`
 }
 
-func ProvideHello(exampleService service.ExampleServiceInterface) *HelloHandler {
-	return &HelloHandler{exampleService}
+func NewHelloHandler(i *do.Injector) (*HelloHandler, error) {
+	return &HelloHandler{
+		do.MustInvoke[service.ExampleServiceInterface](i),
+	}, nil
 }
 
 func (h HelloHandler) Hello(c echo.Context) error {

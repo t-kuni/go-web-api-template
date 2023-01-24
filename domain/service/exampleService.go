@@ -3,6 +3,7 @@ package service
 
 import (
 	"context"
+	"github.com/samber/do"
 	"github.com/t-kuni/go-web-api-template/domain/infrastructure/api"
 	"github.com/t-kuni/go-web-api-template/domain/infrastructure/db"
 	"github.com/t-kuni/go-web-api-template/ent"
@@ -17,11 +18,11 @@ type ExampleServiceInterface interface {
 	Exec(ctx context.Context, baseAsset string) (string, []*ent.Company, error)
 }
 
-func ProvideExampleService(
-	binanceApi api.BinanceApiInterface,
-	dbConnector db.ConnectorInterface,
-) *ExampleService {
-	return &ExampleService{binanceApi, dbConnector}
+func NewExampleService(i *do.Injector) (ExampleServiceInterface, error) {
+	return &ExampleService{
+		do.MustInvoke[api.BinanceApiInterface](i),
+		do.MustInvoke[db.ConnectorInterface](i),
+	}, nil
 }
 
 func (s ExampleService) Exec(ctx context.Context, baseAsset string) (string, []*ent.Company, error) {

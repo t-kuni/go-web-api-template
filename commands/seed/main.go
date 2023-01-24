@@ -6,7 +6,9 @@ import (
 	"github.com/ghodss/yaml"
 	"github.com/joho/godotenv"
 	"github.com/romanyx/polluter"
-	"github.com/t-kuni/go-web-api-template/wire"
+	"github.com/samber/do"
+	"github.com/t-kuni/go-web-api-template/di"
+	infraDb "github.com/t-kuni/go-web-api-template/domain/infrastructure/db"
 	"io/ioutil"
 	"path/filepath"
 )
@@ -14,13 +16,12 @@ import (
 func main() {
 	godotenv.Load(filepath.Join(".env"))
 
-	app, cleanup, err := wire.InitializeApp()
-	if err != nil {
-		panic(err)
-	}
-	defer cleanup()
+	container := di.NewContainer()
+	defer container.Shutdown()
 
-	db := app.DBConnector.GetDB()
+	dbConnector := do.MustInvoke[infraDb.ConnectorInterface](container)
+
+	db := dbConnector.GetDB()
 	p := polluter.New(polluter.MySQLEngine(db))
 
 	seedBytes, err := ioutil.ReadFile(filepath.Join("seeds", "seeds.yml"))

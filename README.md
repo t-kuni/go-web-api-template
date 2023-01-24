@@ -12,7 +12,7 @@ This repository is project template for Go Web API application.
 ```
 cp .env.example .env
 cp .env.feature.example .env.feature
-go generate -x -tags wireinject ./...
+go generate -x ./...
 docker compose up -d
 ```
 

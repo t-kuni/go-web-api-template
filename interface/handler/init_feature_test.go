@@ -15,14 +15,6 @@ var dbConnector *db.Connector
 func TestMain(m *testing.M) {
 	godotenv.Load(filepath.Join("..", "..", ".env.feature"))
 
-	var cleanup func()
-	var err error
-	dbConnector, cleanup, err = db.ProvideConnector()
-	if err != nil {
-		panic(err)
-	}
-	defer cleanup()
-
 	code := m.Run()
 	os.Exit(code)
 }
