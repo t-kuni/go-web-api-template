@@ -70,8 +70,6 @@ go run entgo.io/ent/cmd/ent init [EntityName]
 
 # タスク
 
-- [ ] ライブラリバージョンアップ
-- [ ] DIコンテナをgenerics対応のものに移行
 - [ ] OpenAPIと連携
 - [ ] リクエストをバインド
 - [ ] バリデーション
