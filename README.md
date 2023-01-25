@@ -9,6 +9,8 @@ This repository is project template for Go Web API application.
 * [Validator](https://github.com/go-playground/validator)
 * ORM
 * Seeder
+* Logging
+* Error Handling (Stack trace)
 
 # Requirements
 
