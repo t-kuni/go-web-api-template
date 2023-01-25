@@ -1,17 +1,23 @@
 package main
 
 import (
-	"fmt"
 	"github.com/joho/godotenv"
 	"github.com/samber/do"
 	"github.com/t-kuni/go-web-api-template/di"
+	"github.com/t-kuni/go-web-api-template/logger"
 	routerPackage "github.com/t-kuni/go-web-api-template/router"
 	serverPackage "github.com/t-kuni/go-web-api-template/server"
+	"log"
 	"os"
 )
 
 func main() {
 	godotenv.Load()
+
+	if err := logger.SetupLogger(); err != nil {
+		log.Fatalf("Logger initialization failed: %+v", err)
+		os.Exit(1)
+	}
 
 	app := di.NewApp()
 	defer app.Shutdown()
@@ -22,7 +28,7 @@ func main() {
 	router.Attach(server.Echo)
 	err := server.Start()
 	if err != nil {
-		fmt.Println(err)
+		logger.SimpleFatal(err, nil)
 		os.Exit(1)
 	}
 }

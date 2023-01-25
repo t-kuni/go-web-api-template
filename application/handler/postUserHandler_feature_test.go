@@ -36,9 +36,8 @@ func TestPostUserHandler_PostUser(t *testing.T) {
 	do.Override[db2.ConnectorInterface](app, db.NewTestConnector)
 
 	body, err := json.Marshal(handler.PostUserRequest{
-		Name:      util.Ptr[string]("TEST"),
-		Age:       util.Ptr[int](10),
-		CompanyId: util.Ptr[int](1),
+		Name: util.Ptr[string]("TEST"),
+		Age:  util.Ptr[int](10),
 	})
 	assert.NoError(t, err)
 

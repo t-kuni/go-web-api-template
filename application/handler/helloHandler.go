@@ -2,6 +2,7 @@ package handler
 
 import (
 	"github.com/labstack/echo/v4"
+	"github.com/rotisserie/eris"
 	"github.com/samber/do"
 	"github.com/t-kuni/go-web-api-template/const/app"
 	"github.com/t-kuni/go-web-api-template/domain/service"
@@ -37,7 +38,7 @@ func NewHelloHandler(i *do.Injector) (*HelloHandler, error) {
 func (h HelloHandler) Hello(c echo.Context) error {
 	status, companies, err := h.ExampleService.Exec(c.Request().Context(), "BNB")
 	if err != nil {
-		return err
+		return eris.Wrap(err, "")
 	}
 
 	var resp HelloResponse

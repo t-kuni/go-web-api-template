@@ -4,6 +4,7 @@ import (
 	"github.com/samber/do"
 	"github.com/t-kuni/go-web-api-template/application/handler"
 	"github.com/t-kuni/go-web-api-template/domain/service"
+	errorHandler "github.com/t-kuni/go-web-api-template/errors/handler"
 	"github.com/t-kuni/go-web-api-template/infrastructure/api"
 	"github.com/t-kuni/go-web-api-template/infrastructure/db"
 	"github.com/t-kuni/go-web-api-template/router"
@@ -22,6 +23,7 @@ func NewApp() *do.Injector {
 
 	// Validator
 	do.Provide(injector, validator.NewCustomValidator)
+	do.Provide(injector, errorHandler.NewErrorHandler)
 
 	// Handler
 	do.Provide(injector, handler.NewHelloHandler)

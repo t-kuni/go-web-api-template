@@ -7,6 +7,8 @@ This repository is project template for Go Web API application.
 * [Onion Architecture](https://jeffreypalermo.com/2008/07/the-onion-architecture-part-1/)
 * [DI Container](https://github.com/samber/do)
 * [Validator](https://github.com/go-playground/validator)
+* ORM
+* Seeder
 
 # Requirements
 
@@ -77,21 +79,16 @@ go run entgo.io/ent/cmd/ent init [EntityName]
 # タスク
 
 - [ ] OpenAPIと連携
-- [ ] エラーハンドリング
-  - [ ] スタックトレース
 - [ ] マイグレーションの管理を切り出し
 - [ ] 認証処理のモック化
-- [ ] ロギング
-- [ ] docker composeをenvironmentsフォルダに移動
 - [ ] レスポンスがJSONではない処理のテスト（例えばファイルのダウンロードなど）
 - [ ] テストのカバレッジの可視化
-- [ ] DBを参照してからトランザクションを開始するケースに対応できるか
 - [ ] 現在日時のモック化
 - [ ] DB接続のタイムゾーン
 - [ ] 本番環境用コンテナ
 - [ ] vscode用devcontainer定義
 - [ ] テストの前処理、後処理をリファクタ（txdbの初期化処理タイミングを変更）
-- [ ] レスポンスを整理（Bindエラー、Validationエラー）
 - [ ] coreファイルが残る問題
-- [ ] テストのエラーハンドリングをassert.NoErrorに変える
 - [ ] テストのレコードの初期投入を見やすくする
+- [ ] XxxInterface -> IXxx
+- [ ] アクセスログミドルウェア
