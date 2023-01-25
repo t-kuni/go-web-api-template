@@ -3,7 +3,7 @@ package router
 import (
 	"github.com/labstack/echo/v4"
 	"github.com/samber/do"
-	"github.com/t-kuni/go-web-api-template/interface/handler"
+	"github.com/t-kuni/go-web-api-template/application/handler"
 )
 
 type Router struct {

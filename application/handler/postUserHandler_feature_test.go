@@ -9,11 +9,11 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/samber/do"
 	"github.com/stretchr/testify/assert"
+	"github.com/t-kuni/go-web-api-template/application/handler"
 	"github.com/t-kuni/go-web-api-template/di"
 	db2 "github.com/t-kuni/go-web-api-template/domain/infrastructure/db"
 	"github.com/t-kuni/go-web-api-template/ent/user"
 	"github.com/t-kuni/go-web-api-template/infrastructure/db"
-	"github.com/t-kuni/go-web-api-template/interface/handler"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
@@ -25,13 +25,13 @@ func TestPostUserHandler_PostUser(t *testing.T) {
 	//
 	// Prepare
 	//
-	container := di.NewContainer()
-	defer container.Shutdown()
+	app := di.NewApp()
+	defer app.Shutdown()
 
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	do.Override[db2.ConnectorInterface](container, db.NewTestConnector)
+	do.Override[db2.ConnectorInterface](app, db.NewTestConnector)
 
 	body, err := json.Marshal(handler.PostUserRequest{
 		Name:      "TEST",
@@ -48,7 +48,7 @@ func TestPostUserHandler_PostUser(t *testing.T) {
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
 
-	dbConnector := do.MustInvoke[db2.ConnectorInterface](container)
+	dbConnector := do.MustInvoke[db2.ConnectorInterface](app)
 	db := dbConnector.GetDB()
 
 	_, err = db.Exec("SET FOREIGN_KEY_CHECKS = 0")
@@ -70,7 +70,7 @@ func TestPostUserHandler_PostUser(t *testing.T) {
 	//
 	// Execute
 	//
-	h := do.MustInvoke[*handler.PostUserHandler](container)
+	h := do.MustInvoke[*handler.PostUserHandler](app)
 	err = h.PostUser(c)
 	if err != nil {
 		t.Fatal(err)

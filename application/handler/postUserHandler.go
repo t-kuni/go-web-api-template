@@ -13,9 +13,9 @@ type PostUserHandler struct {
 }
 
 type PostUserRequest struct {
-	Name      string `json:"name" validate:"required"`
-	Age       int    `json:"age" validate:"required"`
-	CompanyId int    `json:"companyId"`
+	Name      *string `json:"name" validate:"required"`
+	Age       *int    `json:"age" validate:"gte=18,lte=60,required"`
+	CompanyId *int    `json:"companyId" validate:"required"`
 }
 
 type PostUserResponse struct {
@@ -31,14 +31,20 @@ func NewPostUserHandler(i *do.Injector) (*PostUserHandler, error) {
 func (h PostUserHandler) PostUser(c echo.Context) error {
 	var req PostUserRequest
 
-	if err := c.Bind(&req); err != nil {
+	err := c.Bind(&req)
+	if err != nil {
 		return c.String(http.StatusBadRequest, err.Error())
 	}
 
-	err := h.DbConnector.Transaction(c.Request().Context(), func(tx *ent.Client) error {
+	err = c.Validate(req)
+	if err != nil {
+		return c.String(http.StatusBadRequest, err.Error())
+	}
+
+	err = h.DbConnector.Transaction(c.Request().Context(), func(tx *ent.Client) error {
 		_, err := tx.User.Create().
-			SetAge(req.Age).
-			SetName(req.Name).
+			SetAge(*req.Age).
+			SetName(*req.Name).
 			Save(c.Request().Context())
 		if err != nil {
 			return err

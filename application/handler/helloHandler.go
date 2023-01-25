@@ -3,6 +3,7 @@ package handler
 import (
 	"github.com/labstack/echo/v4"
 	"github.com/samber/do"
+	"github.com/t-kuni/go-web-api-template/const/app"
 	"github.com/t-kuni/go-web-api-template/domain/service"
 	"net/http"
 )
@@ -12,6 +13,7 @@ type HelloHandler struct {
 }
 
 type HelloResponse struct {
+	AppName   string                 `json:"appName"`
 	Status    string                 `json:"status"`
 	Companies []HelloResponseCompany `json:"companies"`
 }
@@ -39,6 +41,7 @@ func (h HelloHandler) Hello(c echo.Context) error {
 	}
 
 	var resp HelloResponse
+	resp.AppName = app.AppName
 	resp.Status = status
 
 	var respCompanies []HelloResponseCompany

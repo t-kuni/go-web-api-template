@@ -26,8 +26,8 @@ func TestHello(t *testing.T) {
 	//
 	// Prepare
 	//
-	container := di.NewContainer()
-	defer container.Shutdown()
+	app := di.NewApp()
+	defer app.Shutdown()
 
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
@@ -49,13 +49,13 @@ func TestHello(t *testing.T) {
 					},
 				},
 			}, nil)
-		do.OverrideValue[api.BinanceApiInterface](container, mock)
+		do.OverrideValue[api.BinanceApiInterface](app, mock)
 	}
 
 	//
 	// Execute
 	//
-	h := do.MustInvoke[*handler.HelloHandler](container)
+	h := do.MustInvoke[*handler.HelloHandler](app)
 	err := h.Hello(c)
 
 	//
@@ -70,8 +70,8 @@ func TestHello2(t *testing.T) {
 	//
 	// Prepare
 	//
-	container := di.NewContainer()
-	defer container.Shutdown()
+	app := di.NewApp()
+	defer app.Shutdown()
 
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
@@ -98,13 +98,13 @@ func TestHello2(t *testing.T) {
 					Edges:     ent.CompanyEdges{},
 				},
 			}, nil)
-		do.OverrideValue[service.ExampleServiceInterface](container, mock)
+		do.OverrideValue[service.ExampleServiceInterface](app, mock)
 	}
 
 	//
 	// Execute
 	//
-	h := do.MustInvoke[*handler.HelloHandler](container)
+	h := do.MustInvoke[*handler.HelloHandler](app)
 	err := h.Hello(c)
 
 	//
@@ -119,8 +119,8 @@ func TestHello3(t *testing.T) {
 	//
 	// Prepare
 	//
-	container := di.NewContainer()
-	defer container.Shutdown()
+	app := di.NewApp()
+	defer app.Shutdown()
 
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
@@ -142,10 +142,10 @@ func TestHello3(t *testing.T) {
 					},
 				},
 			}, nil)
-		do.OverrideValue[api.BinanceApiInterface](container, mock)
+		do.OverrideValue[api.BinanceApiInterface](app, mock)
 	}
 
-	dbConnector := do.MustInvoke[db2.ConnectorInterface](container)
+	dbConnector := do.MustInvoke[db2.ConnectorInterface](app)
 	db := dbConnector.GetDB()
 
 	_, err := db.Exec("SET FOREIGN_KEY_CHECKS = 0")
@@ -165,7 +165,7 @@ func TestHello3(t *testing.T) {
 	//
 	// Execute
 	//
-	h := do.MustInvoke[*handler.HelloHandler](container)
+	h := do.MustInvoke[*handler.HelloHandler](app)
 	err = h.Hello(c)
 
 	//

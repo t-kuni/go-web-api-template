@@ -13,11 +13,11 @@ import (
 func main() {
 	godotenv.Load()
 
-	container := di.NewContainer()
-	defer container.Shutdown()
+	app := di.NewApp()
+	defer app.Shutdown()
 
-	server := do.MustInvoke[*serverPackage.Server](container)
-	router := do.MustInvoke[*routerPackage.Router](container)
+	server := do.MustInvoke[*serverPackage.Server](app)
+	router := do.MustInvoke[*routerPackage.Router](app)
 
 	router.Attach(server.Echo)
 	err := server.Start()

@@ -15,7 +15,7 @@ func NewServer(i *do.Injector) (*Server, error) {
 	e := echo.New()
 
 	//e.HTTPErrorHandler = errorHandler.Handler
-	//e.Validator = validator
+	e.Validator = do.MustInvoke[echo.Validator](i)
 
 	//e.Use(xxx)
 

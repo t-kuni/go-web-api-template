@@ -16,10 +16,10 @@ import (
 func main() {
 	godotenv.Load(filepath.Join(".env"))
 
-	container := di.NewContainer()
-	defer container.Shutdown()
+	app := di.NewApp()
+	defer app.Shutdown()
 
-	dbConnector := do.MustInvoke[infraDb.ConnectorInterface](container)
+	dbConnector := do.MustInvoke[infraDb.ConnectorInterface](app)
 
 	db := dbConnector.GetDB()
 	p := polluter.New(polluter.MySQLEngine(db))

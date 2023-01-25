@@ -26,10 +26,10 @@ func main() {
 
 	fmt.Println("Target Database: " + os.Getenv("DB_DATABASE"))
 
-	container := di.NewContainer()
-	defer container.Shutdown()
+	app := di.NewApp()
+	defer app.Shutdown()
 
-	dbConnector := do.MustInvoke[db.ConnectorInterface](container)
+	dbConnector := do.MustInvoke[db.ConnectorInterface](app)
 
 	if err := dbConnector.Migrate(context.Background()); err != nil {
 		panic(err)

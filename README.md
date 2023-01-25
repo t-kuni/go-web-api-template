@@ -1,6 +1,12 @@
-# About
+# Go Web API Template
 
 This repository is project template for Go Web API application.
+
+# Features
+
+* [Onion Architecture](https://jeffreypalermo.com/2008/07/the-onion-architecture-part-1/)
+* [DI Container](https://github.com/samber/do)
+* [Validator](https://github.com/go-playground/validator)
 
 # Requirements
 
@@ -71,8 +77,6 @@ go run entgo.io/ent/cmd/ent init [EntityName]
 # タスク
 
 - [ ] OpenAPIと連携
-- [ ] リクエストをバインド
-- [ ] バリデーション
 - [ ] エラーハンドリング
   - [ ] スタックトレース
 - [ ] マイグレーションの管理を切り出し
@@ -86,3 +90,6 @@ go run entgo.io/ent/cmd/ent init [EntityName]
 - [ ] DB接続のタイムゾーン
 - [ ] 本番環境用コンテナ
 - [ ] vscode用devcontainer定義
+- [ ] テストの前処理、後処理をリファクタ（txdbの初期化処理タイミングを変更）
+- [ ] レスポンスを整理（Bindエラー、Validationエラー）
+- [ ] coreファイルが残る問題
