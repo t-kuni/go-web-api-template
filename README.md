@@ -93,3 +93,5 @@ go run entgo.io/ent/cmd/ent init [EntityName]
 - [ ] テストの前処理、後処理をリファクタ（txdbの初期化処理タイミングを変更）
 - [ ] レスポンスを整理（Bindエラー、Validationエラー）
 - [ ] coreファイルが残る問題
+- [ ] テストのエラーハンドリングをassert.NoErrorに変える
+- [ ] テストのレコードの初期投入を見やすくする

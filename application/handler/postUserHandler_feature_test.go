@@ -14,6 +14,8 @@ import (
 	db2 "github.com/t-kuni/go-web-api-template/domain/infrastructure/db"
 	"github.com/t-kuni/go-web-api-template/ent/user"
 	"github.com/t-kuni/go-web-api-template/infrastructure/db"
+	"github.com/t-kuni/go-web-api-template/server"
+	"github.com/t-kuni/go-web-api-template/util"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
@@ -34,15 +36,13 @@ func TestPostUserHandler_PostUser(t *testing.T) {
 	do.Override[db2.ConnectorInterface](app, db.NewTestConnector)
 
 	body, err := json.Marshal(handler.PostUserRequest{
-		Name:      "TEST",
-		Age:       10,
-		CompanyId: 1,
+		Name:      util.Ptr[string]("TEST"),
+		Age:       util.Ptr[int](10),
+		CompanyId: util.Ptr[int](1),
 	})
-	if err != nil {
-		t.Fatal(err)
-	}
+	assert.NoError(t, err)
 
-	e := echo.New()
+	e := do.MustInvoke[*server.Server](app).Echo
 	req := httptest.NewRequest(http.MethodPost, "/users", bytes.NewReader(body))
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	rec := httptest.NewRecorder()
@@ -52,50 +52,36 @@ func TestPostUserHandler_PostUser(t *testing.T) {
 	db := dbConnector.GetDB()
 
 	_, err = db.Exec("SET FOREIGN_KEY_CHECKS = 0")
-	if err != nil {
-		t.Fatal(err)
-	}
+	assert.NoError(t, err)
 
 	tx, err := dbConnector.GetEnt().Tx(c.Request().Context())
-	if err != nil {
-		t.Fatal(err)
-	}
+	assert.NoError(t, err)
 	t.Cleanup(func() { tx.Rollback() })
 
 	_, err = db.Exec("SET FOREIGN_KEY_CHECKS = 1")
-	if err != nil {
-		t.Fatal(err)
-	}
+	assert.NoError(t, err)
 
 	//
 	// Execute
 	//
 	h := do.MustInvoke[*handler.PostUserHandler](app)
 	err = h.PostUser(c)
-	if err != nil {
-		t.Fatal(err)
-	}
+	assert.NoError(t, err)
 
 	//
 	// Assert
 	//
 	var res handler.PostUserResponse
 	buf, err := ioutil.ReadAll(rec.Body)
-	if err != nil {
-		t.Fatal(err)
-	}
+	assert.NoError(t, err)
 	err = json.Unmarshal(buf, &res)
-	if err != nil {
-		t.Fatal(err)
-	}
+	assert.NoError(t, err)
 
 	assert.Equal(t, "OK", res.Status)
 
 	users, err := tx.User.Query().
 		Where(user.Name("TEST"), user.Age(10)).
 		All(c.Request().Context())
-	if err != nil {
-		t.Fatal(err)
-	}
+	assert.NoError(t, err)
 	assert.Len(t, users, 1)
 }

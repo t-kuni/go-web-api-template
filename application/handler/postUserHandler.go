@@ -14,7 +14,7 @@ type PostUserHandler struct {
 
 type PostUserRequest struct {
 	Name      *string `json:"name" validate:"required"`
-	Age       *int    `json:"age" validate:"gte=18,lte=60,required"`
+	Age       *int    `json:"age" validate:"gte=8,lte=60,required"`
 	CompanyId *int    `json:"companyId" validate:"required"`
 }
 
