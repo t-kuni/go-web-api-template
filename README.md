@@ -17,7 +17,13 @@ This repository is project template for Go Web API application.
 * go 1.19+
   * [How to install and switch between multiple versions of golang](https://gist.github.com/t-kuni/4e23b59f16557d704974b1ce6b49e6bb)
 
-# Usage 
+# Usage
+
+```
+alias swagger='docker run --rm -it  --user $(id -u):$(id -g) -e GOPATH=$(go env GOPATH):/go -v $HOME:$HOME -w $(pwd) quay.io/goswagger/swagger'
+swagger version
+swagger generate server -A App -f ./swagger.yml --model-package=restapi/models
+```
 
 ```
 cp .env.example .env

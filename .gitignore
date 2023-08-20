@@ -6,3 +6,8 @@
 !/ent/schema
 !/ent/generate.go
 *.log
+
+# go-swagger
+/cmd
+/restapi/*
+!/restapi/configure_*
