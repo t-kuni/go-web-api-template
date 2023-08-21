@@ -20,8 +20,6 @@ This repository is project template for Go Web API application.
 # Usage
 
 ```
-alias swagger='docker run --rm -it  --user $(id -u):$(id -g) -e GOPATH=$(go env GOPATH):/go -v $HOME:$HOME -w $(pwd) quay.io/goswagger/swagger'
-swagger version
 swagger generate server -A App -f ./swagger.yml --model-package=restapi/models
 go run cmd/app-server/main.go --scheme=http --port 34567 --host 0.0.0.0
 curl -i "http://localhost:34567"
@@ -91,12 +89,13 @@ go run entgo.io/ent/cmd/ent init [EntityName]
 # タスク
 
 - [ ] OpenAPIと連携
-  - [ ] make コマンドでコード生成できるようにする（＋ファイルのクリーンアップ）
+  - [x] make コマンドでコード生成できるようにする（＋ファイルのクリーンアップ）
   - [x] 既存の仕組みと統合する
   - [x] airに対応
   - [x] DB接続に対応
   - [ ] テストに対応
   - [ ] 共通エラーハンドラ対応
+  - [ ] バリデーションを試す
 - [ ] マイグレーションの管理を切り出し
 - [ ] 認証処理のモック化
 - [ ] レスポンスがJSONではない処理のテスト（例えばファイルのダウンロードなど）
