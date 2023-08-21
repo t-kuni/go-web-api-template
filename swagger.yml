@@ -1,4 +1,4 @@
-swagger: "2.0"
+swagger: '2.0'
 info:
   description: From the todo list tutorial on goswagger.io
   title: A Todo list application
@@ -27,16 +27,16 @@ paths:
           format: int32
           default: 20
       responses:
-        200:
+        '200':
           description: list the todo operations
           schema:
             type: array
             items:
-              $ref: "#/definitions/item"
+              $ref: '#/definitions/item'
         default:
           description: generic error response
           schema:
-            $ref: "#/definitions/error"
+            $ref: '#/definitions/error'
     post:
       tags:
         - todos
@@ -45,17 +45,17 @@ paths:
         - name: body
           in: body
           schema:
-            $ref: "#/definitions/item"
+            $ref: '#/definitions/item'
       responses:
-        201:
+        '201':
           description: Created
           schema:
-            $ref: "#/definitions/item"
+            $ref: '#/definitions/item'
         default:
           description: error
           schema:
-            $ref: "#/definitions/error"
-  /{id}:
+            $ref: '#/definitions/error'
+  '/{id}':
     parameters:
       - type: integer
         format: int64
@@ -70,27 +70,53 @@ paths:
         - name: body
           in: body
           schema:
-            $ref: "#/definitions/item"
+            $ref: '#/definitions/item'
       responses:
-        200:
+        '200':
           description: OK
           schema:
-            $ref: "#/definitions/item"
+            $ref: '#/definitions/item'
         default:
           description: error
           schema:
-            $ref: "#/definitions/error"
+            $ref: '#/definitions/error'
     delete:
       tags:
         - todos
       operationId: destroyOne
       responses:
-        204:
+        '204':
           description: Deleted
         default:
           description: error
           schema:
-            $ref: "#/definitions/error"
+            $ref: '#/definitions/error'
+  /companies:
+    get:
+      summary: Your GET endpoint
+      tags:
+        - companies
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+            properties:
+              companies:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    name:
+                      type: string
+                  required:
+                    - id
+                    - name
+            required:
+              - companies
+      operationId: get-companies
 definitions:
   item:
     type: object

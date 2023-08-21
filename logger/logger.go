@@ -2,6 +2,7 @@ package logger
 
 import (
 	"fmt"
+	"github.com/go-http-utils/headers"
 	"github.com/labstack/echo/v4"
 	"github.com/rotisserie/eris"
 	"github.com/sirupsen/logrus"
@@ -110,6 +111,15 @@ func Panic(c echo.Context, msg string, params map[string]interface{}) {
 		Error(msg)
 }
 
+func PanicV2(req *http.Request, msg string, params map[string]interface{}) {
+	stackInfo := makeStackInfo(runtime.Caller(1))
+	logrus.
+		WithFields(makeCommonFields(stackInfo, params)).
+		WithFields(makeHttpFieldsV2(req)).
+		WithField("panic", true).
+		Error(msg)
+}
+
 func RequestLog(c echo.Context) {
 	stackInfo := makeStackInfo(runtime.Caller(1))
 
@@ -123,6 +133,20 @@ func RequestLog(c echo.Context) {
 		Info(msg)
 }
 
+func RequestLogV2(req *http.Request, reqBody map[string]interface{}) {
+	stackInfo := makeStackInfo(runtime.Caller(1))
+
+	url := req.RequestURI
+	method := req.Method
+	msg := fmt.Sprintf("[Request][%s]%s", url, method)
+
+	logrus.
+		WithFields(makeCommonFields(stackInfo, nil)).
+		WithFields(makeHttpFieldsV2(req)).
+		WithField("input", reqBody).
+		Info(msg)
+}
+
 func ResponseLog(c echo.Context, status int, latency time.Duration, latencyHuman string) {
 	stackInfo := makeStackInfo(runtime.Caller(1))
 
@@ -133,6 +157,22 @@ func ResponseLog(c echo.Context, status int, latency time.Duration, latencyHuman
 	logrus.
 		WithFields(makeCommonFields(stackInfo, nil)).
 		WithFields(makeHttpFields(c)).
+		WithField("latency", latency).
+		WithField("latency_human", latencyHuman).
+		WithField("http_status", status).
+		Info(msg)
+}
+
+func ResponseLogV2(req *http.Request, status int, latency time.Duration, latencyHuman string) {
+	stackInfo := makeStackInfo(runtime.Caller(1))
+
+	url := req.RequestURI
+	method := req.Method
+	msg := fmt.Sprintf("[Response][%s]%s", url, method)
+
+	logrus.
+		WithFields(makeCommonFields(stackInfo, nil)).
+		WithFields(makeHttpFieldsV2(req)).
 		WithField("latency", latency).
 		WithField("latency_human", latencyHuman).
 		WithField("http_status", status).
@@ -189,11 +229,30 @@ func makeHttpFields(c echo.Context) map[string]interface{} {
 	}
 }
 
+func makeHttpFieldsV2(req *http.Request) map[string]interface{} {
+	return map[string]interface{}{
+		"uri":         req.RequestURI,
+		"ip":          req.Header.Get(headers.XForwardedFor),
+		"http_method": req.Method,
+		"server_ip":   getLocalIP(),
+		"referrer":    req.Referer(),
+		"environment": os.Getenv("APP_ENV"),
+		"header":      makeHeaderFieldV2(req),
+	}
+}
+
 func makeHeaderField(c echo.Context) map[string]interface{} {
 	excludeHeaders := []string{
 		"Authorization",
 	}
 	return filterHeaders(c.Request().Header, excludeHeaders)
+}
+
+func makeHeaderFieldV2(req *http.Request) map[string]interface{} {
+	excludeHeaders := []string{
+		"Authorization",
+	}
+	return filterHeaders(req.Header, excludeHeaders)
 }
 
 func makeStackInfo(pc uintptr, file string, line int, ok bool) *StackInfo {
