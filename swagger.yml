@@ -120,8 +120,6 @@ paths:
 definitions:
   item:
     type: object
-    required:
-      - description
     properties:
       id:
         type: integer
@@ -130,8 +128,13 @@ definitions:
       description:
         type: string
         minLength: 1
+        pattern: '^[A-Z]*$'
+        default: DEFAULT
+        maxLength: 10
       completed:
         type: boolean
+    required:
+      - description
   error:
     type: object
     required:
