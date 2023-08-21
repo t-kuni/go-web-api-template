@@ -4,7 +4,14 @@ package restapi
 
 import (
 	"crypto/tls"
+	"github.com/joho/godotenv"
+	"github.com/samber/do"
+	"github.com/t-kuni/go-web-api-template/di"
+	useCaseTodos "github.com/t-kuni/go-web-api-template/domain/usecases/todos"
+	"github.com/t-kuni/go-web-api-template/logger"
+	"log"
 	"net/http"
+	"os"
 
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime"
@@ -21,6 +28,8 @@ func configureFlags(api *operations.AppAPI) {
 }
 
 func configureAPI(api *operations.AppAPI) http.Handler {
+	app := di.NewApp()
+
 	// configure the api here
 	api.ServeError = errors.ServeError
 
@@ -38,15 +47,28 @@ func configureAPI(api *operations.AppAPI) http.Handler {
 
 	api.JSONProducer = runtime.JSONProducer()
 
-	if api.TodosGetHandler == nil {
-		api.TodosGetHandler = todos.GetHandlerFunc(func(params todos.GetParams) middleware.Responder {
-			return middleware.NotImplemented("operation todos.Get has not yet been implemented")
+	if api.TodosAddOneHandler == nil {
+		api.TodosAddOneHandler = todos.AddOneHandlerFunc(func(params todos.AddOneParams) middleware.Responder {
+			return middleware.NotImplemented("operation todos.AddOne has not yet been implemented")
+		})
+	}
+	if api.TodosDestroyOneHandler == nil {
+		api.TodosDestroyOneHandler = todos.DestroyOneHandlerFunc(func(params todos.DestroyOneParams) middleware.Responder {
+			return middleware.NotImplemented("operation todos.DestroyOne has not yet been implemented")
+		})
+	}
+	api.TodosFindTodosHandler = todos.FindTodosHandlerFunc(do.MustInvoke[*useCaseTodos.Find](app).Main)
+	if api.TodosUpdateOneHandler == nil {
+		api.TodosUpdateOneHandler = todos.UpdateOneHandlerFunc(func(params todos.UpdateOneParams) middleware.Responder {
+			return middleware.NotImplemented("operation todos.UpdateOne has not yet been implemented")
 		})
 	}
 
 	api.PreServerShutdown = func() {}
 
-	api.ServerShutdown = func() {}
+	api.ServerShutdown = func() {
+		app.Shutdown()
+	}
 
 	return setupGlobalMiddleware(api.Serve(setupMiddlewares))
 }
@@ -61,6 +83,12 @@ func configureTLS(tlsConfig *tls.Config) {
 // This function can be called multiple times, depending on the number of serving schemes.
 // scheme value will be set accordingly: "http", "https" or "unix".
 func configureServer(s *http.Server, scheme, addr string) {
+	godotenv.Load("..")
+
+	if err := logger.SetupLogger(); err != nil {
+		log.Fatalf("Logger initialization failed: %+v", err)
+		os.Exit(1)
+	}
 }
 
 // The middleware configuration is for the handler executors. These do not apply to the swagger.json document.

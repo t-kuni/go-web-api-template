@@ -4,6 +4,7 @@ import (
 	"github.com/samber/do"
 	"github.com/t-kuni/go-web-api-template/application/handler"
 	"github.com/t-kuni/go-web-api-template/domain/service"
+	"github.com/t-kuni/go-web-api-template/domain/usecases/todos"
 	errorHandler "github.com/t-kuni/go-web-api-template/errors/handler"
 	"github.com/t-kuni/go-web-api-template/infrastructure/api"
 	"github.com/t-kuni/go-web-api-template/infrastructure/db"
@@ -35,6 +36,9 @@ func NewApp() *do.Injector {
 	// Infrastructure
 	do.Provide(injector, db.NewConnector)
 	do.Provide(injector, api.NewBinanceApi)
+
+	// UseCase
+	do.Provide(injector, todos.NewFind)
 
 	return injector
 }
