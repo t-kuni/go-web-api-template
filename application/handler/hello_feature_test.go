@@ -145,7 +145,7 @@ func TestHello3(t *testing.T) {
 		do.OverrideValue[api.BinanceApiInterface](app, mock)
 	}
 
-	dbConnector := do.MustInvoke[db2.ConnectorInterface](app)
+	dbConnector := do.MustInvoke[db2.Connector](app)
 	db := dbConnector.GetDB()
 
 	_, err := db.Exec("SET FOREIGN_KEY_CHECKS = 0")

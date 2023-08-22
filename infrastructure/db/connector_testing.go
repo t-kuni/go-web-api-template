@@ -7,13 +7,14 @@ import (
 	sql2 "entgo.io/ent/dialect/sql"
 	"fmt"
 	"github.com/DATA-DOG/go-txdb"
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/samber/do"
 	"github.com/t-kuni/go-web-api-template/domain/infrastructure/db"
 	"github.com/t-kuni/go-web-api-template/ent"
 	"os"
 )
 
-func NewTestConnector(i *do.Injector) (db.ConnectorInterface, error) {
+func NewTestConnector(i *do.Injector) (db.Connector, error) {
 	user := os.Getenv("DB_USER")
 	password := os.Getenv("DB_PASSWORD")
 	host := os.Getenv("DB_HOST")

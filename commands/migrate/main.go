@@ -29,7 +29,7 @@ func main() {
 	app := di.NewApp()
 	defer app.Shutdown()
 
-	dbConnector := do.MustInvoke[db.ConnectorInterface](app)
+	dbConnector := do.MustInvoke[db.Connector](app)
 
 	if err := dbConnector.Migrate(context.Background()); err != nil {
 		panic(err)

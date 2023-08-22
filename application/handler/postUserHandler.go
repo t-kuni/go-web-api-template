@@ -11,7 +11,7 @@ import (
 )
 
 type PostUserHandler struct {
-	DbConnector db.ConnectorInterface
+	DbConnector db.Connector
 }
 
 type PostUserRequest struct {
@@ -25,7 +25,7 @@ type PostUserResponse struct {
 
 func NewPostUserHandler(i *do.Injector) (*PostUserHandler, error) {
 	return &PostUserHandler{
-		do.MustInvoke[db.ConnectorInterface](i),
+		do.MustInvoke[db.Connector](i),
 	}, nil
 }
 

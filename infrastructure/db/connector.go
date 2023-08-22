@@ -18,7 +18,7 @@ type Connector struct {
 	Client *ent.Client
 }
 
-func NewConnector(i *do.Injector) (db.ConnectorInterface, error) {
+func NewConnector(i *do.Injector) (db.Connector, error) {
 	user := os.Getenv("DB_USER")
 	password := os.Getenv("DB_PASSWORD")
 	host := os.Getenv("DB_HOST")
@@ -77,8 +77,5 @@ func (c Connector) Transaction(ctx context.Context, fn func(tx *ent.Client) erro
 }
 
 func (c Connector) Shutdown() error {
-	if err := c.DB.Close(); err != nil {
-		// TODO Logging
-	}
-	return nil
+	return c.DB.Close()
 }

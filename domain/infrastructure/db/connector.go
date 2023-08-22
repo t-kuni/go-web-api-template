@@ -7,7 +7,7 @@ import (
 	"github.com/t-kuni/go-web-api-template/ent"
 )
 
-type ConnectorInterface interface {
+type Connector interface {
 	GetDB() *sql.DB
 	GetEnt() *ent.Client
 	Transaction(ctx context.Context, fn func(tx *ent.Client) error) error

@@ -11,7 +11,7 @@ import (
 
 type ExampleService struct {
 	BinanceApi  api.BinanceApiInterface
-	DBConnector db.ConnectorInterface
+	DBConnector db.Connector
 }
 
 type ExampleServiceInterface interface {
@@ -21,7 +21,7 @@ type ExampleServiceInterface interface {
 func NewExampleService(i *do.Injector) (ExampleServiceInterface, error) {
 	return &ExampleService{
 		do.MustInvoke[api.BinanceApiInterface](i),
-		do.MustInvoke[db.ConnectorInterface](i),
+		do.MustInvoke[db.Connector](i),
 	}, nil
 }
 

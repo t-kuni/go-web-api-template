@@ -4,13 +4,12 @@ package middleware_test
 
 import (
 	"encoding/json"
-	"github.com/leretto-inc/canly-api/app/middleware"
+	"github.com/t-kuni/go-web-api-template/middleware"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 
 	"github.com/labstack/echo/v4"
-	"github.com/leretto-inc/canly-api/app/domain/model"
 	"github.com/stretchr/testify/assert"
 )
 

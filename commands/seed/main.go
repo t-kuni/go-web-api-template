@@ -19,7 +19,7 @@ func main() {
 	app := di.NewApp()
 	defer app.Shutdown()
 
-	dbConnector := do.MustInvoke[infraDb.ConnectorInterface](app)
+	dbConnector := do.MustInvoke[infraDb.Connector](app)
 
 	db := dbConnector.GetDB()
 	p := polluter.New(polluter.MySQLEngine(db))
