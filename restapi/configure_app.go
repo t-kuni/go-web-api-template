@@ -4,11 +4,12 @@ package restapi
 
 import (
 	"crypto/tls"
+	"github.com/go-openapi/errors"
 	"github.com/joho/godotenv"
 	"github.com/samber/do"
+	useCaseCompanies "github.com/t-kuni/go-web-api-template/application/handler/companies"
+	useCaseTodos "github.com/t-kuni/go-web-api-template/application/handler/todos"
 	"github.com/t-kuni/go-web-api-template/di"
-	useCaseCompanies "github.com/t-kuni/go-web-api-template/domain/usecases/companies"
-	useCaseTodos "github.com/t-kuni/go-web-api-template/domain/usecases/todos"
 	"github.com/t-kuni/go-web-api-template/logger"
 	middleware2 "github.com/t-kuni/go-web-api-template/middleware"
 	"github.com/t-kuni/go-web-api-template/restapi/operations/companies"
@@ -16,7 +17,6 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/runtime/middleware"
 
@@ -70,11 +70,12 @@ func configureAPI(api *operations.AppAPI) http.Handler {
 			return middleware.NotImplemented("operation todos.AddOne has not yet been implemented")
 		})
 	}
-	if api.TodosDestroyOneHandler == nil {
-		api.TodosDestroyOneHandler = todos.DestroyOneHandlerFunc(func(params todos.DestroyOneParams) middleware.Responder {
-			return middleware.NotImplemented("operation todos.DestroyOne has not yet been implemented")
-		})
-	}
+	api.TodosDestroyOneHandler = todos.DestroyOneHandlerFunc(func(params todos.DestroyOneParams) middleware.Responder {
+		println("DELETE")
+		//return eris.Wrap(errors.New("test"), "")
+		return middleware.NotImplemented("operation todos.DestroyOne has not yet been implemented")
+		//return middleware.Error(500, errors.New("test"))
+	})
 	if api.TodosUpdateOneHandler == nil {
 		api.TodosUpdateOneHandler = todos.UpdateOneHandlerFunc(func(params todos.UpdateOneParams) middleware.Responder {
 			return middleware.NotImplemented("operation todos.UpdateOne has not yet been implemented")

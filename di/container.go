@@ -3,10 +3,9 @@ package di
 import (
 	"github.com/samber/do"
 	"github.com/t-kuni/go-web-api-template/application/handler"
+	"github.com/t-kuni/go-web-api-template/application/handler/companies"
+	"github.com/t-kuni/go-web-api-template/application/handler/todos"
 	"github.com/t-kuni/go-web-api-template/domain/service"
-	"github.com/t-kuni/go-web-api-template/domain/usecases/companies"
-	"github.com/t-kuni/go-web-api-template/domain/usecases/todos"
-	errorHandler "github.com/t-kuni/go-web-api-template/errors/handler"
 	"github.com/t-kuni/go-web-api-template/infrastructure/api"
 	"github.com/t-kuni/go-web-api-template/infrastructure/db"
 	"github.com/t-kuni/go-web-api-template/middleware"
@@ -18,7 +17,6 @@ func NewApp() *do.Injector {
 
 	// Validator
 	do.Provide(injector, validator.NewCustomValidator)
-	do.Provide(injector, errorHandler.NewErrorHandler)
 
 	// Middleware
 	do.Provide(injector, middleware.NewRecover)

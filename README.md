@@ -6,6 +6,7 @@ This repository is project template for Go Web API application.
 
 * [Onion Architecture](https://jeffreypalermo.com/2008/07/the-onion-architecture-part-1/)
 * [DI Container](https://github.com/samber/do)
+* [Server generation from swagger](https://github.com/go-swagger/go-swagger)
 * [Validator](https://github.com/go-playground/validator)
 * ORM
 * Seeder
@@ -25,6 +26,7 @@ go run cmd/app-server/main.go --scheme=http --port 34567 --host 0.0.0.0
 curl -i "http://localhost:34567"
 curl -i "http://localhost:34567/companies"
 curl -i "http://localhost:34567" -d "{\"description\":\"message $RANDOM\"}" -H 'Content-Type: application/io.goswagger.examples.todo-list.v1+json'
+curl -i localhost:34567/1 -X DELETE -H 'Content-Type: application/io.goswagger.examples.todo-list.v1+json'
 ```
 
 ```
@@ -88,14 +90,15 @@ go run entgo.io/ent/cmd/ent init [EntityName]
 
 # タスク
 
-- [ ] OpenAPIと連携
+- [x] OpenAPIと連携
   - [x] make コマンドでコード生成できるようにする（＋ファイルのクリーンアップ）
   - [x] 既存の仕組みと統合する
   - [x] airに対応
   - [x] DB接続に対応
   - [x] テストに対応
-  - [ ] 共通エラーハンドラ対応
+  - [-] 共通エラーハンドラ対応
   - [x] バリデーションを試す
+- [ ] テストをmakeコマンドから実行できるようにする
 - [ ] polluterからtestfixturesに載せ替え
 - [ ] マイグレーションの管理を切り出し
 - [ ] 認証処理のモック化

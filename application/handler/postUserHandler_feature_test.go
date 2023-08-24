@@ -23,7 +23,7 @@ package handler_test
 //)
 //
 //// テスト対象にトランザクション＋コミットが含まれるパターン
-//func TestPostUserHandler_PostUser(t *testing.T) {
+//func TestPostUserHandler_PostUser(t *testing.Param) {
 //	//
 //	// Prepare
 //	//
