@@ -11,4 +11,8 @@ generate: clean
 	go generate ./...
 
 test: generate
-	go test -v ./...
+	go test -tags feature -v ./...
+
+coverage: generate
+	go test -tags feature -coverpkg=./... -coverprofile=coverage/coverage.o ./... > /dev/null
+	go tool cover -html=coverage/coverage.o -o coverage/coverage.html
