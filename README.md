@@ -98,7 +98,7 @@ go run entgo.io/ent/cmd/ent init [EntityName]
   - [x] テストに対応
   - [-] 共通エラーハンドラ対応
   - [x] バリデーションを試す
-- [ ] テストをmakeコマンドから実行できるようにする
+- [x] テストをmakeコマンドから実行できるようにする
 - [ ] polluterからtestfixturesに載せ替え
 - [ ] マイグレーションの管理を切り出し
 - [ ] 認証処理のモック化
