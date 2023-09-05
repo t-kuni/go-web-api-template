@@ -6,31 +6,24 @@ import (
 	"bytes"
 	"database/sql"
 	"github.com/go-openapi/runtime"
-	"github.com/golang/mock/gomock"
-	"github.com/joho/godotenv"
 	"github.com/samber/do"
 	"github.com/stretchr/testify/assert"
 	"github.com/t-kuni/go-web-api-template/application/handler/companies"
-	"github.com/t-kuni/go-web-api-template/di"
 	"github.com/t-kuni/go-web-api-template/domain/infrastructure/db"
 	dbImpl "github.com/t-kuni/go-web-api-template/infrastructure/db"
 	companies2 "github.com/t-kuni/go-web-api-template/restapi/operations/companies"
 	"github.com/t-kuni/go-web-api-template/testutil"
 	"net/http"
 	"net/http/httptest"
-	"path/filepath"
 	"testing"
 )
 
 func Test_a(t *testing.T) {
 	// Arrange
-	godotenv.Load(filepath.Join("..", "..", "..", ".env.feature"))
+	cont := testutil.BeforeEach(t)
+	defer testutil.AfterEach(cont)
 
-	app := di.NewApp()
-	defer app.Shutdown()
-
-	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
+	app := cont.App
 
 	do.Override[db.Connector](app, dbImpl.NewTestConnector)
 

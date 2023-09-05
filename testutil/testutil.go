@@ -3,8 +3,50 @@ package testutil
 import (
 	"database/sql"
 	"fmt"
+	"github.com/golang/mock/gomock"
+	"github.com/joho/godotenv"
+	"github.com/samber/do"
+	"github.com/sirupsen/logrus/hooks/test"
+	"github.com/t-kuni/go-web-api-template/di"
+	"path/filepath"
+	"runtime"
 	"strings"
+	"testing"
 )
+
+type TestCaseContainer struct {
+	t          *testing.T
+	App        *do.Injector
+	MockCtrl   *gomock.Controller
+	loggerHook *test.Hook
+}
+
+// BeforeEach テストケース毎に実行される前処理
+func BeforeEach(t *testing.T) *TestCaseContainer {
+	_, file, _, ok := runtime.Caller(0)
+	if !ok {
+		t.Fatal("Could not get current file path")
+	}
+	directory := filepath.Dir(file)
+	godotenv.Load(filepath.Join(directory, "..", ".env.feature"))
+
+	app := di.NewApp()
+
+	ctrl := gomock.NewController(t)
+
+	return &TestCaseContainer{
+		t:          t,
+		App:        app,
+		MockCtrl:   ctrl,
+		loggerHook: test.NewGlobal(),
+	}
+}
+
+// AfterEach テストケース毎に実行される後処理
+func AfterEach(cont *TestCaseContainer) {
+	cont.MockCtrl.Finish()
+	cont.App.Shutdown()
+}
 
 // PrepareTestData 外部キー制約のチェックを無効化した状態で第二引数の処理を実行します
 func PrepareTestData(db *sql.DB, closure func(db *sql.DB)) {
