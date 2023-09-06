@@ -1,4 +1,4 @@
-name: go-test
+name: Feature Test
 on:
   pull_request:
     types: [opened, synchronize]
@@ -42,7 +42,7 @@ jobs:
         working-directory: ./app
       - name: Migrate DB
         working-directory: ./app
-        run: DB_HOST=localhost DB_PORT=33060 go run commands/migrate/main.go
+        run: go run commands/migrate/main.go
         env:
           DB_HOST: localhost
           DB_PORT: 3306
