@@ -36,6 +36,11 @@ jobs:
         run: |
           go install github.com/golang/mock/mockgen@v1.6.0
           go install gotest.tools/gotestsum@v1.8.2
+          # Swagger
+          download_url=$(curl -s https://api.github.com/repos/go-swagger/go-swagger/releases/latest | \
+                jq -r '.assets[] | select(.name | contains("'"$(uname | tr '[:upper:]' '[:lower:]')"'_amd64")) | .browser_download_url') && \
+              curl -o /usr/local/bin/swagger -L'#' "$download_url" && \
+              chmod +x /usr/local/bin/swagger
       - name: Generate code
         run: make generate
       - name: Migrate DB
