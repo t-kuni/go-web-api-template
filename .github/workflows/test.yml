@@ -44,7 +44,9 @@ jobs:
       - name: Generate code
         run: make generate
       - name: Migrate DB
-        run: go run commands/migrate/main.go
+        run: |
+          go run commands/migrate/main.go
+          go run commands/seed/main.go --seed=test
         env:
           DB_HOST: localhost
           DB_PORT: 3306
