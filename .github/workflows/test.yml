@@ -30,15 +30,14 @@ jobs:
         run: go mod download
       - name: Copy .env
         run: cp .env.feature.example .env.feature
-      - name: Install tools
+      - name: Install tools & Generate code
         run: |
           go install github.com/golang/mock/mockgen@v1.6.0
           download_url=$(curl -s https://api.github.com/repos/go-swagger/go-swagger/releases/latest | \
                 jq -r '.assets[] | select(.name | contains("'"$(uname | tr '[:upper:]' '[:lower:]')"'_amd64")) | .browser_download_url') && \
               curl -o /usr/local/bin/swagger -L'#' "$download_url" && \
               chmod +x /usr/local/bin/swagger
-      - name: Generate code
-        run: make generate
+          make generate
       - name: Migrate DB
         run: go run commands/migrate/main.go
         env:
