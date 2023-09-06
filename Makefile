@@ -1,3 +1,6 @@
+build: generate
+	go build -o cmd/app-server/main cmd/app-server/main.go
+
 clean:
 	git ls-files --others --ignored --exclude-standard ./ | \
 	grep -v '.env*' | \
@@ -6,8 +9,6 @@ clean:
 	xargs -I {} rm -f {}
 
 generate: clean
-	alias swagger='docker run --rm -it  --user $(id -u):$(id -g) -e GOPATH=$(go env GOPATH):/go -v $HOME:$HOME -w $(pwd) quay.io/goswagger/swagger' && \
-	swagger version && \
 	go generate ./...
 
 test: generate

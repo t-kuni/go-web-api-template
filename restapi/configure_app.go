@@ -24,7 +24,7 @@ import (
 	"github.com/t-kuni/go-web-api-template/restapi/operations/todos"
 )
 
-//go:generate swagger generate server --target ../../go-web-api-template --name App --spec ../swagger.yml --model-package restapi/models --principal interface{}
+//go:generate swagger generate server --target ../ --name App --spec ../swagger.yml --model-package restapi/models --principal interface{}
 
 var app *do.Injector
 

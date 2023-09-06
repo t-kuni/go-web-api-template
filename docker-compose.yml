@@ -4,6 +4,7 @@ services:
   app:
     build:
       context: ./
+      target: dev
     ports:
       - 34567:80
       - 34568:2345

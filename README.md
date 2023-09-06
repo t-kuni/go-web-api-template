@@ -88,6 +88,12 @@ docker compose exec db tail -f /tmp/query.log
 go run entgo.io/ent/cmd/ent init [EntityName]
 ```
 
+# Build Container for production
+
+```
+docker build --target prod --tag go-web-api-template .
+```
+
 # タスク
 
 - [ ] polluterからtestfixturesに載せ替え
@@ -96,11 +102,11 @@ go run entgo.io/ent/cmd/ent init [EntityName]
 - [ ] レスポンスがJSONではない処理のテスト（例えばファイルのダウンロードなど）
 - [ ] 現在日時のモック化
 - [ ] DB接続のタイムゾーン
-- [ ] 本番環境用コンテナ
+- [x] 本番環境用コンテナ
 - [ ] vscode用devcontainer定義
 - [ ] coreファイルが残る問題
 - [ ] XxxInterface -> IXxx
-- [ ] アクセスログミドルウェア
+- [x] アクセスログミドルウェア
 - [x] OpenAPIと連携
   - [x] make コマンドでコード生成できるようにする（＋ファイルのクリーンアップ）
   - [x] 既存の仕組みと統合する
@@ -113,3 +119,5 @@ go run entgo.io/ent/cmd/ent init [EntityName]
 - [x] テストのカバレッジの可視化
 - [x] テストの前処理、後処理をリファクタ（txdbの初期化処理タイミングを変更）
 - [x] テストのレコードの初期投入を見やすくする
+- [ ] CI
+- [ ] CD
