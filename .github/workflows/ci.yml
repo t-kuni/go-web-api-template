@@ -40,6 +40,13 @@ jobs:
         run: |
           go install github.com/golang/mock/mockgen@v1.6.0
         working-directory: ./app
+      - name: Migrate DB
+        working-directory: ./app
+        run: DB_HOST=localhost DB_PORT=33060 go run commands/migrate/main.go
+        env:
+          DB_HOST: localhost
+          DB_PORT: 3306
+          DB_USER: root
       - name: Clear test cache
         working-directory: ./app
         run: go clean -testcache
