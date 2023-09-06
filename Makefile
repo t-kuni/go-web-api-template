@@ -12,7 +12,7 @@ generate: clean
 	go generate ./...
 
 test: generate
-	go test -tags feature -v ./...
+	gotestsum --hide-summary=skipped -- -tags feature ./... -v
 
 coverage: generate
 	go test -tags feature -coverpkg=./... -coverprofile=coverage/coverage.o ./... > /dev/null
