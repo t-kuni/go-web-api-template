@@ -12,7 +12,7 @@ import (
 type BinanceApi struct {
 }
 
-func NewBinanceApi(i *do.Injector) (api.BinanceApiInterface, error) {
+func NewBinanceApi(i *do.Injector) (api.IBinanceApi, error) {
 	return &BinanceApi{}, nil
 }
 

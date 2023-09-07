@@ -38,7 +38,7 @@ func TestHello(t *testing.T) {
 	c := e.NewContext(req, rec)
 
 	{
-		mock := api.NewMockBinanceApiInterface(ctrl)
+		mock := api.NewMockIBinanceApi(ctrl)
 		mock.
 			EXPECT().
 			GetExchangeInfo(gomock.Eq("BNB")).
@@ -49,7 +49,7 @@ func TestHello(t *testing.T) {
 					},
 				},
 			}, nil)
-		do.OverrideValue[api.BinanceApiInterface](app, mock)
+		do.OverrideValue[api.IBinanceApi](app, mock)
 	}
 
 	//
@@ -82,7 +82,7 @@ func TestHello2(t *testing.T) {
 	c := e.NewContext(req, rec)
 
 	{
-		mock := service.NewMockExampleServiceInterface(ctrl)
+		mock := service.NewMockIExampleService(ctrl)
 		createdAt, err := time.Parse("2006-01-02 15:04:05 MST", "2014-12-31 12:31:24 JST")
 		if err != nil {
 			return
@@ -98,7 +98,7 @@ func TestHello2(t *testing.T) {
 					Edges:     ent.CompanyEdges{},
 				},
 			}, nil)
-		do.OverrideValue[service.ExampleServiceInterface](app, mock)
+		do.OverrideValue[service.IExampleService](app, mock)
 	}
 
 	//
@@ -131,7 +131,7 @@ func TestHello3(t *testing.T) {
 	c := e.NewContext(req, rec)
 
 	{
-		mock := api.NewMockBinanceApiInterface(ctrl)
+		mock := api.NewMockIBinanceApi(ctrl)
 		mock.
 			EXPECT().
 			GetExchangeInfo(gomock.Eq("BNB")).
@@ -142,7 +142,7 @@ func TestHello3(t *testing.T) {
 					},
 				},
 			}, nil)
-		do.OverrideValue[api.BinanceApiInterface](app, mock)
+		do.OverrideValue[api.IBinanceApi](app, mock)
 	}
 
 	dbConnector := do.MustInvoke[db2.Connector](app)

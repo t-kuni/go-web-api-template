@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"flag"
 	"fmt"
 	"github.com/ghodss/yaml"
 	"github.com/joho/godotenv"
@@ -16,6 +17,13 @@ import (
 func main() {
 	godotenv.Load(filepath.Join(".env"))
 
+	var (
+		seed = flag.String("seed", "basic", "seed name")
+	)
+	flag.Parse()
+
+	fmt.Println("Use seed: " + *seed)
+
 	app := di.NewApp()
 	defer app.Shutdown()
 
@@ -24,7 +32,8 @@ func main() {
 	db := dbConnector.GetDB()
 	p := polluter.New(polluter.MySQLEngine(db))
 
-	seedBytes, err := ioutil.ReadFile(filepath.Join("seeds", "seeds.yml"))
+	seedFile := fmt.Sprintf("%s.yml", *seed)
+	seedBytes, err := ioutil.ReadFile(filepath.Join("seeds", seedFile))
 	if err != nil {
 		panic(err)
 	}
