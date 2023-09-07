@@ -105,7 +105,6 @@ docker build --target prod --tag go-web-api-template .
 - [x] 本番環境用コンテナ
 - [ ] vscode用devcontainer定義
 - [ ] coreファイルが残る問題
-- [ ] XxxInterface -> IXxx
 - [x] アクセスログミドルウェア
 - [x] OpenAPIと連携
   - [x] make コマンドでコード生成できるようにする（＋ファイルのクリーンアップ）
@@ -119,5 +118,5 @@ docker build --target prod --tag go-web-api-template .
 - [x] テストのカバレッジの可視化
 - [x] テストの前処理、後処理をリファクタ（txdbの初期化処理タイミングを変更）
 - [x] テストのレコードの初期投入を見やすくする
-- [ ] CI
+- [x] CI
 - [ ] CD
