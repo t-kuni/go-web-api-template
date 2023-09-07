@@ -9,12 +9,12 @@ import (
 )
 
 type GetCompanies struct {
-	exampleService service.ExampleServiceInterface
+	exampleService service.IExampleService
 }
 
 func NewGetCompanies(i *do.Injector) (*GetCompanies, error) {
 	return &GetCompanies{
-		do.MustInvoke[service.ExampleServiceInterface](i),
+		do.MustInvoke[service.IExampleService](i),
 	}, nil
 }
 

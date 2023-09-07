@@ -10,7 +10,7 @@ import (
 )
 
 type HelloHandler struct {
-	ExampleService service.ExampleServiceInterface
+	ExampleService service.IExampleService
 }
 
 type HelloResponse struct {
@@ -31,7 +31,7 @@ type HelloResponseUser struct {
 
 func NewHelloHandler(i *do.Injector) (*HelloHandler, error) {
 	return &HelloHandler{
-		do.MustInvoke[service.ExampleServiceInterface](i),
+		do.MustInvoke[service.IExampleService](i),
 	}, nil
 }
 

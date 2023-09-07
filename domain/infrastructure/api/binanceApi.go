@@ -12,6 +12,6 @@ type GetExchangeInfoResultSymbol struct {
 	QuoteAsset string
 }
 
-type BinanceApiInterface interface {
+type IBinanceApi interface {
 	GetExchangeInfo(baseAsset string) (*GetExchangeInfoResult, error)
 }

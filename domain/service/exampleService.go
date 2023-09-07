@@ -10,17 +10,17 @@ import (
 )
 
 type ExampleService struct {
-	BinanceApi  api.BinanceApiInterface
+	BinanceApi  api.IBinanceApi
 	DBConnector db.Connector
 }
 
-type ExampleServiceInterface interface {
+type IExampleService interface {
 	Exec(ctx context.Context, baseAsset string) (string, []*ent.Company, error)
 }
 
-func NewExampleService(i *do.Injector) (ExampleServiceInterface, error) {
+func NewExampleService(i *do.Injector) (IExampleService, error) {
 	return &ExampleService{
-		do.MustInvoke[api.BinanceApiInterface](i),
+		do.MustInvoke[api.IBinanceApi](i),
 		do.MustInvoke[db.Connector](i),
 	}, nil
 }
