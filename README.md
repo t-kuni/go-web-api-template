@@ -8,7 +8,7 @@ This repository is project template for Go Web API application.
 * [DI Container](https://github.com/samber/do)
 * [Server generation from swagger](https://github.com/go-swagger/go-swagger)
 * [Validator](https://github.com/go-playground/validator)
-* ORM
+* [ORM](https://github.com/ent/ent)
 * Seeder
 * Logging
 * Error Handling (Stack trace)
