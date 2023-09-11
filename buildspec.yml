@@ -4,19 +4,20 @@ phases:
   pre_build:
     commands:
       - echo "Logging in to Amazon ECR..."
-      - aws ecr get-login-password --region ap-northeast-1 | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.ap-northeast-1.amazonaws.com
+      - ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+      - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
       - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
 
   build:
     commands:
       - echo "Building the Docker image..."
       - docker build --target prod --tag go-web-api-template .
-      - docker tag go-web-api-template:$COMMIT_HASH $AWS_ACCOUNT_ID.dkr.ecr.ap-northeast-1.amazonaws.com/aws-auth-example_app:$COMMIT_HASH
+      - docker tag go-web-api-template:$COMMIT_HASH $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/aws-auth-example_app:$COMMIT_HASH
 
   post_build:
     commands:
       - echo "Pushing Docker image to Amazon ECR..."
-      - docker push $AWS_ACCOUNT_ID.dkr.ecr.ap-northeast-1.amazonaws.com/aws-auth-example_app:$COMMIT_HASH
+      - docker push $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/aws-auth-example_app:$COMMIT_HASH
 
 cache:
   paths:
