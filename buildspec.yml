@@ -12,16 +12,17 @@ phases:
       - ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
       - echo "ACCOUNT_ID:$ACCOUNT_ID, REGION:$AWS_REGION"
       - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
-      - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
-      - echo "COMMIT_HASH:$COMMIT_HASH"
 
   build:
     commands:
-      - docker build --target prod --tag go-web-api-template::$COMMIT_HASH .
-      - docker tag go-web-api-template:$COMMIT_HASH $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/aws-auth-example_app:$COMMIT_HASH
+      - docker build --target prod --tag go-web-api-template .
+      - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+      - echo "COMMIT_HASH:$COMMIT_HASH"
+      - docker tag go-web-api-template $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/aws-auth-example_app:$COMMIT_HASH
 
   post_build:
     commands:
+      - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
       - docker push $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/aws-auth-example_app:$COMMIT_HASH
 
 cache:
