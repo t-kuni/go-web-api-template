@@ -1,22 +1,27 @@
 version: 0.2
 
+env:
+  secrets-manager:
+    DOCKER_HUB_ID: "$SSM_PARAM_NAME_DOCKER_HUB_ID"
+    DOCKER_HUB_PW: "$SSM_PARAM_NAME_DOCKER_HUB_PW"
 phases:
   pre_build:
     commands:
-      - echo "Logging in to Amazon ECR..."
+      - echo "DOCKER_HUB_ID:$DOCKER_HUB_ID"
+      - docker login --username $DOCKER_HUB_ID --password $DOCKER_HUB_PW
       - ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+      - echo "ACCOUNT_ID:$ACCOUNT_ID, REGION:$AWS_REGION"
       - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
       - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+      - echo "COMMIT_HASH:$COMMIT_HASH"
 
   build:
     commands:
-      - echo "Building the Docker image..."
       - docker build --target prod --tag go-web-api-template .
       - docker tag go-web-api-template:$COMMIT_HASH $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/aws-auth-example_app:$COMMIT_HASH
 
   post_build:
     commands:
-      - echo "Pushing Docker image to Amazon ECR..."
       - docker push $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/aws-auth-example_app:$COMMIT_HASH
 
 cache:
