@@ -5,25 +5,23 @@ env:
     DOCKER_HUB_ID: "$SSM_PARAM_NAME_DOCKER_HUB_ID"
     DOCKER_HUB_PW: "$SSM_PARAM_NAME_DOCKER_HUB_PW"
 phases:
-  pre_build:
+  build:
     commands:
       - echo "DOCKER_HUB_ID:$DOCKER_HUB_ID"
       - docker login --username $DOCKER_HUB_ID --password $DOCKER_HUB_PW
+      -
       - ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
       - echo "ACCOUNT_ID:$ACCOUNT_ID, REGION:$AWS_REGION"
       - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
-
-  build:
-    commands:
+      -
       - docker build --target prod --tag go-web-api-template .
+      -
       - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
       - echo "COMMIT_HASH:$COMMIT_HASH"
       - docker tag go-web-api-template $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/aws-auth-example_app:$COMMIT_HASH
+      -
       - echo "push to $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/aws-auth-example_app:$COMMIT_HASH"
       - docker push $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/aws-auth-example_app:$COMMIT_HASH
-
-  post_build:
-    commands:
 
 cache:
   paths:
