@@ -19,11 +19,10 @@ phases:
       - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
       - echo "COMMIT_HASH:$COMMIT_HASH"
       - docker tag go-web-api-template $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/aws-auth-example_app:$COMMIT_HASH
+      - docker push $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/aws-auth-example_app:$COMMIT_HASH
 
   post_build:
     commands:
-      - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
-      - docker push $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/aws-auth-example_app:$COMMIT_HASH
 
 cache:
   paths:
