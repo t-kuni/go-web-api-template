@@ -1,9 +1,12 @@
 version: 0.2
 
 env:
+  variables:
+    DOCKER_BUILDKIT: 1
   parameter-store:
     DOCKER_HUB_ID: "$SSM_PARAM_NAME_DOCKER_HUB_ID"
     DOCKER_HUB_PW: "$SSM_PARAM_NAME_DOCKER_HUB_PW"
+
 phases:
   build:
     commands:
@@ -16,14 +19,8 @@ phases:
       -
       - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
       - echo "COMMIT_HASH:$COMMIT_HASH"
-      - docker build --target prod --tag $REPOSITORY_URI:$COMMIT_HASH .
-      -
-#      - docker tag temp-tag $REPOSITORY_URI:$COMMIT_HASH
+      - docker build --build-arg BUILDKIT_INLINE_CACHE=1 --cache-from=$REPOSITORY_URI:latest --cache-to=$REPOSITORY_URI:cache --target prod --tag $REPOSITORY_URI:$COMMIT_HASH .
       -
       - echo "push to $REPOSITORY_URI:$COMMIT_HASH"
       - docker push $REPOSITORY_URI:$COMMIT_HASH
-
-cache:
-  paths:
-    - '/root/.cache/go-build/**/*'
-    - '/go/pkg/mod/**/*'
+      - docker push $REPOSITORY_URI:cache
