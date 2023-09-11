@@ -14,10 +14,10 @@ phases:
       - echo "ACCOUNT_ID:$ACCOUNT_ID, REGION:$AWS_REGION"
       - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
       -
-      - docker build --target prod --tag $REPOSITORY_URI:$COMMIT_HASH .
-      -
       - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
       - echo "COMMIT_HASH:$COMMIT_HASH"
+      - docker build --target prod --tag $REPOSITORY_URI:$COMMIT_HASH .
+      -
 #      - docker tag temp-tag $REPOSITORY_URI:$COMMIT_HASH
       -
       - echo "push to $REPOSITORY_URI:$COMMIT_HASH"
