@@ -9,9 +9,9 @@ This repository is project template for Go Web API application.
 * [Server generation from swagger](https://github.com/go-swagger/go-swagger)
 * [Validator](https://github.com/go-playground/validator)
 * [ORM](https://github.com/ent/ent)
+* [Logging](https://github.com/sirupsen/logrus)
+* [Error Handling (Stack trace)](https://github.com/rotisserie/eris)
 * Seeder
-* Logging
-* Error Handling (Stack trace)
 
 # Requirements
 
