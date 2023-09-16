@@ -40,4 +40,4 @@ FROM golang:1.19.3-alpine3.16 AS prod
 COPY --from=prod_build /app/cmd/app-server/main /app/main
 
 WORKDIR /app
-CMD ["./main"]
+CMD ["./main", "--scheme=http", "--port", "80", "--host", "0.0.0.0"]
