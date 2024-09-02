@@ -104,6 +104,7 @@ docker build --target prod --tag go-web-api-template .
 - [x] 本番環境用コンテナ
 - [ ] vscode用devcontainer定義
 - [ ] coreファイルが残る問題
+- [ ] コンテナ上で生成したファイルのオーナーがrootな問題
 - [x] アクセスログミドルウェア
 - [x] OpenAPIと連携
   - [x] make コマンドでコード生成できるようにする（＋ファイルのクリーンアップ）
