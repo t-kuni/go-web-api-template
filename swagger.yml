@@ -11,79 +11,76 @@ schemes:
   - http
   - https
 paths:
-  /:
+  /todos:
     get:
       tags:
         - todos
-      operationId: findTodos
+      operationId: get-todos
       parameters:
-        - name: since
+        - name: page
           in: query
           type: integer
           format: int64
-        - name: limit
+        - name: status
           in: query
-          type: integer
+          type: string
           format: int32
-          default: 20
       responses:
         '200':
           description: list the todo operations
           schema:
-            type: array
-            items:
-              $ref: '#/definitions/item'
+            type: object
+            properties:
+              todos:
+                x-stoplight:
+                  id: 3f43y35zd46f9
+                type: array
+                items:
+                  $ref: '#/definitions/Todo'
+              page:
+                type: integer
+                x-stoplight:
+                  id: 689uxkengkax1
+              maxPage:
+                type: integer
+                x-stoplight:
+                  id: 7wu4oppx3rgos
+            required:
+              - todos
+              - page
+              - maxPage
         default:
           description: generic error response
           schema:
             $ref: '#/definitions/error'
+      description: get todos
     post:
       tags:
         - todos
-      operationId: addOne
+      operationId: post-todos
       parameters:
         - name: body
           in: body
           schema:
-            $ref: '#/definitions/item'
+            $ref: '#/definitions/Todo'
       responses:
-        '201':
-          description: Created
+        '200':
+          description: OK
           schema:
-            $ref: '#/definitions/item'
-        default:
-          description: error
-          schema:
-            $ref: '#/definitions/error'
-  '/{id}':
+            $ref: '#/definitions/Todo'
+      description: post todos
+    parameters: []
+  '/todos/{id}':
     parameters:
       - type: integer
         format: int64
         name: id
         in: path
         required: true
-    put:
-      tags:
-        - todos
-      operationId: updateOne
-      parameters:
-        - name: body
-          in: body
-          schema:
-            $ref: '#/definitions/item'
-      responses:
-        '200':
-          description: OK
-          schema:
-            $ref: '#/definitions/item'
-        default:
-          description: error
-          schema:
-            $ref: '#/definitions/error'
     delete:
       tags:
         - todos
-      operationId: destroyOne
+      operationId: delete-todos
       responses:
         '204':
           description: Deleted
@@ -91,6 +88,7 @@ paths:
           description: error
           schema:
             $ref: '#/definitions/error'
+      description: delete todos
   /companies:
     get:
       summary: Your GET endpoint
@@ -117,24 +115,122 @@ paths:
             required:
               - companies
       operationId: get-companies
+      description: get companies
+  /users:
+    get:
+      summary: Your GET endpoint
+      tags:
+        - user
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+            properties:
+              users:
+                type: array
+                x-stoplight:
+                  id: 4k5wjood9wprc
+                items:
+                  $ref: '#/definitions/User'
+              page:
+                type: integer
+                x-stoplight:
+                  id: ikf55ng4hv260
+              maxPage:
+                type: integer
+                x-stoplight:
+                  id: mc1t21lvgya7d
+            required:
+              - users
+              - page
+              - maxPage
+      operationId: get-users
+      description: get users
+      parameters:
+        - type: integer
+          in: query
+          name: page
+    post:
+      summary: ''
+      operationId: post-users
+      responses:
+        '200':
+          description: OK
+      description: post user
+      parameters:
+        - in: body
+          name: body
+          schema:
+            $ref: '#/definitions/User'
+      tags:
+        - user
+  '/users/{id}':
+    parameters:
+      - type: string
+        name: id
+        in: path
+        required: true
+    delete:
+      summary: ''
+      operationId: delete-users-id
+      responses:
+        '204':
+          description: No Content
+          schema:
+            type: object
+            properties: {}
+      description: delete user
+      tags:
+        - user
 definitions:
-  item:
+  Todo:
     type: object
+    x-stoplight:
+      id: 66711535045f0
+    title: todo
     properties:
       id:
-        type: integer
-        format: int64
-        readOnly: true
+        type: string
+        format: uuid
+        description: |-
+          （post APIの場合）
+          nullの場合は新規作成を行う（バックエンドでUUIDを採番する）
+          指定がある場合は更新を行う
+        x-nullable: true
+      title:
+        type: string
+        x-stoplight:
+          id: 7p8s754pkvx9o
+        maxLength: 50
       description:
         type: string
-        minLength: 1
-        pattern: '^[A-Z]*$'
-        default: DEFAULT
-        maxLength: 10
+        maxLength: 500
+      status:
+        type: string
+        x-stoplight:
+          id: 5wr8ny716fi7v
+        enum:
+          - none
+          - progress
+          - pending
+          - complated
       completed:
         type: boolean
+        readOnly: true
+      completed_at:
+        type: string
+        x-stoplight:
+          id: lb297jodx4ra3
+        format: date-time
+        readOnly: true
     required:
+      - id
+      - title
       - description
+      - status
+      - completed
+      - completed_at
   error:
     type: object
     required:
@@ -145,3 +241,137 @@ definitions:
         format: int64
       message:
         type: string
+  User:
+    title: User
+    x-stoplight:
+      id: k1mjvox6qaijv
+    type: object
+    properties:
+      id:
+        type: string
+        x-stoplight:
+          id: nns3slpn43z9v
+        format: uuid
+        x-nullable: true
+      name:
+        type: string
+        x-stoplight:
+          id: rwsev9ipd0ium
+        minLength: 50
+      gender:
+        type: string
+        x-stoplight:
+          id: h6lwovdp7fke9
+        enum:
+          - man
+          - woman
+      age:
+        type: integer
+        x-stoplight:
+          id: bnplszvfw513r
+        minimum: 18
+        exclusiveMinimum: false
+        exclusiveMaximum: false
+        maximum: 99
+      emails:
+        type: array
+        x-stoplight:
+          id: jxef53qzfhriq
+        items:
+          x-stoplight:
+            id: os6sh24qn023m
+          type: object
+          properties:
+            address:
+              type: string
+              x-stoplight:
+                id: 1ytoqjsx5hih5
+              format: email
+            type:
+              type: string
+              x-stoplight:
+                id: c29oxqdjha7qd
+              enum:
+                - main
+                - sub
+          required:
+            - address
+            - type
+    required:
+      - id
+      - name
+      - gender
+      - age
+      - emails
+    x-tags:
+      - user
+  AiResponse:
+    title: AiResponse
+    x-stoplight:
+      id: x9gozbpk5mq5u
+    type: object
+    properties:
+      type:
+        type: string
+        x-stoplight:
+          id: g66lbyldi3mc0
+        enum:
+          - read
+          - ok
+        description: |-
+          "ok" : コード生成フェーズに移る
+          "read" : 追加のファイル読み込みを行う
+      read:
+        type: object
+        x-stoplight:
+          id: ve0lv7roemwuy
+        properties:
+          requiredInformation:
+            type: array
+            x-stoplight:
+              id: zcwkl37yqsxdz
+            description: Requirementsを達成するために必要な情報
+            items:
+              x-stoplight:
+                id: xpu3w0i7ng82n
+              type: string
+          paths:
+            type: array
+            x-stoplight:
+              id: l7jxr9nhs8ngj
+            description: 参照したいドキュメントのパス
+            minItems: 1
+            maxItems: 5
+            uniqueItems: true
+            items:
+              x-stoplight:
+                id: cv1gwk82rad8q
+              type: string
+        required:
+          - requiredInformation
+          - paths
+    required:
+      - type
+  Dummy:
+    title: Dummy
+    x-stoplight:
+      id: p7zf6721xxguo
+    type: object
+    properties:
+      needInfo:
+        type: array
+        description: |-
+          あるリポジトリのAPIの実装を依頼されました
+          どういう情報を集める必要があるか？
+        minItems: 10
+        maxItems: 10
+        items:
+          x-stoplight:
+            id: auyp0hlznfp1c
+          type: string
+    required:
+      - needInfo
+tags:
+  - name: companies
+  - name: todos
+  - name: user

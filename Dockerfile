@@ -13,6 +13,7 @@ RUN curl -sSfL https://raw.githubusercontent.com/cosmtrek/air/master/install.sh 
 RUN go install github.com/go-delve/delve/cmd/dlv@v1.9.1
 RUN go install github.com/golang/mock/mockgen@v1.6.0
 RUN go install gotest.tools/gotestsum@latest
+RUN go install github.com/go-swagger/go-swagger/cmd/swagger@v0.30.5
 
 # Purge build tools
 RUN apk del --purge build-tools

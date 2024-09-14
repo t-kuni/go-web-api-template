@@ -1,28 +1,28 @@
 users:
-- id: 1
-  age: 20
-  name: 吉田
-  created_at: 2020-12-31 23:59:59
-- id: 2
-  age: 23
-  name: 上田
-  created_at: 2010-12-31 23:59:59
-- id: 3
-  age: 31
-  name: 池上
-  created_at: 2010-12-31 23:59:59
-- id: 4
-  age: 12
-  name: 林
-  created_at: 2010-12-31 23:59:59
+  - id: 1
+    age: 20
+    name: 吉田
+    created_at: 2020-12-31 23:59:59
+  - id: 2
+    age: 23
+    name: 上田
+    created_at: 2010-12-31 23:59:59
+  - id: 3
+    age: 31
+    name: 池上
+    created_at: 2010-12-31 23:59:59
+  - id: 4
+    age: 12
+    name: 林
+    created_at: 2010-12-31 23:59:59
 
 companies:
-- id: 1
-  name: 企業１
-  created_at: 2010-12-31 23:59:59
-- id: 2
-  name: 企業２
-  created_at: 2010-12-31 23:59:59
+  - id: 1
+    name: 企業１
+    created_at: 2010-12-31 23:59:59
+  - id: 2
+    name: 企業２
+    created_at: 2010-12-31 23:59:59
 
 employments:
   - user_id: 1
@@ -35,3 +35,35 @@ employments:
     company_id: 2
   - user_id: 4
     company_id: 1
+
+todos:
+  - id: dcc023bf-bf41-4756-8b6a-7b8e6c23e580
+    title: "Task 1"
+    description: "Description for Task 1"
+    status: "none"
+    completed: false
+    completed_at: null
+  - id: 9c5b98ea-3ddd-4b31-8f4e-1b2b6661e362
+    title: "Task 2"
+    description: "Description for Task 2"
+    status: "progress"
+    completed: false
+    completed_at: null
+  - id: b0c61fdc-4f48-4a1c-9cee-8e3d66ea8d9f
+    title: "Task 3"
+    description: "Description for Task 3"
+    status: "pending"
+    completed: false
+    completed_at: null
+  - id: e7a3f5fd-7a0b-4864-9d3e-8c3df6551d3b
+    title: "Task 4"
+    description: "Description for Task 4"
+    status: "completed"
+    completed: true
+    completed_at: 2023-10-01 12:00:00
+  - id: 3ac217bf-5f4a-4c11-9b45-6b3fee1e9c84
+    title: "Task 5"
+    description: "Description for Task 5"
+    status: "none"
+    completed: false
+    completed_at: null

@@ -34,7 +34,7 @@ func NewApp() *do.Injector {
 	do.Provide(injector, api.NewBinanceApi)
 
 	// UseCase
-	do.Provide(injector, todos.NewFind)
+	do.Provide(injector, todos.NewListTodos)
 	do.Provide(injector, companies.NewGetCompanies)
 
 	return injector

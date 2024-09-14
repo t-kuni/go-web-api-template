@@ -1,0 +1,39 @@
+erDiagram
+    todos {
+        uuid id PK
+        string title
+        string description
+        string status
+        boolean completed
+        timestamp completed_at
+    }
+
+    users {
+        uuid id PK
+        string name
+        string gender
+        int age
+    }
+
+    emails {
+        uuid id PK
+        string address
+        string type
+    }
+
+    users ||--|{ emails : ""
+
+%% 1対1のリレーション（必須）
+%% EntityA ||--|| EntityB : "1 to 1 mandatory"
+
+%% 1対1のリレーション（オプション）
+%% EntityA ||--o| EntityB : "1 to 1 optional"
+
+%% 1対多のリレーション（最低1件必須）
+%% EntityA }|--|{ EntityB : "1 to many mandatory"
+
+%% 1対多のリレーション（0件も許可）
+%% EntityA }|--o{ EntityB : "1 to many optional"
+
+%% 多対多のリレーション
+%% EntityA }o--o{ EntityB : "many to many"

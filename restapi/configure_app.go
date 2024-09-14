@@ -18,8 +18,6 @@ import (
 	"os"
 
 	"github.com/go-openapi/runtime"
-	"github.com/go-openapi/runtime/middleware"
-
 	"github.com/t-kuni/go-web-api-template/restapi/operations"
 	"github.com/t-kuni/go-web-api-template/restapi/operations/todos"
 )
@@ -40,9 +38,6 @@ func configureAPI(api *operations.AppAPI) http.Handler {
 		os.Exit(1)
 	}
 
-	println("configureAPI()")
-	println("DB_USER: " + os.Getenv("DB_USER"))
-
 	app = di.NewApp()
 
 	// configure the api here
@@ -62,25 +57,8 @@ func configureAPI(api *operations.AppAPI) http.Handler {
 
 	api.JSONProducer = runtime.JSONProducer()
 
-	api.TodosFindTodosHandler = todos.FindTodosHandlerFunc(do.MustInvoke[*useCaseTodos.Find](app).Main)
+	api.TodosGetTodosHandler = todos.GetTodosHandlerFunc(do.MustInvoke[*useCaseTodos.ListTodos](app).Main)
 	api.CompaniesGetCompaniesHandler = companies.GetCompaniesHandlerFunc(do.MustInvoke[*useCaseCompanies.GetCompanies](app).Main)
-
-	if api.TodosAddOneHandler == nil {
-		api.TodosAddOneHandler = todos.AddOneHandlerFunc(func(params todos.AddOneParams) middleware.Responder {
-			return middleware.NotImplemented("operation todos.AddOne has not yet been implemented")
-		})
-	}
-	api.TodosDestroyOneHandler = todos.DestroyOneHandlerFunc(func(params todos.DestroyOneParams) middleware.Responder {
-		println("DELETE")
-		//return eris.Wrap(errors.New("test"), "")
-		return middleware.NotImplemented("operation todos.DestroyOne has not yet been implemented")
-		//return middleware.Error(500, errors.New("test"))
-	})
-	if api.TodosUpdateOneHandler == nil {
-		api.TodosUpdateOneHandler = todos.UpdateOneHandlerFunc(func(params todos.UpdateOneParams) middleware.Responder {
-			return middleware.NotImplemented("operation todos.UpdateOne has not yet been implemented")
-		})
-	}
 
 	api.PreServerShutdown = func() {}
 
@@ -101,7 +79,6 @@ func configureTLS(tlsConfig *tls.Config) {
 // This function can be called multiple times, depending on the number of serving schemes.
 // scheme value will be set accordingly: "http", "https" or "unix".
 func configureServer(s *http.Server, scheme, addr string) {
-	println("configureServer()")
 }
 
 // The middleware configuration is for the handler executors. These do not apply to the swagger.json document.
