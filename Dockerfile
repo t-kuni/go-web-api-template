@@ -1,4 +1,4 @@
-FROM golang:1.19.3-alpine3.16 AS dev
+FROM golang:1.23-alpine AS dev
 
 # Install build tools
 RUN apk update \
@@ -10,17 +10,17 @@ RUN apk add alpine-sdk
 RUN curl -sSfL https://raw.githubusercontent.com/cosmtrek/air/master/install.sh | sh -s -- -b $(go env GOPATH)/bin
 
 # Install delve
-RUN go install github.com/go-delve/delve/cmd/dlv@v1.9.1
+RUN go install github.com/go-delve/delve/cmd/dlv@v1.23.0
 RUN go install github.com/golang/mock/mockgen@v1.6.0
 RUN go install gotest.tools/gotestsum@latest
-RUN go install github.com/go-swagger/go-swagger/cmd/swagger@v0.30.5
+RUN go install github.com/go-swagger/go-swagger/cmd/swagger@v0.31.0
 
 # Purge build tools
 RUN apk del --purge build-tools
 
 WORKDIR /app
 
-FROM golang:1.19.3-alpine3.16 AS prod_build
+FROM golang:1.23-alpine3.16 AS prod_build
 
 RUN apk update && apk add --no-cache make curl jq git
 
@@ -36,7 +36,7 @@ COPY . /app
 WORKDIR /app
 RUN make build
 
-FROM golang:1.19.3-alpine3.16 AS prod
+FROM golang:1.23-alpine AS prod
 
 COPY --from=prod_build /app/cmd/app-server/main /app/main
 
