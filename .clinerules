@@ -1,0 +1,40 @@
+# 本リポジトリについて
+
+* Web APIを開発している
+* 言語： Go
+* アーキテクチャ： オニオンアーキテクチャ
+* ORM： ent
+* go-swaggerを使用してswagger.ymlからAPIのコードを生成
+
+# コマンド
+
+* `make generate`
+  * ent/schema内の*.goに基づいて、entフォルダ配下にコードを生成します。
+  * swagger.ymlにrestapiフォルダ配下にコードを生成します
+
+
+# フォルダ構成
+
+* application/handler
+    * APIのハンドラーが格納されています。
+    * 各APIのドメインロジックをここに記述します
+* domain/service
+    * 複数のAPIで共有するドメインロジックをここに記述します
+* infrastructure
+    * 副作用を扱う実装をここに配置します。
+    * ドメインロジックは含めないこと
+* domain/infrastructure
+    * 前述のinfrastructureのインターフェースをここに配置します
+* ent/schema
+  * DBのスキーマ定義が格納されています。
+* resetapi/configure_app.go
+  * APIのハンドラーとswagger.ymlに基づいて生成されたコードをマッピングします。
+
+
+# テストガイドライン
+
+* application/handlerにテストコードを作成し、すべてのレイヤを一気通貫でテストする
+    * e2eチックにAPIの振る舞いを検証する
+    * DBはモック化しない(docker-composeによってテスト用DBをが起動しています)
+    * DIによって自動的にテスト用の接続が使われます（テストケース終了時に自動的にロールバックされる）
+    * DB接続以外の副作用はモック化する
