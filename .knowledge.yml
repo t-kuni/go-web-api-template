@@ -1,7 +1,0 @@
-knowledge:
-  - path: go.mod
-    kind: dependencies
-  - path: swagger.yml
-    kind: specifications
-  - path: er.mmd
-    kind: specifications

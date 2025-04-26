@@ -29,7 +29,6 @@ require (
 	github.com/samber/do v1.6.0
 	github.com/sirupsen/logrus v1.9.3
 	github.com/stretchr/testify v1.9.0
-	go.uber.org/mock v0.4.0
 	golang.org/x/net v0.29.0
 )
 
