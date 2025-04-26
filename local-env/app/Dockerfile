@@ -19,7 +19,7 @@ RUN download_url=$(curl -s https://api.github.com/repos/go-swagger/go-swagger/re
 
 RUN go install github.com/golang/mock/mockgen@v1.6.0
 
-COPY . /app
+COPY ../.. /app
 WORKDIR /app
 RUN make build
 
