@@ -60,7 +60,7 @@ https://localhost:8080 に接続し、`example_test`データベースを作成�
 ```
 docker compose exec app sh
 DB_DATABASE=example_test go run commands/migrate/main.go
-gotestsum --hide-summary=skipped -- -tags feature ./...
+make test
 ```
 
 # Setting remote debug on GoLand
@@ -94,25 +94,7 @@ docker build --target prod --tag go-web-api-template .
 - [ ] polluterからtestfixturesに載せ替え
 - [ ] マイグレーションの管理を切り出し
 - [ ] 認証処理のモック化
-- [ ] レスポンスがJSONではない処理のテスト（例えばファイルのダウンロードなど）
 - [ ] 現在日時のモック化
 - [ ] DB接続のタイムゾーン
-- [x] 本番環境用コンテナ
-- [ ] vscode用devcontainer定義
 - [ ] coreファイルが残る問題
-- [ ] コンテナ上で生成したファイルのオーナーがrootな問題
-- [x] アクセスログミドルウェア
-- [x] OpenAPIと連携
-  - [x] make コマンドでコード生成できるようにする（＋ファイルのクリーンアップ）
-  - [x] 既存の仕組みと統合する
-  - [x] airに対応
-  - [x] DB接続に対応
-  - [x] テストに対応
-  - [-] 共通エラーハンドラ対応
-  - [x] バリデーションを試す
-- [x] テストをmakeコマンドから実行できるようにする
-- [x] テストのカバレッジの可視化
-- [x] テストの前処理、後処理をリファクタ（txdbの初期化処理タイミングを変更）
-- [x] テストのレコードの初期投入を見やすくする
-- [x] CI
 - [ ] CD
