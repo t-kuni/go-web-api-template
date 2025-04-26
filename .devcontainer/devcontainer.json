@@ -1,0 +1,15 @@
+{
+  "name": "Go Web Api Template",
+  "dockerComposeFile": "../docker-compose.yml",
+  "service": "app",
+  "workspaceFolder": "/app",
+  "settings": {
+    "go.gopath": "/go",
+    "go.toolsGopath": "/go"
+  },
+  "extensions": [
+    "golang.go",
+    "ms-vscode.go",
+    "saoudrizwan.claude-dev"
+  ]
+}

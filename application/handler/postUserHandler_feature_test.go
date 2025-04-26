@@ -5,7 +5,7 @@ package handler_test
 //import (
 //	"bytes"
 //	"encoding/json"
-//	"github.com/golang/mock/gomock"
+//	"go.uber.org/mock"
 //	"github.com/labstack/echo/v4"
 //	"github.com/samber/do"
 //	"github.com/stretchr/testify/assert"

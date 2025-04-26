@@ -3,11 +3,11 @@ package testutil
 import (
 	"database/sql"
 	"fmt"
-	"github.com/golang/mock/gomock"
 	"github.com/joho/godotenv"
 	"github.com/samber/do"
 	"github.com/sirupsen/logrus/hooks/test"
 	"github.com/t-kuni/go-web-api-template/di"
+	"go.uber.org/mock/gomock"
 	"path/filepath"
 	"runtime"
 	"strings"

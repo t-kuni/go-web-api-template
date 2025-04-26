@@ -4,7 +4,6 @@ package handler_test
 
 import (
 	"encoding/json"
-	"github.com/golang/mock/gomock"
 	"github.com/labstack/echo/v4"
 	"github.com/samber/do"
 	"github.com/stretchr/testify/assert"
@@ -14,6 +13,7 @@ import (
 	db2 "github.com/t-kuni/go-web-api-template/domain/infrastructure/db"
 	"github.com/t-kuni/go-web-api-template/domain/service"
 	"github.com/t-kuni/go-web-api-template/ent"
+	"go.uber.org/mock/gomock"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
