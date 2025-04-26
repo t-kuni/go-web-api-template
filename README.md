@@ -11,6 +11,7 @@ This repository is project template for Go Web API application.
 * [ORM](https://github.com/ent/ent)
 * [Logging](https://github.com/sirupsen/logrus)
 * [Error Handling (Stack trace)](https://github.com/rotisserie/eris)
+* Dev Container
 * Seeder
 
 # Usage
