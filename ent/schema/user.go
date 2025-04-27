@@ -27,11 +27,9 @@ func (User) Fields() []ent.Field {
 // Edges of the User.
 func (User) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.To("companies", Company.Type).
-			StorageKey(
-				edge.Table("employments"),
-				edge.Columns("user_id", "company_id"),
-			),
+		edge.From("company", Company.Type).
+			Ref("users").
+			Unique(),
 		edge.To("emails", Email.Type),
 		//edge.To("employments", Employment.Type),
 	}

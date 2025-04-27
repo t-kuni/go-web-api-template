@@ -40,11 +40,11 @@ swagger generate server -A App -f ./swagger.yml --model-package=restapi/models
 Confirm
 
 ```
-curl -i "http://localhost:34567"
-curl -i "http://localhost:34567/companies"
-curl -i "http://localhost:34567/todos"
-curl -i "http://localhost:34567" -d "{\"description\":\"message $RANDOM\"}" -H 'Content-Type: application/io.goswagger.examples.todo-list.v1+json'
-curl -i localhost:34567/1 -X DELETE -H 'Content-Type: application/io.goswagger.examples.todo-list.v1+json'
+curl -i "http://localhost"
+curl -i "http://localhost/companies"
+curl -i "http://localhost/todos"
+curl -i "http://localhost" -d "{\"description\":\"message $RANDOM\"}" -H 'Content-Type: application/io.goswagger.examples.todo-list.v1+json'
+curl -i localhost/1 -X DELETE -H 'Content-Type: application/io.goswagger.examples.todo-list.v1+json'
 ```
 
 # Tests

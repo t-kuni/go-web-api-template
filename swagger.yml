@@ -246,6 +246,8 @@ definitions:
     x-stoplight:
       id: k1mjvox6qaijv
     type: object
+    x-tags:
+      - user
     properties:
       id:
         type: string
@@ -297,14 +299,37 @@ definitions:
           required:
             - address
             - type
+      company:
+        $ref: '#/definitions/Company'
     required:
       - id
       - name
       - gender
       - age
       - emails
+      - company
+  Company:
+    title: Company
+    x-stoplight:
+      id: xhz6wrg696hfz
+    type: object
     x-tags:
       - user
+    properties:
+      id:
+        type: string
+        x-stoplight:
+          id: nns3slpn43z9v
+        format: uuid
+        x-nullable: true
+      name:
+        type: string
+        x-stoplight:
+          id: rwsev9ipd0ium
+        minLength: 50
+    required:
+      - id
+      - name
 tags:
   - name: companies
   - name: todos

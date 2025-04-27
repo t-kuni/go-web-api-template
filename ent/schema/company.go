@@ -24,8 +24,6 @@ func (Company) Fields() []ent.Field {
 // Edges of the Company.
 func (Company) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.From("users", User.Type).
-			Ref("companies"),
-		//edge.To("employments", Employment.Type),
+		edge.To("users", User.Type),
 	}
 }
