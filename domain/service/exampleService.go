@@ -10,14 +10,14 @@ import (
 
 type ExampleService struct {
 	BinanceApi  api.IBinanceApi
-	DBConnector db.Connector
+	DBConnector db.IConnector
 }
 
 type IExampleService interface {
 	Exec(ctx context.Context, baseAsset string) (string, []*ent.Company, error)
 }
 
-func NewExampleService(conn db.Connector, binanceApi api.IBinanceApi) (IExampleService, error) {
+func NewExampleService(conn db.IConnector, binanceApi api.IBinanceApi) (IExampleService, error) {
 	return &ExampleService{
 		binanceApi,
 		conn,

@@ -29,7 +29,6 @@ func NewApp(opts ...fx.Option) *fx.App {
 
 			// Handler
 			handler.NewHelloHandler,
-			handler.NewPostUserHandler,
 
 			// Service
 			service.NewExampleService,

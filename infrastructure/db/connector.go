@@ -9,6 +9,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/t-kuni/go-web-api-template/domain/infrastructure/db"
 	"github.com/t-kuni/go-web-api-template/ent"
+	"go.uber.org/fx"
 	"os"
 )
 
@@ -17,7 +18,7 @@ type Connector struct {
 	Client *ent.Client
 }
 
-func NewConnector() (db.Connector, error) {
+func NewConnector(lc fx.Lifecycle) (db.IConnector, error) {
 	user := os.Getenv("DB_USER")
 	password := os.Getenv("DB_PASSWORD")
 	host := os.Getenv("DB_HOST")
@@ -33,6 +34,12 @@ func NewConnector() (db.Connector, error) {
 	if err := db.Ping(); err != nil {
 		return nil, err
 	}
+
+	lc.Append(fx.Hook{
+		OnStop: func(ctx context.Context) error {
+			return db.Close()
+		},
+	})
 
 	drv := sql2.OpenDB("mysql", db)
 	client := ent.NewClient(ent.Driver(drv))

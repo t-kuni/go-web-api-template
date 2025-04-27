@@ -11,10 +11,10 @@ import (
 )
 
 type ListTodos struct {
-	DBConnector db.Connector
+	DBConnector db.IConnector
 }
 
-func NewListTodos(conn db.Connector) (*ListTodos, error) {
+func NewListTodos(conn db.IConnector) (*ListTodos, error) {
 	return &ListTodos{
 		conn,
 	}, nil

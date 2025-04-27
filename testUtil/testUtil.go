@@ -3,20 +3,23 @@ package testUtil
 import (
 	"database/sql"
 	"fmt"
-	"github.com/joho/godotenv"
-	"github.com/sirupsen/logrus/hooks/test"
-	"github.com/t-kuni/go-web-api-template/di"
-	"github.com/t-kuni/go-web-api-template/domain/infrastructure/system"
-	"github.com/t-kuni/go-web-api-template/ent"
-	"github.com/t-kuni/go-web-api-template/infrastructure/db"
-	"go.uber.org/fx"
-	"go.uber.org/mock/gomock"
 	"os"
 	"path/filepath"
 	"runtime"
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/joho/godotenv"
+	"github.com/sirupsen/logrus/hooks/test"
+	"github.com/stretchr/testify/assert"
+	"github.com/t-kuni/go-web-api-template/di"
+	"github.com/t-kuni/go-web-api-template/domain/infrastructure/db"
+	"github.com/t-kuni/go-web-api-template/domain/infrastructure/system"
+	"github.com/t-kuni/go-web-api-template/ent"
+	dbImpl "github.com/t-kuni/go-web-api-template/infrastructure/db"
+	"go.uber.org/fx"
+	"go.uber.org/mock/gomock"
 )
 
 func TestMain(m *testing.M) {
@@ -27,7 +30,7 @@ func TestMain(m *testing.M) {
 	directory := filepath.Dir(file)
 	godotenv.Load(filepath.Join(directory, "..", ".env.feature"))
 
-	db.RegisterTxdbDriver()
+	dbImpl.RegisterTxdbDriver()
 
 	code := m.Run()
 	os.Exit(code)
@@ -44,6 +47,8 @@ type TestCaseContainer struct {
 func Prepare(t *testing.T) *TestCaseContainer {
 	cont := TestCaseContainer{}
 
+	cont.t = t
+
 	cont.MockCtrl = gomock.NewController(t)
 
 	cont.FxOptions = []fx.Option{
@@ -59,7 +64,7 @@ func Prepare(t *testing.T) *TestCaseContainer {
 		//fx.Invoke(func(log *logger.Logger) {
 		//	cont.LoggerHook = log.SetupForTest()
 		//}),
-		fx.Decorate(db.NewTestConnector),
+		fx.Decorate(dbImpl.NewTestConnector),
 	}
 
 	return &cont
@@ -69,9 +74,7 @@ func Prepare(t *testing.T) *TestCaseContainer {
 func (c *TestCaseContainer) Finish() {
 	c.MockCtrl.Finish()
 	err := c.FxContainer.Stop(c.t.Context())
-	if err != nil {
-		c.t.Fatal(err)
-	}
+	assert.NoError(c.t, err)
 }
 
 func (c *TestCaseContainer) Invoke(closure any) {
@@ -86,14 +89,12 @@ func (c *TestCaseContainer) Exec(closure any) {
 	opts := append(c.FxOptions, fx.Invoke(closure))
 	c.FxContainer = di.NewApp(opts...)
 	err := c.FxContainer.Start(c.t.Context())
-	if err != nil {
-		c.t.Fatal(err)
-	}
+	assert.NoError(c.t, err)
 }
 
 // PrepareTestData 外部キー制約のチェックを無効化した状態で第二引数の処理を実行します
 func (c *TestCaseContainer) PrepareTestData(closure func(entClient *ent.Client)) {
-	c.Invoke(func(conn db.Connector) {
+	c.Invoke(func(conn db.IConnector) {
 		MustExec(conn.GetDB(), "SET FOREIGN_KEY_CHECKS = 0")
 		closure(conn.GetEnt())
 		MustExec(conn.GetDB(), "SET FOREIGN_KEY_CHECKS = 1")

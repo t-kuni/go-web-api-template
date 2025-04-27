@@ -9,7 +9,7 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/romanyx/polluter"
 	"github.com/t-kuni/go-web-api-template/di"
-	"github.com/t-kuni/go-web-api-template/infrastructure/db"
+	"github.com/t-kuni/go-web-api-template/domain/infrastructure/db"
 	"go.uber.org/fx"
 	"io/ioutil"
 	"path/filepath"
@@ -26,7 +26,7 @@ func main() {
 	fmt.Println("Use seed: " + *seed)
 
 	ctx := context.Background()
-	app := di.NewApp(fx.Invoke(func(conn db.Connector) {
+	app := di.NewApp(fx.Invoke(func(conn db.IConnector) {
 		db := conn.GetDB()
 
 		p := polluter.New(polluter.MySQLEngine(db))

@@ -3,6 +3,7 @@
 package db
 
 import (
+	"context"
 	"database/sql"
 	sql2 "entgo.io/ent/dialect/sql"
 	"fmt"
@@ -14,7 +15,7 @@ import (
 	"os"
 )
 
-func NewTestConnector(lc fx.Lifecycle) (db.Connector, error) {
+func NewTestConnector(lc fx.Lifecycle) (db.IConnector, error) {
 	db, err := sql.Open("txdb", "identifier")
 	if err != nil {
 		return nil, err
@@ -23,6 +24,12 @@ func NewTestConnector(lc fx.Lifecycle) (db.Connector, error) {
 	if err := db.Ping(); err != nil {
 		return nil, err
 	}
+
+	lc.Append(fx.Hook{
+		OnStop: func(ctx context.Context) error {
+			return db.Close()
+		},
+	})
 
 	drv := sql2.OpenDB("mysql", db)
 	client := ent.NewClient(ent.Driver(drv))
