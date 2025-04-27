@@ -1,4 +1,4 @@
-package testutil
+package testUtil
 
 import (
 	"database/sql"

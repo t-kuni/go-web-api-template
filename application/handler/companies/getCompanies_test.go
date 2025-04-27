@@ -14,7 +14,7 @@ import (
 	"github.com/t-kuni/go-web-api-template/ent"
 	dbImpl "github.com/t-kuni/go-web-api-template/infrastructure/db"
 	companies2 "github.com/t-kuni/go-web-api-template/restapi/operations/companies"
-	"github.com/t-kuni/go-web-api-template/testutil"
+	"github.com/t-kuni/go-web-api-template/testUtil"
 	"go.uber.org/mock/gomock"
 	"net/http"
 	"net/http/httptest"
@@ -24,8 +24,8 @@ import (
 
 func Test_a(t *testing.T) {
 	// Arrange
-	cont := testutil.BeforeEach(t)
-	defer testutil.AfterEach(cont)
+	cont := testUtil.BeforeEach(t)
+	defer testUtil.AfterEach(cont)
 
 	app := cont.App
 
@@ -52,8 +52,8 @@ func Test_a(t *testing.T) {
 	}
 
 	d := do.MustInvoke[db.Connector](app).GetDB()
-	testutil.PrepareTestData(d, func(db *sql.DB) {
-		testutil.MustInsert(d, "companies", []map[string]interface{}{
+	testUtil.PrepareTestData(d, func(db *sql.DB) {
+		testUtil.MustInsert(d, "companies", []map[string]interface{}{
 			{"id": 1, "name": "NAME1", "created_at": "2020-05-10 10:00:00"},
 		})
 	})
