@@ -2,7 +2,6 @@ package middleware
 
 import (
 	"fmt"
-	"github.com/samber/do"
 	"github.com/t-kuni/go-web-api-template/logger"
 	"net/http"
 	"runtime"
@@ -18,7 +17,7 @@ const (
 type Recover struct {
 }
 
-func NewRecover(i *do.Injector) (*Recover, error) {
+func NewRecover() (*Recover, error) {
 	return &Recover{}, nil
 }
 

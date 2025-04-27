@@ -3,18 +3,10 @@
 package handler_test
 
 import (
-	"github.com/joho/godotenv"
-	"github.com/t-kuni/go-web-api-template/infrastructure/db"
-	"os"
-	"path/filepath"
+	"github.com/t-kuni/go-web-api-template/testUtil"
 	"testing"
 )
 
-var dbConnector *db.Connector
-
 func TestMain(m *testing.M) {
-	godotenv.Load(filepath.Join("..", "..", ".env.feature"))
-
-	code := m.Run()
-	os.Exit(code)
+	testUtil.TestMain(m)
 }

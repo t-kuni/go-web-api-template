@@ -3,7 +3,6 @@ package api
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/samber/do"
 	"github.com/t-kuni/go-web-api-template/domain/infrastructure/api"
 	"io/ioutil"
 	"net/http"
@@ -12,7 +11,7 @@ import (
 type BinanceApi struct {
 }
 
-func NewBinanceApi(i *do.Injector) (api.IBinanceApi, error) {
+func NewBinanceApi() (api.IBinanceApi, error) {
 	return &BinanceApi{}, nil
 }
 

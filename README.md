@@ -5,7 +5,7 @@ This repository is project template for Go Web API application.
 # Features
 
 * [Onion Architecture](https://jeffreypalermo.com/2008/07/the-onion-architecture-part-1/)
-* [DI Container](https://github.com/samber/do)
+* [DI Container](https://github.com/uber-go/fx)
 * [Server generation from swagger](https://github.com/go-swagger/go-swagger)
 * [Validator](https://github.com/go-playground/validator)
 * [ORM](https://github.com/ent/ent)

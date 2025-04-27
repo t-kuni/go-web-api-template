@@ -5,9 +5,9 @@ import (
 	"flag"
 	"fmt"
 	"github.com/joho/godotenv"
-	"github.com/samber/do"
 	"github.com/t-kuni/go-web-api-template/di"
 	"github.com/t-kuni/go-web-api-template/domain/infrastructure/db"
+	"go.uber.org/fx"
 	"os"
 	"path/filepath"
 )
@@ -26,12 +26,16 @@ func main() {
 
 	fmt.Println("Target Database: " + os.Getenv("DB_DATABASE"))
 
-	app := di.NewApp()
-	defer app.Shutdown()
+	ctx := context.Background()
+	app := di.NewApp(fx.Invoke(func(conn db.Connector) {
+		if err := conn.Migrate(context.Background()); err != nil {
+			panic(err)
+		}
+	}))
+	defer app.Stop(ctx)
 
-	dbConnector := do.MustInvoke[db.Connector](app)
-
-	if err := dbConnector.Migrate(context.Background()); err != nil {
+	err = app.Start(ctx)
+	if err != nil {
 		panic(err)
 	}
 

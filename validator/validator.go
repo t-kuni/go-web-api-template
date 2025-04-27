@@ -4,14 +4,13 @@ import (
 	"github.com/forPelevin/gomoji"
 	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
-	"github.com/samber/do"
 )
 
 type CustomValidator struct {
 	Validator *validator.Validate
 }
 
-func NewCustomValidator(i *do.Injector) (echo.Validator, error) {
+func NewCustomValidator() (echo.Validator, error) {
 	v := &CustomValidator{
 		Validator: validator.New(),
 	}

@@ -7,7 +7,6 @@ import (
 	"entgo.io/ent/dialect/sql/schema"
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/samber/do"
 	"github.com/t-kuni/go-web-api-template/domain/infrastructure/db"
 	"github.com/t-kuni/go-web-api-template/ent"
 	"os"
@@ -18,7 +17,7 @@ type Connector struct {
 	Client *ent.Client
 }
 
-func NewConnector(i *do.Injector) (db.Connector, error) {
+func NewConnector() (db.Connector, error) {
 	user := os.Getenv("DB_USER")
 	password := os.Getenv("DB_PASSWORD")
 	host := os.Getenv("DB_HOST")

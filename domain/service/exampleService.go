@@ -3,7 +3,6 @@ package service
 
 import (
 	"context"
-	"github.com/samber/do"
 	"github.com/t-kuni/go-web-api-template/domain/infrastructure/api"
 	"github.com/t-kuni/go-web-api-template/domain/infrastructure/db"
 	"github.com/t-kuni/go-web-api-template/ent"
@@ -18,10 +17,10 @@ type IExampleService interface {
 	Exec(ctx context.Context, baseAsset string) (string, []*ent.Company, error)
 }
 
-func NewExampleService(i *do.Injector) (IExampleService, error) {
+func NewExampleService(conn db.Connector, binanceApi api.IBinanceApi) (IExampleService, error) {
 	return &ExampleService{
-		do.MustInvoke[api.IBinanceApi](i),
-		do.MustInvoke[db.Connector](i),
+		binanceApi,
+		conn,
 	}, nil
 }
 

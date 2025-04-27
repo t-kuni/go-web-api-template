@@ -2,7 +2,6 @@ package todos
 
 import (
 	"github.com/go-openapi/runtime/middleware"
-	"github.com/samber/do"
 	"github.com/t-kuni/go-web-api-template/domain/infrastructure/db"
 	"github.com/t-kuni/go-web-api-template/ent/schema"
 	"github.com/t-kuni/go-web-api-template/ent/todo"
@@ -15,9 +14,9 @@ type ListTodos struct {
 	DBConnector db.Connector
 }
 
-func NewListTodos(i *do.Injector) (*ListTodos, error) {
+func NewListTodos(conn db.Connector) (*ListTodos, error) {
 	return &ListTodos{
-		DBConnector: do.MustInvoke[db.Connector](i),
+		conn,
 	}, nil
 }
 

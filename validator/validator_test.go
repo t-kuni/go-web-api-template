@@ -2,14 +2,12 @@ package validator
 
 import (
 	"github.com/go-playground/validator/v10"
-	"github.com/samber/do"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
 func TestValidator(t *testing.T) {
-	dummyInjector := do.New()
-	v, err := NewCustomValidator(dummyInjector)
+	v, err := NewCustomValidator()
 	assert.NoError(t, err)
 
 	t.Run("ExcludeEmoji", func(t *testing.T) {

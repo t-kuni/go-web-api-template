@@ -3,28 +3,35 @@
 package restapi
 
 import (
+	"context"
 	"crypto/tls"
 	"github.com/go-openapi/errors"
 	"github.com/joho/godotenv"
-	"github.com/samber/do"
 	useCaseCompanies "github.com/t-kuni/go-web-api-template/application/handler/companies"
 	useCaseTodos "github.com/t-kuni/go-web-api-template/application/handler/todos"
 	"github.com/t-kuni/go-web-api-template/di"
 	"github.com/t-kuni/go-web-api-template/logger"
 	middleware2 "github.com/t-kuni/go-web-api-template/middleware"
 	"github.com/t-kuni/go-web-api-template/restapi/operations/companies"
+	"github.com/t-kuni/go-web-api-template/restapi/operations/todos"
+	"go.uber.org/fx"
 	"log"
 	"net/http"
 	"os"
 
 	"github.com/go-openapi/runtime"
 	"github.com/t-kuni/go-web-api-template/restapi/operations"
-	"github.com/t-kuni/go-web-api-template/restapi/operations/todos"
 )
 
 //go:generate go tool swagger generate server --target ../ --name App --spec ../swagger.yml --model-package restapi/models --principal interface{}
 
-var app *do.Injector
+type middleware func(http.Handler) http.Handler
+
+var app *fx.App
+var middlewares struct {
+	recoverHandler middleware
+	accessLog      middleware
+}
 
 func configureFlags(api *operations.AppAPI) {
 	// api.CommandLineOptionsGroups = []swag.CommandLineOptionsGroup{ ... }
@@ -37,8 +44,6 @@ func configureAPI(api *operations.AppAPI) http.Handler {
 		log.Fatalf("Logger initialization failed: %+v", err)
 		os.Exit(1)
 	}
-
-	app = di.NewApp()
 
 	// configure the api here
 	api.ServeError = errors.ServeError
@@ -57,13 +62,30 @@ func configureAPI(api *operations.AppAPI) http.Handler {
 
 	api.JSONProducer = runtime.JSONProducer()
 
-	api.TodosGetTodosHandler = todos.GetTodosHandlerFunc(do.MustInvoke[*useCaseTodos.ListTodos](app).Main)
-	api.CompaniesGetCompaniesHandler = companies.GetCompaniesHandlerFunc(do.MustInvoke[*useCaseCompanies.GetCompanies](app).Main)
+	ctx := context.Background()
+	app = di.NewApp(fx.Invoke(func(
+		recoverHandler *middleware2.Recover,
+		accessLog *middleware2.AccessLog,
+
+		listTodos *useCaseTodos.ListTodos,
+		getCompanies *useCaseCompanies.GetCompanies,
+	) {
+		middlewares.recoverHandler = recoverHandler.Recover
+		middlewares.accessLog = accessLog.AccessLog
+
+		api.TodosGetTodosHandler = todos.GetTodosHandlerFunc(listTodos.Main)
+		api.CompaniesGetCompaniesHandler = companies.GetCompaniesHandlerFunc(getCompanies.Main)
+	}))
+	err := app.Start(ctx)
+	if err != nil {
+		log.Fatalf("App initialization failed: %+v", err)
+		os.Exit(1)
+	}
 
 	api.PreServerShutdown = func() {}
 
 	api.ServerShutdown = func() {
-		app.Shutdown()
+		app.Stop(ctx)
 	}
 
 	return setupGlobalMiddleware(api.Serve(setupMiddlewares))
@@ -90,7 +112,5 @@ func setupMiddlewares(handler http.Handler) http.Handler {
 // The middleware configuration happens before anything, this middleware also applies to serving the swagger.json document.
 // So this is a good place to plug in a panic handling middleware, logging and metrics.
 func setupGlobalMiddleware(handler http.Handler) http.Handler {
-	recoverHandler := do.MustInvoke[*middleware2.Recover](app).Recover
-	accessLog := do.MustInvoke[*middleware2.AccessLog](app).AccessLog
-	return recoverHandler(accessLog(handler))
+	return middlewares.recoverHandler(middlewares.accessLog(handler))
 }

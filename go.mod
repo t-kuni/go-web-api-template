@@ -111,7 +111,10 @@ require (
 	github.com/zclconf/go-cty v1.15.0 // indirect
 	go.mongodb.org/mongo-driver v1.16.1 // indirect
 	go.starlark.net v0.0.0-20231101134539-556fd59b42f6 // indirect
+	go.uber.org/dig v1.18.0 // indirect
+	go.uber.org/fx v1.23.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
+	go.uber.org/zap v1.26.0 // indirect
 	golang.org/x/arch v0.11.0 // indirect
 	golang.org/x/crypto v0.27.0 // indirect
 	golang.org/x/exp v0.0.0-20240222234643-814bf88cf225 // indirect

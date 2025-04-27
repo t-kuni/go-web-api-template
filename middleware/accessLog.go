@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"github.com/go-http-utils/headers"
 	"github.com/labstack/echo/v4"
-	"github.com/samber/do"
 	"github.com/t-kuni/go-web-api-template/logger"
 	"io/ioutil"
 	"net/http"
@@ -16,7 +15,7 @@ import (
 type AccessLog struct {
 }
 
-func NewAccessLog(i *do.Injector) (*AccessLog, error) {
+func NewAccessLog() (*AccessLog, error) {
 	return &AccessLog{}, nil
 }
 
