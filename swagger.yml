@@ -275,30 +275,6 @@ definitions:
         exclusiveMinimum: false
         exclusiveMaximum: false
         maximum: 99
-      emails:
-        type: array
-        x-stoplight:
-          id: jxef53qzfhriq
-        items:
-          x-stoplight:
-            id: os6sh24qn023m
-          type: object
-          properties:
-            address:
-              type: string
-              x-stoplight:
-                id: 1ytoqjsx5hih5
-              format: email
-            type:
-              type: string
-              x-stoplight:
-                id: c29oxqdjha7qd
-              enum:
-                - main
-                - sub
-          required:
-            - address
-            - type
       company:
         $ref: '#/definitions/Company'
     required:
@@ -306,7 +282,6 @@ definitions:
       - name
       - gender
       - age
-      - emails
       - company
   Company:
     title: Company

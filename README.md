@@ -27,6 +27,7 @@ DB Migration and Seeding
 
 ```
 docker compose exec app sh
+make generate
 go run commands/migrate/main.go
 go run commands/seed/main.go
 ```

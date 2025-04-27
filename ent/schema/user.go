@@ -30,7 +30,5 @@ func (User) Edges() []ent.Edge {
 		edge.From("company", Company.Type).
 			Ref("users").
 			Unique(),
-		edge.To("emails", Email.Type),
-		//edge.To("employments", Employment.Type),
 	}
 }
