@@ -2,11 +2,9 @@ package testUtil
 
 import (
 	"database/sql"
-	"fmt"
 	"os"
 	"path/filepath"
 	"runtime"
-	"strings"
 	"testing"
 	"time"
 
@@ -110,41 +108,6 @@ func (c *TestCaseContainer) SetTime(timeStr string) {
 func Override[T any](cont *TestCaseContainer, impl any) {
 	decorator := fx.Decorate(func() T { return impl.(T) })
 	cont.FxOptions = append(cont.FxOptions, decorator)
-}
-
-// MustInsert データを挿入し、エラーが発生した場合はpanicを発生させます
-func MustInsert(db *sql.DB, table string, records []map[string]interface{}) {
-	if len(records) == 0 {
-		return
-	}
-
-	// カラム名とプレースホルダーを生成
-	columns := make([]string, 0, len(records[0]))
-	placeholders := make([]string, 0, len(records[0]))
-	for column := range records[0] {
-		columns = append(columns, column)
-		placeholders = append(placeholders, "?")
-	}
-
-	query := fmt.Sprintf(
-		"INSERT INTO %s (%s) VALUES (%s)",
-		table,
-		strings.Join(columns, ", "),
-		strings.Join(placeholders, ", "),
-	)
-
-	// 各レコードを挿入
-	for _, record := range records {
-		values := make([]interface{}, 0, len(record))
-		for _, column := range columns {
-			values = append(values, record[column])
-		}
-
-		_, err := db.Exec(query, values...)
-		if err != nil {
-			panic(err)
-		}
-	}
 }
 
 // MustExec SQLを実行し、エラーが発生した場合はpanicを発生させます
