@@ -3,6 +3,7 @@ package handler
 import (
 	"github.com/go-openapi/runtime/middleware"
 	"github.com/t-kuni/go-web-api-template/domain/infrastructure/db"
+	customErrors "github.com/t-kuni/go-web-api-template/errors"
 	"github.com/t-kuni/go-web-api-template/ent/schema"
 	"github.com/t-kuni/go-web-api-template/ent/todo"
 	"github.com/t-kuni/go-web-api-template/restapi/models"
@@ -42,12 +43,12 @@ func (u ListTodos) Main(params todos.GetTodosParams) middleware.Responder {
 	offset := (page - 1) * perPage
 	todoList, err := todoQuery.Limit(int(perPage)).Offset(int(offset)).All(params.HTTPRequest.Context())
 	if err != nil {
-		return middleware.Error(500, err)
+		return customErrors.NewErrorResponder(err)
 	}
 
 	total, err := todoQuery.Count(params.HTTPRequest.Context())
 	if err != nil {
-		return middleware.Error(500, err)
+		return customErrors.NewErrorResponder(err)
 	}
 
 	maxPage := (int64(total) + perPage - 1) / perPage
@@ -57,7 +58,7 @@ func (u ListTodos) Main(params todos.GetTodosParams) middleware.Responder {
 	for _, entTodo := range todoList {
 		id, err := util.StringToStrfmtUUID(entTodo.ID)
 		if err != nil {
-			return middleware.Error(500, err)
+			return customErrors.NewErrorResponder(err)
 		}
 
 		apiTodoList = append(apiTodoList, &models.Todo{

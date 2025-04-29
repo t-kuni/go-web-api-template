@@ -31,6 +31,7 @@ func Test_GetCompanies(t *testing.T) {
 
 		cont.PrepareTestData(func(db *ent.Client) {
 			db.Company.Create().SetID("UUID-1").SetName("NAME1").SaveX(t.Context())
+			// ここにuserを追加する
 		})
 
 		{

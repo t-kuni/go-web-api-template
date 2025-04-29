@@ -5,10 +5,10 @@ package restapi
 import (
 	"context"
 	"crypto/tls"
-	"github.com/go-openapi/errors"
 	"github.com/joho/godotenv"
 	useCaseCompanies "github.com/t-kuni/go-web-api-template/application/handler"
 	"github.com/t-kuni/go-web-api-template/di"
+	customErrors "github.com/t-kuni/go-web-api-template/errors"
 	"github.com/t-kuni/go-web-api-template/logger"
 	middleware2 "github.com/t-kuni/go-web-api-template/middleware"
 	"github.com/t-kuni/go-web-api-template/restapi/operations/companies"
@@ -46,7 +46,7 @@ func configureAPI(api *operations.AppAPI) http.Handler {
 	}
 
 	// configure the api here
-	api.ServeError = errors.ServeError
+	api.ServeError = customErrors.CustomServeError
 
 	// Set your custom logger if needed. Default one is log.Printf
 	// Expected interface func(string, ...interface{})

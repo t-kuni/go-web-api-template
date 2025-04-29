@@ -4,6 +4,7 @@ import (
 	"github.com/go-openapi/runtime/middleware"
 	"github.com/go-openapi/strfmt"
 	"github.com/t-kuni/go-web-api-template/domain/infrastructure/db"
+	customErrors "github.com/t-kuni/go-web-api-template/errors"
 	"github.com/t-kuni/go-web-api-template/ent"
 	"github.com/t-kuni/go-web-api-template/ent/user"
 	"github.com/t-kuni/go-web-api-template/restapi/models"
@@ -37,7 +38,7 @@ func (u GetUsers) Main(params userOps.GetUsersParams) middleware.Responder {
 	// 総ユーザー数を取得
 	totalCount, err := client.User.Query().Count(ctx)
 	if err != nil {
-		return middleware.Error(500, err)
+		return customErrors.NewErrorResponder(err)
 	}
 
 	// 最大ページ数を計算
@@ -52,7 +53,7 @@ func (u GetUsers) Main(params userOps.GetUsersParams) middleware.Responder {
 		Order(ent.Asc(user.FieldID)).
 		All(ctx)
 	if err != nil {
-		return middleware.Error(500, err)
+		return customErrors.NewErrorResponder(err)
 	}
 
 	// レスポンス用のユーザーリストを作成
