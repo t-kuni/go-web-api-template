@@ -18,7 +18,22 @@ type (
 		line     int
 		funcName string
 	}
+
+	Logger struct {
+		logger *logrus.Logger
+	}
 )
+
+func NewLogger() *Logger {
+	err := SetupLogger()
+	if err != nil {
+		panic(err)
+	}
+	
+	return &Logger{
+		logger: logrus.StandardLogger(),
+	}
+}
 
 func SetupLogger() error {
 	logrus.SetFormatter(&logrus.JSONFormatter{

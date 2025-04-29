@@ -36,6 +36,7 @@ func NewApp(opts ...fx.Option) *fx.App {
 			db.NewConnector,
 			api.NewBinanceApi,
 			system.NewTimer,
+			system.NewLogger,
 
 			// UseCase
 			handler.NewListTodos,
