@@ -18,52 +18,58 @@ import (
 	"go.uber.org/mock/gomock"
 )
 
-func Test_a(t *testing.T) {
-	// Arrange
-	cont := testUtil.Prepare(t)
-	defer cont.Finish()
+func Test_GetCompanies(t *testing.T) {
+	t.Run("正常にレスポンスを返すこと", func(t *testing.T) {
+		//
+		// Arrange
+		//
+		cont := testUtil.Prepare(t)
+		defer cont.Finish()
 
-	cont.SetTime("2020-04-10T00:00:00+09:00")
+		cont.SetTime("2020-04-10T00:00:00+09:00")
 
-	cont.PrepareTestData(func(db *ent.Client) {
-		db.Company.Create().SetID(1).SetName("NAME1").SaveX(t.Context())
-	})
-
-	{
-		mock := service.NewMockIExampleService(cont.MockCtrl)
-		mock.
-			EXPECT().
-			Exec(gomock.Any(), gomock.Eq("BNB")).
-			Return("DUMMY", []*ent.Company{
-				{
-					ID:        1,
-					Name:      "TEST",
-					CreatedAt: testUtil.MustNewDateTime("2006-01-02T15:04:05+09:00"),
-					Edges:     ent.CompanyEdges{},
-				},
-			}, nil)
-		testUtil.Override[service.IExampleService](cont, mock)
-	}
-
-	// Act
-	body := `{
-		"key": "value"
-	}`
-
-	cont.Exec(func(testee *handler.GetCompanies) {
-		req, err := http.NewRequest(http.MethodPost, "http://example.com", bytes.NewBuffer([]byte(body)))
-		assert.NoError(t, err)
-		resp := testee.Main(companies.GetCompaniesParams{
-			HTTPRequest: req,
+		cont.PrepareTestData(func(db *ent.Client) {
+			db.Company.Create().SetID(1).SetName("NAME1").SaveX(t.Context())
 		})
 
-		recorder := httptest.NewRecorder()
-		producer := runtime.JSONProducer()
-		resp.WriteResponse(recorder, producer)
-		actualBody := recorder.Body.String()
+		{
+			mock := service.NewMockIExampleService(cont.MockCtrl)
+			mock.
+				EXPECT().
+				Exec(gomock.Any(), gomock.Eq("BNB")).
+				Return("DUMMY", []*ent.Company{
+					{
+						ID:        1,
+						Name:      "TEST",
+						CreatedAt: testUtil.MustNewDateTime("2006-01-02T15:04:05+09:00"),
+						Edges:     ent.CompanyEdges{},
+					},
+				}, nil)
+			testUtil.Override[service.IExampleService](cont, mock)
+		}
 
-		// Assert
-		expectBody := `
+		cont.Exec(func(testee *handler.GetCompanies) {
+			//
+			// Act
+			//
+			body := `{
+		"key": "value"
+	}`
+			req, err := http.NewRequest(http.MethodPost, "http://example.com", bytes.NewBuffer([]byte(body)))
+			assert.NoError(t, err)
+			resp := testee.Main(companies.GetCompaniesParams{
+				HTTPRequest: req,
+			})
+
+			recorder := httptest.NewRecorder()
+			producer := runtime.JSONProducer()
+			resp.WriteResponse(recorder, producer)
+			actualBody := recorder.Body.String()
+
+			//
+			// Assert
+			//
+			expectBody := `
 {
   "companies": [
     {
@@ -72,7 +78,8 @@ func Test_a(t *testing.T) {
     }
   ]
 }`
-		assert.Equal(t, http.StatusOK, recorder.Code)
-		assert.JSONEq(t, expectBody, actualBody)
+			assert.Equal(t, http.StatusOK, recorder.Code)
+			assert.JSONEq(t, expectBody, actualBody)
+		})
 	})
 }
