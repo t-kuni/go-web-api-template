@@ -14,6 +14,8 @@
   * モックファイルの作成
 * `make test`
     * テストコードを実行します
+* `git add -A && GIT_PAGER=cat git diff HEAD`
+    * 現在の変更状態を確認する
 
 # フォルダ構成
 
