@@ -27,9 +27,28 @@ func (u GetCompanies) Main(params companies.GetCompaniesParams) middleware.Respo
 	respCompanies := []*models.Company{}
 	for _, company := range companies2 {
 		id := strfmt.UUID(company.ID)
+		
+		// ユーザー情報を変換
+		users := []*models.User{}
+		for _, user := range company.Edges.Users {
+			userId := strfmt.UUID(user.ID)
+			age := int64(user.Age)
+			gender := user.Gender
+			
+			users = append(users, &models.User{
+				ID:     &userId,
+				Name:   &user.Name,
+				Age:    &age,
+				Gender: &gender,
+				// Company フィールドは循環参照を避けるため null に設定
+				Company: nil,
+			})
+		}
+		
 		respCompanies = append(respCompanies, &models.Company{
-			ID:   &id,
-			Name: &company.Name,
+			ID:    &id,
+			Name:  &company.Name,
+			Users: users,
 		})
 	}
 

@@ -4,10 +4,11 @@ package handler_test
 
 import (
 	"bytes"
-	"github.com/t-kuni/go-web-api-template/application/handler"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/t-kuni/go-web-api-template/application/handler"
 
 	"github.com/go-openapi/runtime"
 	"github.com/stretchr/testify/assert"
@@ -74,7 +75,8 @@ func Test_GetCompanies(t *testing.T) {
   "companies": [
     {
       "id": "UUID-1",
-      "name": "TEST"
+      "name": "TEST",
+      "users": []
     }
   ]
 }`

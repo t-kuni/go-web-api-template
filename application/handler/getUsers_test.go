@@ -67,7 +67,8 @@ func Test_GetUsers(t *testing.T) {
       "gender": "man",
       "company": {
         "id": "UUID-1",
-        "name": "テスト株式会社"
+        "name": "テスト株式会社",
+        "users": []
       }
     },
     {
@@ -77,7 +78,8 @@ func Test_GetUsers(t *testing.T) {
       "gender": "woman",
       "company": {
         "id": "UUID-1",
-        "name": "テスト株式会社"
+        "name": "テスト株式会社",
+        "users": []
       }
     }
   ],

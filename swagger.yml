@@ -294,6 +294,12 @@ definitions:
         x-stoplight:
           id: rwsev9ipd0ium
         minLength: 50
+      users:
+        type: array
+        x-stoplight:
+          id: z513g4hrvgh7t
+        items:
+          $ref: '#/definitions/User'
     required:
       - id
       - name

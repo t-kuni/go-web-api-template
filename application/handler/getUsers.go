@@ -64,8 +64,9 @@ func (u GetUsers) Main(params userOps.GetUsersParams) middleware.Responder {
 			companyID := strfmt.UUID(usr.Edges.Company.ID)
 			companyName := usr.Edges.Company.Name
 			company = &models.Company{
-				ID:   &companyID,
-				Name: &companyName,
+				ID:    &companyID,
+				Name:  &companyName,
+				Users: []*models.User{},
 			}
 		}
 
