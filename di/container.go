@@ -27,6 +27,7 @@ func NewApp(opts ...fx.Option) *fx.App {
 
 			// Handler
 			handler.NewHelloHandler,
+			handler.NewGetUsers,
 
 			// Service
 			service.NewExampleService,

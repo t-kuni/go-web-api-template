@@ -13,6 +13,7 @@ import (
 	middleware2 "github.com/t-kuni/go-web-api-template/middleware"
 	"github.com/t-kuni/go-web-api-template/restapi/operations/companies"
 	"github.com/t-kuni/go-web-api-template/restapi/operations/todos"
+	"github.com/t-kuni/go-web-api-template/restapi/operations/user"
 	"go.uber.org/fx"
 	"log"
 	"net/http"
@@ -68,12 +69,14 @@ func configureAPI(api *operations.AppAPI) http.Handler {
 
 		listTodos *useCaseCompanies.ListTodos,
 		getCompanies *useCaseCompanies.GetCompanies,
+		getUsers *useCaseCompanies.GetUsers,
 	) {
 		middlewares.recoverHandler = recoverHandler.Recover
 		middlewares.accessLog = accessLog.AccessLog
 
 		api.TodosGetTodosHandler = todos.GetTodosHandlerFunc(listTodos.Main)
 		api.CompaniesGetCompaniesHandler = companies.GetCompaniesHandlerFunc(getCompanies.Main)
+		api.UserGetUsersHandler = user.GetUsersHandlerFunc(getUsers.Main)
 	}))
 	err := app.Start(ctx)
 	if err != nil {
