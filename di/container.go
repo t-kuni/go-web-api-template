@@ -2,8 +2,6 @@ package di
 
 import (
 	"github.com/t-kuni/go-web-api-template/application/handler"
-	"github.com/t-kuni/go-web-api-template/application/handler/companies"
-	"github.com/t-kuni/go-web-api-template/application/handler/todos"
 	"github.com/t-kuni/go-web-api-template/domain/service"
 	"github.com/t-kuni/go-web-api-template/infrastructure/api"
 	"github.com/t-kuni/go-web-api-template/infrastructure/db"
@@ -39,8 +37,8 @@ func NewApp(opts ...fx.Option) *fx.App {
 			system.NewTimer,
 
 			// UseCase
-			todos.NewListTodos,
-			companies.NewGetCompanies,
+			handler.NewListTodos,
+			handler.NewGetCompanies,
 		),
 	}
 	mergedOpts = append(mergedOpts, opts...)

@@ -1,19 +1,19 @@
 //go:build feature
 
-package companies_test
+package handler_test
 
 import (
 	"bytes"
+	"github.com/t-kuni/go-web-api-template/application/handler"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 
 	"github.com/go-openapi/runtime"
 	"github.com/stretchr/testify/assert"
-	"github.com/t-kuni/go-web-api-template/application/handler/companies"
 	"github.com/t-kuni/go-web-api-template/domain/service"
 	"github.com/t-kuni/go-web-api-template/ent"
-	companies2 "github.com/t-kuni/go-web-api-template/restapi/operations/companies"
+	"github.com/t-kuni/go-web-api-template/restapi/operations/companies"
 	"github.com/t-kuni/go-web-api-template/testUtil"
 	"go.uber.org/mock/gomock"
 )
@@ -50,10 +50,10 @@ func Test_a(t *testing.T) {
 		"key": "value"
 	}`
 
-	cont.Exec(func(testee *companies.GetCompanies) {
+	cont.Exec(func(testee *handler.GetCompanies) {
 		req, err := http.NewRequest(http.MethodPost, "http://example.com", bytes.NewBuffer([]byte(body)))
 		assert.NoError(t, err)
-		resp := testee.Main(companies2.GetCompaniesParams{
+		resp := testee.Main(companies.GetCompaniesParams{
 			HTTPRequest: req,
 		})
 

@@ -7,8 +7,7 @@ import (
 	"crypto/tls"
 	"github.com/go-openapi/errors"
 	"github.com/joho/godotenv"
-	useCaseCompanies "github.com/t-kuni/go-web-api-template/application/handler/companies"
-	useCaseTodos "github.com/t-kuni/go-web-api-template/application/handler/todos"
+	useCaseCompanies "github.com/t-kuni/go-web-api-template/application/handler"
 	"github.com/t-kuni/go-web-api-template/di"
 	"github.com/t-kuni/go-web-api-template/logger"
 	middleware2 "github.com/t-kuni/go-web-api-template/middleware"
@@ -67,7 +66,7 @@ func configureAPI(api *operations.AppAPI) http.Handler {
 		recoverHandler *middleware2.Recover,
 		accessLog *middleware2.AccessLog,
 
-		listTodos *useCaseTodos.ListTodos,
+		listTodos *useCaseCompanies.ListTodos,
 		getCompanies *useCaseCompanies.GetCompanies,
 	) {
 		middlewares.recoverHandler = recoverHandler.Recover

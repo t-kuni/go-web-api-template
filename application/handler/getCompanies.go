@@ -1,4 +1,4 @@
-package companies
+package handler
 
 import (
 	"github.com/go-openapi/runtime/middleware"
