@@ -3,7 +3,6 @@ package system
 import (
 	"fmt"
 	"github.com/go-http-utils/headers"
-	"github.com/labstack/echo/v4"
 	"github.com/rotisserie/eris"
 	"github.com/sirupsen/logrus"
 	"net"
@@ -38,11 +37,11 @@ func SetupLogger() error {
 	return nil
 }
 
-func Info(c echo.Context, msg string, params map[string]interface{}) {
+func Info(req *http.Request, msg string, params map[string]interface{}) {
 	stackInfo := makeStackInfo(runtime.Caller(1))
 	logrus.
 		WithFields(makeCommonFields(stackInfo, params)).
-		WithFields(makeHttpFields(c)).
+		WithFields(makeHttpFieldsV2(req)).
 		Info(msg)
 }
 
@@ -53,45 +52,45 @@ func SimpleInfoF(format string, args ...interface{}) {
 		Infof(format, args...)
 }
 
-func Warn(c echo.Context, msg string, params map[string]interface{}) {
+func Warn(req *http.Request, msg string, params map[string]interface{}) {
 	stackInfo := makeStackInfo(runtime.Caller(1))
 	logrus.
 		WithFields(makeCommonFields(stackInfo, params)).
-		WithFields(makeHttpFields(c)).
+		WithFields(makeHttpFieldsV2(req)).
 		Warn(msg)
 }
 
-func WarnWithError(c echo.Context, e error, params map[string]interface{}) {
+func WarnWithError(req *http.Request, e error, params map[string]interface{}) {
 	stackInfo := makeStackInfo(runtime.Caller(1))
 	logrus.
 		WithFields(makeCommonFields(stackInfo, params)).
-		WithFields(makeHttpFields(c)).
+		WithFields(makeHttpFieldsV2(req)).
 		WithField("panic", false).
 		Warnf("%+v", e)
 }
 
-func Error(c echo.Context, e error, params map[string]interface{}) {
+func Error(req *http.Request, e error, params map[string]interface{}) {
 	stackInfo := makeStackInfo(runtime.Caller(1))
 	logrus.
 		WithFields(makeCommonFields(stackInfo, params)).
-		WithFields(makeHttpFields(c)).
+		WithFields(makeHttpFieldsV2(req)).
 		WithField("panic", false).
 		Errorf("%+v", e)
 }
 
-func Debug(c echo.Context, msg string, params map[string]interface{}) {
+func Debug(req *http.Request, msg string, params map[string]interface{}) {
 	stackInfo := makeStackInfo(runtime.Caller(1))
 	logrus.
 		WithFields(makeCommonFields(stackInfo, params)).
-		WithFields(makeHttpFields(c)).
+		WithFields(makeHttpFieldsV2(req)).
 		Debug(msg)
 }
 
-func Fatal(c echo.Context, msg string, params map[string]interface{}) {
+func Fatal(req *http.Request, msg string, params map[string]interface{}) {
 	stackInfo := makeStackInfo(runtime.Caller(1))
 	logrus.
 		WithFields(makeCommonFields(stackInfo, params)).
-		WithFields(makeHttpFields(c)).
+		WithFields(makeHttpFieldsV2(req)).
 		Fatal(msg)
 }
 
@@ -102,11 +101,11 @@ func SimpleFatal(e error, params map[string]interface{}) {
 		Fatalf("%+v", e)
 }
 
-func Panic(c echo.Context, msg string, params map[string]interface{}) {
+func Panic(req *http.Request, msg string, params map[string]interface{}) {
 	stackInfo := makeStackInfo(runtime.Caller(1))
 	logrus.
 		WithFields(makeCommonFields(stackInfo, params)).
-		WithFields(makeHttpFields(c)).
+		WithFields(makeHttpFieldsV2(req)).
 		WithField("panic", true).
 		Error(msg)
 }
@@ -120,16 +119,16 @@ func PanicV2(req *http.Request, msg string, params map[string]interface{}) {
 		Error(msg)
 }
 
-func RequestLog(c echo.Context) {
+func RequestLog(req *http.Request) {
 	stackInfo := makeStackInfo(runtime.Caller(1))
 
-	url := c.Request().RequestURI
-	method := c.Request().Method
+	url := req.RequestURI
+	method := req.Method
 	msg := fmt.Sprintf("[Request][%s]%s", url, method)
 
 	logrus.
 		WithFields(makeCommonFields(stackInfo, nil)).
-		WithFields(makeHttpFields(c)).
+		WithFields(makeHttpFieldsV2(req)).
 		Info(msg)
 }
 
@@ -147,16 +146,16 @@ func RequestLogV2(req *http.Request, reqBody map[string]interface{}) {
 		Info(msg)
 }
 
-func ResponseLog(c echo.Context, status int, latency time.Duration, latencyHuman string) {
+func ResponseLog(req *http.Request, status int, latency time.Duration, latencyHuman string) {
 	stackInfo := makeStackInfo(runtime.Caller(1))
 
-	url := c.Request().RequestURI
-	method := c.Request().Method
+	url := req.RequestURI
+	method := req.Method
 	msg := fmt.Sprintf("[Response][%s]%s", url, method)
 
 	logrus.
 		WithFields(makeCommonFields(stackInfo, nil)).
-		WithFields(makeHttpFields(c)).
+		WithFields(makeHttpFieldsV2(req)).
 		WithField("latency", latency).
 		WithField("latency_human", latencyHuman).
 		WithField("http_status", status).
@@ -215,19 +214,6 @@ func makeCommonFields(stackInfo *StackInfo, params map[string]interface{}) map[s
 	}
 }
 
-func makeHttpFields(c echo.Context) map[string]interface{} {
-	req := c.Request()
-
-	return map[string]interface{}{
-		"uri":         req.RequestURI,
-		"ip":          c.RealIP(),
-		"http_method": req.Method,
-		"server_ip":   getLocalIP(),
-		"referrer":    req.Referer(),
-		"environment": os.Getenv("APP_ENV"),
-		"header":      makeHeaderField(c),
-	}
-}
 
 func makeHttpFieldsV2(req *http.Request) map[string]interface{} {
 	return map[string]interface{}{
@@ -241,12 +227,6 @@ func makeHttpFieldsV2(req *http.Request) map[string]interface{} {
 	}
 }
 
-func makeHeaderField(c echo.Context) map[string]interface{} {
-	excludeHeaders := []string{
-		"Authorization",
-	}
-	return filterHeaders(c.Request().Header, excludeHeaders)
-}
 
 func makeHeaderFieldV2(req *http.Request) map[string]interface{} {
 	excludeHeaders := []string{

@@ -3,7 +3,6 @@ package system_test
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/labstack/echo/v4"
 	"github.com/rotisserie/eris"
 	"github.com/stretchr/testify/assert"
 	"github.com/t-kuni/go-web-api-template/infrastructure/system"
@@ -18,14 +17,12 @@ func TestLogger(t *testing.T) {
 		cont := beforeEach(t)
 		defer afterEach(cont)
 
-		e := echo.New()
 		req := httptest.NewRequest(http.MethodGet, "/test-path", nil)
 		req.Header.Set("Referer", "https://example.com/")
 		req.Header.Set("Test-Header-Key1", "Test-Header-Value-1")
-		rec := httptest.NewRecorder()
-		c := e.NewContext(req, rec)
+		req.Header.Set("X-Forwarded-For", "192.0.2.1")
 
-		system.Info(c, "test message", map[string]interface{}{
+		system.Info(req, "test message", map[string]interface{}{
 			"testKey1": "testValue1",
 		})
 
@@ -53,7 +50,7 @@ func TestLogger(t *testing.T) {
 		assert.Equal(t, "test", log["environment"])
 		assert.Nil(t, log["input"])
 		headers := log["header"].(map[string]interface{})
-		assert.Len(t, headers, 2)
+		assert.Len(t, headers, 3)
 		assert.Equal(t, "Test-Header-Value-1", headers["Test-Header-Key1"].([]interface{})[0])
 	})
 
@@ -61,16 +58,14 @@ func TestLogger(t *testing.T) {
 		cont := beforeEach(t)
 		defer afterEach(cont)
 
-		e := echo.New()
 		req := httptest.NewRequest(http.MethodGet, "/test-path", nil)
 		req.Header.Set("Referer", "https://example.com/")
 		req.Header.Set("Test-Header-Key1", "Test-Header-Value-1")
-		rec := httptest.NewRecorder()
-		c := e.NewContext(req, rec)
+		req.Header.Set("X-Forwarded-For", "192.0.2.1")
 
 		err := fmt.Errorf("test root error")
 		wrappedErr := eris.Wrap(err, "wrapped error")
-		system.Error(c, wrappedErr, map[string]interface{}{
+		system.Error(req, wrappedErr, map[string]interface{}{
 			"testKey1": "testValue1",
 		})
 
@@ -100,7 +95,7 @@ func TestLogger(t *testing.T) {
 		assert.Equal(t, "test", log["environment"])
 		assert.Nil(t, log["input"])
 		headers := log["header"].(map[string]interface{})
-		assert.Len(t, headers, 2)
+		assert.Len(t, headers, 3)
 		assert.Equal(t, "Test-Header-Value-1", headers["Test-Header-Key1"].([]interface{})[0])
 		assert.Equal(t, false, log["panic"])
 	})
@@ -109,15 +104,13 @@ func TestLogger(t *testing.T) {
 		cont := beforeEach(t)
 		defer afterEach(cont)
 
-		e := echo.New()
 		reqBody := "{ testKey1: 'testValue1' }"
 		req := httptest.NewRequest(http.MethodGet, "/test-path", strings.NewReader(reqBody))
-		rec := httptest.NewRecorder()
-		c := e.NewContext(req, rec)
+		req.Header.Set("X-Forwarded-For", "192.0.2.1")
 
 		err := fmt.Errorf("test root error")
 		wrappedErr := eris.Wrap(err, "wrapped error")
-		system.WarnWithError(c, wrappedErr, map[string]interface{}{
+		system.WarnWithError(req, wrappedErr, map[string]interface{}{
 			"testKey1": "testValue1",
 		})
 
