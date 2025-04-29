@@ -20,9 +20,21 @@
 * application/handler
     * APIのハンドラーが格納されています。
     * 各APIのドメインロジックをここに記述します
+    * ファイル名と構造体名は `メソッド + エンドポイント` とする
+        * 例
+            * `GET /v1/companies/{id}/users` なら `getCompaniesUsers`
+            * `POST /v1/companies/{id}/users/{id}` なら `postCompaniesUser`
 * domain/service
     * 複数のAPIで共有するドメインロジックをここに記述します
     * interfaceもセットで定義します（必要に応じてモックに差し替えられるようにするため）
+    * ファイル名と構造体名は `操作対象のリソース名 + 動詞 + Service` とする
+        * 例
+            * userRegisterService
+            * emailSendService
+        * 目的：責務を明確にするため
+    * interfaceのコメントgo docに以下を記載すること
+        * 何に対してどういう処理を行うサービス、メソッドなのか
+        * どういうときに使うことを想定しているのか
 * infrastructure
     * 副作用を扱う実装をここに配置します。
     * ドメインロジックは含めないこと
