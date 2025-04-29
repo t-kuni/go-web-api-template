@@ -2,7 +2,7 @@ package middleware
 
 import (
 	"fmt"
-	"github.com/t-kuni/go-web-api-template/logger"
+	"github.com/t-kuni/go-web-api-template/infrastructure/system"
 	"net/http"
 	"runtime"
 )
@@ -52,6 +52,6 @@ func (m Recover) WritePanicLog(r *http.Request, panicErr interface{}) {
 	length := runtime.Stack(stack, !DisableStackAll)
 	if !DisablePrintStack {
 		msg := fmt.Sprintf("%v %s\n", err, stack[:length])
-		logger.PanicV2(r, msg, nil)
+		system.PanicV2(r, msg, nil)
 	}
 }

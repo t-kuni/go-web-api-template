@@ -1,10 +1,10 @@
-package logger_test
+package system_test
 
 import (
 	"github.com/joho/godotenv"
 	"github.com/sirupsen/logrus"
 	"github.com/sirupsen/logrus/hooks/test"
-	"github.com/t-kuni/go-web-api-template/logger"
+	"github.com/t-kuni/go-web-api-template/infrastructure/system"
 	"io"
 	"os"
 	"path/filepath"
@@ -14,9 +14,9 @@ import (
 var loggerHook *test.Hook
 
 func TestMain(m *testing.M) {
-	godotenv.Load(filepath.Join("..", ".env.feature"))
+	godotenv.Load(filepath.Join("..", "..", ".env.feature"))
 
-	err := logger.SetupLogger()
+	err := system.SetupLogger()
 	if err != nil {
 		panic(err)
 	}

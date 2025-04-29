@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"github.com/go-http-utils/headers"
 	"github.com/labstack/echo/v4"
-	"github.com/t-kuni/go-web-api-template/logger"
+	"github.com/t-kuni/go-web-api-template/infrastructure/system"
 	"io/ioutil"
 	"net/http"
 	"time"
@@ -44,14 +44,14 @@ func (w *CustomResponseWriter) WriteHeader(statusCode int) {
 func (m AccessLog) AccessLog(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		reqBody := getRequestBody(r)
-		logger.RequestLogV2(r, reqBody)
+		system.RequestLogV2(r, reqBody)
 
 		respWriter := NewCustomResponseWriter(w)
 		latency, latencyHuman := measureLatency(func() {
 			next.ServeHTTP(respWriter, r)
 		})
 
-		logger.ResponseLogV2(r, respWriter.StatusCode, latency, latencyHuman)
+		system.ResponseLogV2(r, respWriter.StatusCode, latency, latencyHuman)
 	})
 }
 

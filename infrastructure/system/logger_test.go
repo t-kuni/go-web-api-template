@@ -1,4 +1,4 @@
-package logger_test
+package system_test
 
 import (
 	"encoding/json"
@@ -6,7 +6,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/rotisserie/eris"
 	"github.com/stretchr/testify/assert"
-	"github.com/t-kuni/go-web-api-template/logger"
+	"github.com/t-kuni/go-web-api-template/infrastructure/system"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -25,7 +25,7 @@ func TestLogger(t *testing.T) {
 		rec := httptest.NewRecorder()
 		c := e.NewContext(req, rec)
 
-		logger.Info(c, "test message", map[string]interface{}{
+		system.Info(c, "test message", map[string]interface{}{
 			"testKey1": "testValue1",
 		})
 
@@ -70,7 +70,7 @@ func TestLogger(t *testing.T) {
 
 		err := fmt.Errorf("test root error")
 		wrappedErr := eris.Wrap(err, "wrapped error")
-		logger.Error(c, wrappedErr, map[string]interface{}{
+		system.Error(c, wrappedErr, map[string]interface{}{
 			"testKey1": "testValue1",
 		})
 
@@ -117,7 +117,7 @@ func TestLogger(t *testing.T) {
 
 		err := fmt.Errorf("test root error")
 		wrappedErr := eris.Wrap(err, "wrapped error")
-		logger.WarnWithError(c, wrappedErr, map[string]interface{}{
+		system.WarnWithError(c, wrappedErr, map[string]interface{}{
 			"testKey1": "testValue1",
 		})
 

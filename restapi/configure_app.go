@@ -9,7 +9,7 @@ import (
 	useCaseCompanies "github.com/t-kuni/go-web-api-template/application/handler"
 	"github.com/t-kuni/go-web-api-template/di"
 	customErrors "github.com/t-kuni/go-web-api-template/errors"
-	"github.com/t-kuni/go-web-api-template/logger"
+	"github.com/t-kuni/go-web-api-template/infrastructure/system"
 	middleware2 "github.com/t-kuni/go-web-api-template/middleware"
 	"github.com/t-kuni/go-web-api-template/restapi/operations/companies"
 	"github.com/t-kuni/go-web-api-template/restapi/operations/todos"
@@ -40,7 +40,7 @@ func configureFlags(api *operations.AppAPI) {
 func configureAPI(api *operations.AppAPI) http.Handler {
 	godotenv.Load()
 
-	if err := logger.SetupLogger(); err != nil {
+	if err := system.SetupLogger(); err != nil {
 		log.Fatalf("Logger initialization failed: %+v", err)
 		os.Exit(1)
 	}
