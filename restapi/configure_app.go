@@ -8,7 +8,6 @@ import (
 	"github.com/joho/godotenv"
 	useCaseCompanies "github.com/t-kuni/go-web-api-template/application/handler"
 	"github.com/t-kuni/go-web-api-template/di"
-	customErrors "github.com/t-kuni/go-web-api-template/errors"
 	"github.com/t-kuni/go-web-api-template/infrastructure/system"
 	middleware2 "github.com/t-kuni/go-web-api-template/middleware"
 	"github.com/t-kuni/go-web-api-template/restapi/operations/companies"
@@ -40,9 +39,6 @@ func configureFlags(api *operations.AppAPI) {
 func configureAPI(api *operations.AppAPI) http.Handler {
 	godotenv.Load()
 
-	// configure the api here
-	api.ServeError = customErrors.CustomServeError
-
 	// Set your custom logger if needed. Default one is log.Printf
 	// Expected interface func(string, ...interface{})
 	//
@@ -62,13 +58,13 @@ func configureAPI(api *operations.AppAPI) http.Handler {
 		recoverHandler *middleware2.Recover,
 		accessLog *middleware2.AccessLog,
 		logger *system.Logger,
+		customServeError func(http.ResponseWriter, *http.Request, error),
 
 		listTodos *useCaseCompanies.ListTodos,
 		getCompanies *useCaseCompanies.GetCompanies,
 		getUsers *useCaseCompanies.GetUsers,
 	) {
-		// エラーハンドラーにLoggerを設定
-		customErrors.SetLogger(logger)
+		api.ServeError = customServeError
 		middlewares.recoverHandler = recoverHandler.Recover
 		middlewares.accessLog = accessLog.AccessLog
 

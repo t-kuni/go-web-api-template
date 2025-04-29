@@ -3,6 +3,7 @@ package di
 import (
 	"github.com/t-kuni/go-web-api-template/application/handler"
 	"github.com/t-kuni/go-web-api-template/domain/service"
+	customErrors "github.com/t-kuni/go-web-api-template/errors"
 	"github.com/t-kuni/go-web-api-template/infrastructure/api"
 	"github.com/t-kuni/go-web-api-template/infrastructure/db"
 	"github.com/t-kuni/go-web-api-template/infrastructure/system"
@@ -41,6 +42,9 @@ func NewApp(opts ...fx.Option) *fx.App {
 			// UseCase
 			handler.NewListTodos,
 			handler.NewGetCompanies,
+
+			// Others
+			customErrors.NewCustomServeError,
 		),
 	}
 	mergedOpts = append(mergedOpts, opts...)
