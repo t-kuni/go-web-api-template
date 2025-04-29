@@ -15,10 +15,13 @@ const (
 
 // Recover PanicをRecoverするミドルウェアです
 type Recover struct {
+	logger *system.Logger
 }
 
-func NewRecover() (*Recover, error) {
-	return &Recover{}, nil
+func NewRecover(logger *system.Logger) (*Recover, error) {
+	return &Recover{
+		logger: logger,
+	}, nil
 }
 
 // Recover returns a middleware which recovers from panics anywhere in the chain
@@ -52,6 +55,6 @@ func (m Recover) WritePanicLog(r *http.Request, panicErr interface{}) {
 	length := runtime.Stack(stack, !DisableStackAll)
 	if !DisablePrintStack {
 		msg := fmt.Sprintf("%v %s\n", err, stack[:length])
-		system.PanicV2(r, msg, nil)
+		m.logger.PanicV2(r, msg, nil)
 	}
 }

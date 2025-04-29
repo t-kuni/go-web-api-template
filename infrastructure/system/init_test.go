@@ -1,14 +1,15 @@
 package system_test
 
 import (
-	"github.com/joho/godotenv"
-	"github.com/sirupsen/logrus"
-	"github.com/sirupsen/logrus/hooks/test"
-	"github.com/t-kuni/go-web-api-template/infrastructure/system"
 	"io"
 	"os"
 	"path/filepath"
 	"testing"
+
+	"github.com/joho/godotenv"
+	"github.com/sirupsen/logrus"
+	"github.com/sirupsen/logrus/hooks/test"
+	"github.com/t-kuni/go-web-api-template/infrastructure/system"
 )
 
 var loggerHook *test.Hook
@@ -16,10 +17,9 @@ var loggerHook *test.Hook
 func TestMain(m *testing.M) {
 	godotenv.Load(filepath.Join("..", "..", ".env.feature"))
 
-	err := system.SetupLogger()
-	if err != nil {
-		panic(err)
-	}
+	// setupLoggerはprivateになったので直接呼び出せない
+	// 代わりにNewLoggerを使用してロガーを初期化する
+	_ = system.NewLogger()
 	logrus.SetLevel(logrus.TraceLevel)
 	logrus.SetOutput(io.Discard)
 

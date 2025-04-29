@@ -22,7 +22,8 @@ func TestLogger(t *testing.T) {
 		req.Header.Set("Test-Header-Key1", "Test-Header-Value-1")
 		req.Header.Set("X-Forwarded-For", "192.0.2.1")
 
-		system.Info(req, "test message", map[string]interface{}{
+		logger := system.NewLogger()
+		logger.Info(req, "test message", map[string]interface{}{
 			"testKey1": "testValue1",
 		})
 
@@ -65,7 +66,8 @@ func TestLogger(t *testing.T) {
 
 		err := fmt.Errorf("test root error")
 		wrappedErr := eris.Wrap(err, "wrapped error")
-		system.Error(req, wrappedErr, map[string]interface{}{
+		logger := system.NewLogger()
+		logger.Error(req, wrappedErr, map[string]interface{}{
 			"testKey1": "testValue1",
 		})
 
@@ -110,7 +112,8 @@ func TestLogger(t *testing.T) {
 
 		err := fmt.Errorf("test root error")
 		wrappedErr := eris.Wrap(err, "wrapped error")
-		system.WarnWithError(req, wrappedErr, map[string]interface{}{
+		logger := system.NewLogger()
+		logger.WarnWithError(req, wrappedErr, map[string]interface{}{
 			"testKey1": "testValue1",
 		})
 

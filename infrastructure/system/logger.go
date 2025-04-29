@@ -25,7 +25,7 @@ type (
 )
 
 func NewLogger() *Logger {
-	err := SetupLogger()
+	err := setupLogger()
 	if err != nil {
 		panic(err)
 	}
@@ -35,7 +35,7 @@ func NewLogger() *Logger {
 	}
 }
 
-func SetupLogger() error {
+func setupLogger() error {
 	logrus.SetFormatter(&logrus.JSONFormatter{
 		FieldMap: logrus.FieldMap{
 			logrus.FieldKeyMsg: "message",
@@ -52,123 +52,123 @@ func SetupLogger() error {
 	return nil
 }
 
-func Info(req *http.Request, msg string, params map[string]interface{}) {
+func (l *Logger) Info(req *http.Request, msg string, params map[string]interface{}) {
 	stackInfo := makeStackInfo(runtime.Caller(1))
-	logrus.
+	l.logger.
 		WithFields(makeCommonFields(stackInfo, params)).
 		WithFields(makeHttpFieldsV2(req)).
 		Info(msg)
 }
 
-func SimpleInfoF(format string, args ...interface{}) {
+func (l *Logger) SimpleInfoF(format string, args ...interface{}) {
 	stackInfo := makeStackInfo(runtime.Caller(1))
-	logrus.
+	l.logger.
 		WithFields(makeCommonFields(stackInfo, nil)).
 		Infof(format, args...)
 }
 
-func Warn(req *http.Request, msg string, params map[string]interface{}) {
+func (l *Logger) Warn(req *http.Request, msg string, params map[string]interface{}) {
 	stackInfo := makeStackInfo(runtime.Caller(1))
-	logrus.
+	l.logger.
 		WithFields(makeCommonFields(stackInfo, params)).
 		WithFields(makeHttpFieldsV2(req)).
 		Warn(msg)
 }
 
-func WarnWithError(req *http.Request, e error, params map[string]interface{}) {
+func (l *Logger) WarnWithError(req *http.Request, e error, params map[string]interface{}) {
 	stackInfo := makeStackInfo(runtime.Caller(1))
-	logrus.
+	l.logger.
 		WithFields(makeCommonFields(stackInfo, params)).
 		WithFields(makeHttpFieldsV2(req)).
 		WithField("panic", false).
 		Warnf("%+v", e)
 }
 
-func Error(req *http.Request, e error, params map[string]interface{}) {
+func (l *Logger) Error(req *http.Request, e error, params map[string]interface{}) {
 	stackInfo := makeStackInfo(runtime.Caller(1))
-	logrus.
+	l.logger.
 		WithFields(makeCommonFields(stackInfo, params)).
 		WithFields(makeHttpFieldsV2(req)).
 		WithField("panic", false).
 		Errorf("%+v", e)
 }
 
-func Debug(req *http.Request, msg string, params map[string]interface{}) {
+func (l *Logger) Debug(req *http.Request, msg string, params map[string]interface{}) {
 	stackInfo := makeStackInfo(runtime.Caller(1))
-	logrus.
+	l.logger.
 		WithFields(makeCommonFields(stackInfo, params)).
 		WithFields(makeHttpFieldsV2(req)).
 		Debug(msg)
 }
 
-func Fatal(req *http.Request, msg string, params map[string]interface{}) {
+func (l *Logger) Fatal(req *http.Request, msg string, params map[string]interface{}) {
 	stackInfo := makeStackInfo(runtime.Caller(1))
-	logrus.
+	l.logger.
 		WithFields(makeCommonFields(stackInfo, params)).
 		WithFields(makeHttpFieldsV2(req)).
 		Fatal(msg)
 }
 
-func SimpleFatal(e error, params map[string]interface{}) {
+func (l *Logger) SimpleFatal(e error, params map[string]interface{}) {
 	stackInfo := makeStackInfo(runtime.Caller(1))
-	logrus.
+	l.logger.
 		WithFields(makeCommonFields(stackInfo, params)).
 		Fatalf("%+v", e)
 }
 
-func Panic(req *http.Request, msg string, params map[string]interface{}) {
+func (l *Logger) Panic(req *http.Request, msg string, params map[string]interface{}) {
 	stackInfo := makeStackInfo(runtime.Caller(1))
-	logrus.
+	l.logger.
 		WithFields(makeCommonFields(stackInfo, params)).
 		WithFields(makeHttpFieldsV2(req)).
 		WithField("panic", true).
 		Error(msg)
 }
 
-func PanicV2(req *http.Request, msg string, params map[string]interface{}) {
+func (l *Logger) PanicV2(req *http.Request, msg string, params map[string]interface{}) {
 	stackInfo := makeStackInfo(runtime.Caller(1))
-	logrus.
+	l.logger.
 		WithFields(makeCommonFields(stackInfo, params)).
 		WithFields(makeHttpFieldsV2(req)).
 		WithField("panic", true).
 		Error(msg)
 }
 
-func RequestLog(req *http.Request) {
+func (l *Logger) RequestLog(req *http.Request) {
 	stackInfo := makeStackInfo(runtime.Caller(1))
 
 	url := req.RequestURI
 	method := req.Method
 	msg := fmt.Sprintf("[Request][%s]%s", url, method)
 
-	logrus.
+	l.logger.
 		WithFields(makeCommonFields(stackInfo, nil)).
 		WithFields(makeHttpFieldsV2(req)).
 		Info(msg)
 }
 
-func RequestLogV2(req *http.Request, reqBody map[string]interface{}) {
+func (l *Logger) RequestLogV2(req *http.Request, reqBody map[string]interface{}) {
 	stackInfo := makeStackInfo(runtime.Caller(1))
 
 	url := req.RequestURI
 	method := req.Method
 	msg := fmt.Sprintf("[Request][%s]%s", url, method)
 
-	logrus.
+	l.logger.
 		WithFields(makeCommonFields(stackInfo, nil)).
 		WithFields(makeHttpFieldsV2(req)).
 		WithField("input", reqBody).
 		Info(msg)
 }
 
-func ResponseLog(req *http.Request, status int, latency time.Duration, latencyHuman string) {
+func (l *Logger) ResponseLog(req *http.Request, status int, latency time.Duration, latencyHuman string) {
 	stackInfo := makeStackInfo(runtime.Caller(1))
 
 	url := req.RequestURI
 	method := req.Method
 	msg := fmt.Sprintf("[Response][%s]%s", url, method)
 
-	logrus.
+	l.logger.
 		WithFields(makeCommonFields(stackInfo, nil)).
 		WithFields(makeHttpFieldsV2(req)).
 		WithField("latency", latency).
@@ -177,14 +177,14 @@ func ResponseLog(req *http.Request, status int, latency time.Duration, latencyHu
 		Info(msg)
 }
 
-func ResponseLogV2(req *http.Request, status int, latency time.Duration, latencyHuman string) {
+func (l *Logger) ResponseLogV2(req *http.Request, status int, latency time.Duration, latencyHuman string) {
 	stackInfo := makeStackInfo(runtime.Caller(1))
 
 	url := req.RequestURI
 	method := req.Method
 	msg := fmt.Sprintf("[Response][%s]%s", url, method)
 
-	logrus.
+	l.logger.
 		WithFields(makeCommonFields(stackInfo, nil)).
 		WithFields(makeHttpFieldsV2(req)).
 		WithField("latency", latency).

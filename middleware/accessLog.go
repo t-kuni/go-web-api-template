@@ -13,10 +13,13 @@ import (
 
 // AccessLog RequestログとResponseログを出力するミドルウェア
 type AccessLog struct {
+	logger *system.Logger
 }
 
-func NewAccessLog() (*AccessLog, error) {
-	return &AccessLog{}, nil
+func NewAccessLog(logger *system.Logger) (*AccessLog, error) {
+	return &AccessLog{
+		logger: logger,
+	}, nil
 }
 
 type CustomResponseWriter struct {
@@ -44,14 +47,14 @@ func (w *CustomResponseWriter) WriteHeader(statusCode int) {
 func (m AccessLog) AccessLog(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		reqBody := getRequestBody(r)
-		system.RequestLogV2(r, reqBody)
+		m.logger.RequestLogV2(r, reqBody)
 
 		respWriter := NewCustomResponseWriter(w)
 		latency, latencyHuman := measureLatency(func() {
 			next.ServeHTTP(respWriter, r)
 		})
 
-		system.ResponseLogV2(r, respWriter.StatusCode, latency, latencyHuman)
+		m.logger.ResponseLogV2(r, respWriter.StatusCode, latency, latencyHuman)
 	})
 }
 

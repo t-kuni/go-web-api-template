@@ -40,11 +40,6 @@ func configureFlags(api *operations.AppAPI) {
 func configureAPI(api *operations.AppAPI) http.Handler {
 	godotenv.Load()
 
-	if err := system.SetupLogger(); err != nil {
-		log.Fatalf("Logger initialization failed: %+v", err)
-		os.Exit(1)
-	}
-
 	// configure the api here
 	api.ServeError = customErrors.CustomServeError
 
@@ -66,11 +61,14 @@ func configureAPI(api *operations.AppAPI) http.Handler {
 	app = di.NewApp(fx.Invoke(func(
 		recoverHandler *middleware2.Recover,
 		accessLog *middleware2.AccessLog,
+		logger *system.Logger,
 
 		listTodos *useCaseCompanies.ListTodos,
 		getCompanies *useCaseCompanies.GetCompanies,
 		getUsers *useCaseCompanies.GetUsers,
 	) {
+		// エラーハンドラーにLoggerを設定
+		customErrors.SetLogger(logger)
 		middlewares.recoverHandler = recoverHandler.Recover
 		middlewares.accessLog = accessLog.AccessLog
 
