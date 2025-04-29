@@ -8,21 +8,21 @@ import (
 	"github.com/t-kuni/go-web-api-template/infrastructure/system"
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"strings"
 	"testing"
 )
 
 func TestLogger(t *testing.T) {
 	t.Run("Should output info log", func(t *testing.T) {
-		cont := beforeEach(t)
-		defer afterEach(cont)
+		os.Setenv("APP_ENV", "test")
 
 		req := httptest.NewRequest(http.MethodGet, "/test-path", nil)
 		req.Header.Set("Referer", "https://example.com/")
 		req.Header.Set("Test-Header-Key1", "Test-Header-Value-1")
 		req.Header.Set("X-Forwarded-For", "192.0.2.1")
 
-		logger := system.NewLogger()
+		logger, loggerHook := system.NewTestLogger()
 		logger.Info(req, "test message", map[string]interface{}{
 			"testKey1": "testValue1",
 		})
@@ -56,9 +56,6 @@ func TestLogger(t *testing.T) {
 	})
 
 	t.Run("Should output error log with stack trace", func(t *testing.T) {
-		cont := beforeEach(t)
-		defer afterEach(cont)
-
 		req := httptest.NewRequest(http.MethodGet, "/test-path", nil)
 		req.Header.Set("Referer", "https://example.com/")
 		req.Header.Set("Test-Header-Key1", "Test-Header-Value-1")
@@ -66,7 +63,7 @@ func TestLogger(t *testing.T) {
 
 		err := fmt.Errorf("test root error")
 		wrappedErr := eris.Wrap(err, "wrapped error")
-		logger := system.NewLogger()
+		logger, loggerHook := system.NewTestLogger()
 		logger.Error(req, wrappedErr, map[string]interface{}{
 			"testKey1": "testValue1",
 		})
@@ -103,16 +100,14 @@ func TestLogger(t *testing.T) {
 	})
 
 	t.Run("Should output warn log with stack trace", func(t *testing.T) {
-		cont := beforeEach(t)
-		defer afterEach(cont)
-
 		reqBody := "{ testKey1: 'testValue1' }"
 		req := httptest.NewRequest(http.MethodGet, "/test-path", strings.NewReader(reqBody))
 		req.Header.Set("X-Forwarded-For", "192.0.2.1")
 
 		err := fmt.Errorf("test root error")
 		wrappedErr := eris.Wrap(err, "wrapped error")
-		logger := system.NewLogger()
+		// テスト用のロガーを使用
+		logger, loggerHook := system.NewTestLogger()
 		logger.WarnWithError(req, wrappedErr, map[string]interface{}{
 			"testKey1": "testValue1",
 		})

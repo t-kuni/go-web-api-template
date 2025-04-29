@@ -5,6 +5,9 @@ import (
 	"github.com/go-http-utils/headers"
 	"github.com/rotisserie/eris"
 	"github.com/sirupsen/logrus"
+	"github.com/sirupsen/logrus/hooks/test"
+	systemInterface "github.com/t-kuni/go-web-api-template/domain/infrastructure/system"
+	"io"
 	"net"
 	"net/http"
 	"os"
@@ -24,32 +27,56 @@ type (
 	}
 )
 
-func NewLogger() *Logger {
-	err := setupLogger()
-	if err != nil {
-		panic(err)
-	}
-	
-	return &Logger{
-		logger: logrus.StandardLogger(),
-	}
-}
+// NewLogger は新しいロガーインスタンスを生成します
+func NewLogger() (systemInterface.ILogger, error) {
+	logger := logrus.New()
 
-func setupLogger() error {
-	logrus.SetFormatter(&logrus.JSONFormatter{
+	// ロガーの設定
+	logger.SetFormatter(&logrus.JSONFormatter{
 		FieldMap: logrus.FieldMap{
 			logrus.FieldKeyMsg: "message",
 		},
 	})
-	logrus.SetOutput(os.Stdout)
+	logger.SetOutput(os.Stdout)
 
+	// ログレベルの設定
 	level, err := getLogLevel()
 	if err != nil {
-		return eris.Wrap(err, "")
+		return nil, eris.Wrap(err, "")
 	}
-	logrus.SetLevel(level)
+	logger.SetLevel(level)
 
-	return nil
+	return &Logger{
+		logger: logger,
+	}, nil
+}
+
+// NewTestLogger はテスト用の新しいロガーインスタンスを生成します
+func NewTestLogger() (systemInterface.ILogger, *test.Hook) {
+	testLogger, loggerHook := test.NewNullLogger()
+	testLogger.SetLevel(logrus.TraceLevel)
+
+	// JSONフォーマッタを設定
+	testLogger.SetFormatter(&logrus.JSONFormatter{
+		FieldMap: logrus.FieldMap{
+			logrus.FieldKeyMsg: "message",
+		},
+	})
+
+	// 出力先を設定（テスト時は出力を破棄）
+	testLogger.SetOutput(io.Discard)
+
+	return &Logger{
+		logger: testLogger,
+	}, loggerHook
+}
+
+// NewLoggerWithCustomLogger は指定されたlogrusロガーを使用して新しいロガーインスタンスを生成します
+// テスト用途に使用します
+func NewLoggerWithCustomLogger(customLogger *logrus.Logger) systemInterface.ILogger {
+	return &Logger{
+		logger: customLogger,
+	}
 }
 
 func (l *Logger) Info(req *http.Request, msg string, params map[string]interface{}) {
@@ -229,8 +256,11 @@ func makeCommonFields(stackInfo *StackInfo, params map[string]interface{}) map[s
 	}
 }
 
-
 func makeHttpFieldsV2(req *http.Request) map[string]interface{} {
+	if req == nil {
+		return nil
+	}
+
 	return map[string]interface{}{
 		"uri":         req.RequestURI,
 		"ip":          req.Header.Get(headers.XForwardedFor),
@@ -241,7 +271,6 @@ func makeHttpFieldsV2(req *http.Request) map[string]interface{} {
 		"header":      makeHeaderFieldV2(req),
 	}
 }
-
 
 func makeHeaderFieldV2(req *http.Request) map[string]interface{} {
 	excludeHeaders := []string{

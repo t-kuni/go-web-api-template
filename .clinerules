@@ -81,6 +81,6 @@
 * モックの作り方
     * domain/infrastructureのファイルには以下を含めること（モックを生成するのに必要）
     * interfaceを記述したファイルには以下のコメントを含めること
-        * `//go:generate mockgen -source=$GOFILE -destination=${GOFILE}_mock.go -package=$GOPACKAGE`
+        * `//go:generate go tool mockgen -source=$GOFILE -destination=${GOFILE}_mock.go -package=$GOPACKAGE`
         * これにより make generate コマンドでモックファイルが生成されます
         * 主に `domain/infrastructure` と `domain/service` 配下のファイルに記載することになります
