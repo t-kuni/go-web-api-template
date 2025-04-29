@@ -12,11 +12,9 @@ import (
 
 	"github.com/go-openapi/runtime"
 	"github.com/stretchr/testify/assert"
-	"github.com/t-kuni/go-web-api-template/domain/service"
 	"github.com/t-kuni/go-web-api-template/ent"
 	"github.com/t-kuni/go-web-api-template/restapi/operations/companies"
 	"github.com/t-kuni/go-web-api-template/testUtil"
-	"go.uber.org/mock/gomock"
 )
 
 func Test_GetCompanies(t *testing.T) {
@@ -31,24 +29,8 @@ func Test_GetCompanies(t *testing.T) {
 
 		cont.PrepareTestData(func(db *ent.Client) {
 			db.Company.Create().SetID("UUID-1").SetName("NAME1").SaveX(t.Context())
-			// ここにuserを追加する
+			db.User.Create().SetID("UUID-10").SetCompanyID("UUID-1").SetName("NAME1").SetAge(20).SetGender("GENDER_1").SaveX(t.Context())
 		})
-
-		{
-			mock := service.NewMockIExampleService(cont.MockCtrl)
-			mock.
-				EXPECT().
-				Exec(gomock.Any(), gomock.Eq("BNB")).
-				Return("DUMMY", []*ent.Company{
-					{
-						ID:        "UUID-1",
-						Name:      "TEST",
-						CreatedAt: testUtil.MustNewDateTime("2006-01-02T15:04:05+09:00"),
-						Edges:     ent.CompanyEdges{},
-					},
-				}, nil)
-			testUtil.Override[service.IExampleService](cont, mock)
-		}
 
 		cont.Exec(func(testee *handler.GetCompanies) {
 			//
@@ -76,8 +58,16 @@ func Test_GetCompanies(t *testing.T) {
   "companies": [
     {
       "id": "UUID-1",
-      "name": "TEST",
-      "users": []
+      "name": "NAME1",
+      "users": [
+        {
+          "id": "UUID-10",
+          "name": "NAME1",
+          "age": 20,
+          "gender": "GENDER_1",
+          "company": null
+        }
+      ]
     }
   ]
 }`
