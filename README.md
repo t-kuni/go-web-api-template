@@ -28,7 +28,7 @@ DB Migration and Seeding
 ```
 docker compose exec app sh
 make generate
-go run commands/migrate/main.go
+go run commands/migrate/main.go --reset
 go run commands/seed/main.go
 ```
 
@@ -62,7 +62,7 @@ https://localhost:8080 に接続し、`example_test`データベースを作成�
 
 ```
 docker compose exec app sh
-DB_DATABASE=example_test go run commands/migrate/main.go
+DB_DATABASE=example_test go run commands/migrate/main.go --reset
 make test
 ```
 
