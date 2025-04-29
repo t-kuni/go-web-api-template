@@ -55,7 +55,7 @@ func (u ListTodos) Main(params todos.GetTodosParams) middleware.Responder {
 	// Convert ent.Todo to models.Todo
 	var apiTodoList []*models.Todo
 	for _, entTodo := range todoList {
-		id, err := util.UuidToStrfmtUUID(entTodo.ID)
+		id, err := util.StringToStrfmtUUID(entTodo.ID)
 		if err != nil {
 			return middleware.Error(500, err)
 		}

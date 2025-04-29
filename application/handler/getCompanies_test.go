@@ -29,7 +29,7 @@ func Test_GetCompanies(t *testing.T) {
 		cont.SetTime("2020-04-10T00:00:00+09:00")
 
 		cont.PrepareTestData(func(db *ent.Client) {
-			db.Company.Create().SetID(1).SetName("NAME1").SaveX(t.Context())
+			db.Company.Create().SetID("UUID-1").SetName("NAME1").SaveX(t.Context())
 		})
 
 		{
@@ -39,7 +39,7 @@ func Test_GetCompanies(t *testing.T) {
 				Exec(gomock.Any(), gomock.Eq("BNB")).
 				Return("DUMMY", []*ent.Company{
 					{
-						ID:        1,
+						ID:        "UUID-1",
 						Name:      "TEST",
 						CreatedAt: testUtil.MustNewDateTime("2006-01-02T15:04:05+09:00"),
 						Edges:     ent.CompanyEdges{},
@@ -73,7 +73,7 @@ func Test_GetCompanies(t *testing.T) {
 {
   "companies": [
     {
-      "id": 1,
+      "id": "UUID-1",
       "name": "TEST"
     }
   ]

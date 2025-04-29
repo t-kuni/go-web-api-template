@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"fmt"
 	"github.com/go-openapi/runtime/middleware"
 	"github.com/go-openapi/strfmt"
 	"github.com/t-kuni/go-web-api-template/domain/infrastructure/db"
@@ -62,7 +61,7 @@ func (u GetUsers) Main(params userOps.GetUsersParams) middleware.Responder {
 		// 会社情報を取得
 		var company *models.Company
 		if usr.Edges.Company != nil {
-			companyID := strfmt.UUID(fmt.Sprintf("%d", usr.Edges.Company.ID))
+			companyID := strfmt.UUID(usr.Edges.Company.ID)
 			companyName := usr.Edges.Company.Name
 			company = &models.Company{
 				ID:   &companyID,
@@ -77,7 +76,7 @@ func (u GetUsers) Main(params userOps.GetUsersParams) middleware.Responder {
 		}
 
 		// ユーザー情報を設定
-		userID := strfmt.UUID(fmt.Sprintf("%d", usr.ID))
+		userID := strfmt.UUID(usr.ID)
 		respUsers = append(respUsers, &models.User{
 			ID:      &userID,
 			Name:    &usr.Name,

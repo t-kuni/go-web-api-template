@@ -103,15 +103,7 @@ paths:
               companies:
                 type: array
                 items:
-                  type: object
-                  properties:
-                    id:
-                      type: integer
-                    name:
-                      type: string
-                  required:
-                    - id
-                    - name
+                  $ref: '#/definitions/Company'
             required:
               - companies
       operationId: get-companies

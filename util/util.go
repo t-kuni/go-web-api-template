@@ -16,3 +16,11 @@ func UuidToStrfmtUUID(u uuid.UUID) (strfmt.UUID, error) {
 	}
 	return strfmtUUID, nil
 }
+
+func StringToStrfmtUUID(s string) (strfmt.UUID, error) {
+	var strfmtUUID strfmt.UUID
+	if err := strfmtUUID.Scan(s); err != nil {
+		return "", err
+	}
+	return strfmtUUID, nil
+}

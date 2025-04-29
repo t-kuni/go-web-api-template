@@ -85,7 +85,7 @@ func TestHello2(t *testing.T) {
 			Exec(gomock.Any(), gomock.Eq("BNB")).
 			Return("DUMMY", []*ent.Company{
 				{
-					ID:        1,
+					ID:        "UUID-1",
 					Name:      "TEST",
 					CreatedAt: createdAt,
 					Edges:     ent.CompanyEdges{},
@@ -124,8 +124,8 @@ func TestHello3(t *testing.T) {
 	cont.SetTime("2020-04-10T00:00:00+09:00")
 
 	cont.PrepareTestData(func(db *ent.Client) {
-		db.User.Create().SetID(1).SetAge(10).SetName("テストユーザ").SaveX(t.Context())
-		db.Company.Create().SetID(1).SetName("テスト企業").SaveX(t.Context())
+		db.User.Create().SetID("UUID-1").SetAge(10).SetName("テストユーザ").SaveX(t.Context())
+		db.Company.Create().SetID("UUID-1").SetName("テスト企業").SaveX(t.Context())
 	})
 
 	{

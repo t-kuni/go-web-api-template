@@ -26,11 +26,11 @@ func Test_GetUsers(t *testing.T) {
 
 		cont.PrepareTestData(func(db *ent.Client) {
 			// 会社データを作成
-			company := db.Company.Create().SetID(1).SetName("テスト株式会社").SaveX(t.Context())
+			company := db.Company.Create().SetID("UUID-1").SetName("テスト株式会社").SaveX(t.Context())
 			
 			// ユーザーデータを作成
-			db.User.Create().SetID(1).SetName("山田太郎").SetAge(30).SetGender("man").SetCompany(company).SaveX(t.Context())
-			db.User.Create().SetID(2).SetName("佐藤花子").SetAge(25).SetGender("woman").SetCompany(company).SaveX(t.Context())
+			db.User.Create().SetID("UUID-2").SetName("山田太郎").SetAge(30).SetGender("man").SetCompany(company).SaveX(t.Context())
+			db.User.Create().SetID("UUID-3").SetName("佐藤花子").SetAge(25).SetGender("woman").SetCompany(company).SaveX(t.Context())
 		})
 
 		cont.Exec(func(testee *handler.GetUsers) {
@@ -61,22 +61,22 @@ func Test_GetUsers(t *testing.T) {
 {
   "users": [
     {
-      "id": "1",
+      "id": "UUID-2",
       "name": "山田太郎",
       "age": 30,
       "gender": "man",
       "company": {
-        "id": "1",
+        "id": "UUID-1",
         "name": "テスト株式会社"
       }
     },
     {
-      "id": "2",
+      "id": "UUID-3",
       "name": "佐藤花子",
       "age": 25,
       "gender": "woman",
       "company": {
-        "id": "1",
+        "id": "UUID-1",
         "name": "テスト株式会社"
       }
     }
