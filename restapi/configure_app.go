@@ -8,7 +8,7 @@ import (
 	"github.com/joho/godotenv"
 	useCaseCompanies "github.com/t-kuni/go-web-api-template/application/handler"
 	"github.com/t-kuni/go-web-api-template/di"
-	"github.com/t-kuni/go-web-api-template/infrastructure/system"
+	"github.com/t-kuni/go-web-api-template/domain/infrastructure/system"
 	middleware2 "github.com/t-kuni/go-web-api-template/middleware"
 	"github.com/t-kuni/go-web-api-template/restapi/operations/companies"
 	"github.com/t-kuni/go-web-api-template/restapi/operations/todos"
@@ -57,11 +57,12 @@ func configureAPI(api *operations.AppAPI) http.Handler {
 	app = di.NewApp(fx.Invoke(func(
 		recoverHandler *middleware2.Recover,
 		accessLog *middleware2.AccessLog,
-		logger *system.Logger,
+		logger system.ILogger,
 		customServeError func(http.ResponseWriter, *http.Request, error),
 
 		listTodos *useCaseCompanies.ListTodos,
 		getCompanies *useCaseCompanies.GetCompanies,
+		getCompaniesUsers *useCaseCompanies.GetCompaniesUsers,
 		getUsers *useCaseCompanies.GetUsers,
 	) {
 		api.ServeError = customServeError
@@ -70,6 +71,7 @@ func configureAPI(api *operations.AppAPI) http.Handler {
 
 		api.TodosGetTodosHandler = todos.GetTodosHandlerFunc(listTodos.Main)
 		api.CompaniesGetCompaniesHandler = companies.GetCompaniesHandlerFunc(getCompanies.Main)
+		api.CompaniesGetCompaniesUsersHandler = companies.GetCompaniesUsersHandlerFunc(getCompaniesUsers.Main)
 		api.UserGetUsersHandler = user.GetUsersHandlerFunc(getUsers.Main)
 	}))
 	err := app.Start(ctx)

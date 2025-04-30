@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"github.com/go-http-utils/headers"
 	"github.com/labstack/echo/v4"
-	"github.com/t-kuni/go-web-api-template/infrastructure/system"
+	"github.com/t-kuni/go-web-api-template/domain/infrastructure/system"
 	"io/ioutil"
 	"net/http"
 	"time"
@@ -13,10 +13,10 @@ import (
 
 // AccessLog RequestログとResponseログを出力するミドルウェア
 type AccessLog struct {
-	logger *system.Logger
+	logger system.ILogger
 }
 
-func NewAccessLog(logger *system.Logger) (*AccessLog, error) {
+func NewAccessLog(logger system.ILogger) (*AccessLog, error) {
 	return &AccessLog{
 		logger: logger,
 	}, nil

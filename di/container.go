@@ -42,6 +42,7 @@ func NewApp(opts ...fx.Option) *fx.App {
 			// UseCase
 			handler.NewListTodos,
 			handler.NewGetCompanies,
+			handler.NewGetCompaniesUsers,
 
 			// Others
 			customErrors.NewCustomServeError,

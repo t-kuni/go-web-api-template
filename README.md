@@ -43,6 +43,7 @@ Confirm
 ```
 curl -i "http://localhost"
 curl -i "http://localhost/companies"
+curl -i "http://localhost/companies/UUID-1/users"
 curl -i "http://localhost/users"
 curl -i "http://localhost/todos"
 curl -i "http://localhost" -d "{\"description\":\"message $RANDOM\"}" -H 'Content-Type: application/io.goswagger.examples.todo-list.v1+json'

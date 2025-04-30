@@ -2,7 +2,7 @@ package middleware
 
 import (
 	"fmt"
-	"github.com/t-kuni/go-web-api-template/infrastructure/system"
+	"github.com/t-kuni/go-web-api-template/domain/infrastructure/system"
 	"net/http"
 	"runtime"
 )
@@ -15,10 +15,10 @@ const (
 
 // Recover PanicをRecoverするミドルウェアです
 type Recover struct {
-	logger *system.Logger
+	logger system.ILogger
 }
 
-func NewRecover(logger *system.Logger) (*Recover, error) {
+func NewRecover(logger system.ILogger) (*Recover, error) {
 	return &Recover{
 		logger: logger,
 	}, nil

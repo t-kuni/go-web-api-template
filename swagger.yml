@@ -108,6 +108,30 @@ paths:
               - companies
       operationId: get-companies
       description: get companies
+  '/companies/{id}/users':
+    get:
+      summary: Your GET endpoint
+      tags:
+        - companies
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+            properties:
+              users:
+                type: array
+                items:
+                  $ref: '#/definitions/User'
+            required:
+              - users
+      operationId: get-companies-users
+      description: get users
+    parameters:
+      - type: string
+        name: id
+        in: path
+        required: true
   /users:
     get:
       summary: Your GET endpoint

@@ -1,12 +1,12 @@
 package errors
 
 import (
-	"github.com/t-kuni/go-web-api-template/infrastructure/system"
+	"github.com/t-kuni/go-web-api-template/domain/infrastructure/system"
 	"net/http"
 )
 
 // NewCustomServeError はカスタムエラーハンドラを生成する関数です
-func NewCustomServeError(logger *system.Logger) func(w http.ResponseWriter, r *http.Request, err error) {
+func NewCustomServeError(logger system.ILogger) func(w http.ResponseWriter, r *http.Request, err error) {
 	return func(w http.ResponseWriter, r *http.Request, err error) {
 		// エラーをログに出力
 		if logger != nil {
