@@ -32,6 +32,7 @@ func NewApp(opts ...fx.Option) *fx.App {
 			handler.NewListTodos,
 			handler.NewGetCompanies,
 			handler.NewGetCompaniesUsers,
+			handler.NewPostUsersTodos,
 
 			// Service
 			service.NewExampleService,
