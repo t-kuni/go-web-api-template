@@ -52,7 +52,6 @@ func (u GetCompaniesUsers) Main(params companies.GetCompaniesUsersParams) middle
 		company := &models.Company{
 			ID:    &companyID,
 			Name:  &companyName,
-			Users: []*models.User{}, // 循環参照を避けるため空配列を設定
 		}
 
 		// 性別を設定

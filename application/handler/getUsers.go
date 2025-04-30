@@ -67,7 +67,6 @@ func (u GetUsers) Main(params userOps.GetUsersParams) middleware.Responder {
 			company = &models.Company{
 				ID:    &companyID,
 				Name:  &companyName,
-				Users: []*models.User{},
 			}
 		}
 

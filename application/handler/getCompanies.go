@@ -49,7 +49,6 @@ func (u GetCompanies) Main(params companies.GetCompaniesParams) middleware.Respo
 		respCompanies = append(respCompanies, &models.Company{
 			ID:    &id,
 			Name:  &company.Name,
-			Users: users,
 		})
 	}
 

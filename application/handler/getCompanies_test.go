@@ -58,16 +58,7 @@ func Test_GetCompanies(t *testing.T) {
   "companies": [
     {
       "id": "UUID-1",
-      "name": "NAME1",
-      "users": [
-        {
-          "id": "UUID-10",
-          "name": "NAME1",
-          "age": 20,
-          "gender": "GENDER_1",
-          "company": null
-        }
-      ]
+      "name": "NAME1"
     }
   ]
 }`
