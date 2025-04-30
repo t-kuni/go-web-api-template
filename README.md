@@ -13,47 +13,52 @@ This repository is project template for Go Web API application.
 * [Error Handling (Stack trace)](https://github.com/rotisserie/eris)
 * Dev Container
 * Seeder
+* Cline
 
-# Usage
+# Setup
 
-```
+1. VSCodeで本リポジトリを開くと画面右下に以下のポップアップが表示されるので `Reopen in Container` をクリックする  
+   （Clineも同時にインストールされます）
+   
+![image](https://github.com/user-attachments/assets/fc32e2ec-ffbc-403b-a14f-5abd88e26d87)
+
+2. Terminalを開き（`Ctrl + Shift + @`）、以下のコマンドを実行します
+
+2-1. envファイルを生成する
+
+```bash
 cp .env.example .env
 cp .env.feature.example .env.feature
-go generate -x ./...
-docker compose up -d
 ```
 
-DB Migration and Seeding
+2-2. 各種ファイルを生成する
 
-```
-docker compose exec app sh
+```bash
 make generate
+```
+
+2-3. DBを構築＆レコードを登録する
+
+```bash
 go run commands/migrate/main.go --reset
 go run commands/seed/main.go
 ```
 
-Generate Server
+2-4. 疎通確認
 
-```
-swagger generate server -A App -f ./swagger.yml --model-package=restapi/models
-```
-
-Confirm
-
-```
-curl -i "http://localhost"
+```bash
 curl -i "http://localhost/companies"
 curl -i "http://localhost/companies/UUID-1/users"
 curl -i "http://localhost/users"
 curl -i "http://localhost/todos"
-curl -i "http://localhost" -d "{\"description\":\"message $RANDOM\"}" -H 'Content-Type: application/io.goswagger.examples.todo-list.v1+json'
-curl -i localhost/1 -X DELETE -H 'Content-Type: application/io.goswagger.examples.todo-list.v1+json'
 ```
 
-# Tests
+# テストを実行する
 
-```
+```bash
+# テスト用のDBを構築する
 DB_DATABASE=example_test go run commands/migrate/main.go --reset
+# テスト実行
 make test
 ```
 
@@ -82,13 +87,3 @@ go run entgo.io/ent/cmd/ent init [EntityName]
 ```
 docker build --target prod --tag go-web-api-template .
 ```
-
-# タスク
-
-- [ ] polluterからtestfixturesに載せ替え
-- [ ] マイグレーションの管理を切り出し
-- [ ] 認証処理のモック化
-- [ ] 現在日時のモック化
-- [ ] DB接続のタイムゾーン
-- [ ] coreファイルが残る問題
-- [ ] CD
