@@ -29,6 +29,7 @@ func NewApp(opts ...fx.Option) *fx.App {
 			// Handler
 			handler.NewHelloHandler,
 			handler.NewGetUsers,
+			handler.NewPostUser,
 
 			// Service
 			service.NewExampleService,
@@ -38,6 +39,7 @@ func NewApp(opts ...fx.Option) *fx.App {
 			api.NewBinanceApi,
 			system.NewTimer,
 			system.NewLogger,
+			system.NewUuidGenerator,
 
 			// UseCase
 			handler.NewListTodos,
