@@ -18,9 +18,8 @@ This repository is project template for Go Web API application.
 # Setup
 
 1. VSCodeで本リポジトリを開くと画面右下に以下のポップアップが表示されるので `Reopen in Container` をクリックする  
-   （Clineも同時にインストールされます。Clineの使い方は[こちら](./how-to-use-cline.md)を参照）
-   
-![image](https://github.com/user-attachments/assets/fc32e2ec-ffbc-403b-a14f-5abd88e26d87)
+   （Clineも同時にインストールされます。Clineの使い方は[こちら](./how-to-use-cline.md)を参照）　　
+   ![image](https://github.com/user-attachments/assets/fc32e2ec-ffbc-403b-a14f-5abd88e26d87)
 
 2. Terminalを開き（`Ctrl + Shift + @`）、以下のコマンドを実行します
 
