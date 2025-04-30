@@ -52,17 +52,7 @@ curl -i localhost/1 -X DELETE -H 'Content-Type: application/io.goswagger.example
 
 # Tests
 
-Unit test
-
 ```
-go test ./...
-```
-
-Feature test  
-https://localhost:8080 に接続し、`example_test`データベースを作成してから以下のコマンドを実行する
-
-```
-docker compose exec app sh
 DB_DATABASE=example_test go run commands/migrate/main.go --reset
 make test
 ```
