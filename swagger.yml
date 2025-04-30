@@ -212,8 +212,15 @@ paths:
         '200':
           description: OK
           schema:
-            $ref: '#/definitions/Todo'
+            type: object
+            properties: {}
       description: Todoを作成します
+      parameters:
+        - in: body
+          name: body
+          schema:
+            $ref: '#/definitions/Todo'
+          description: ''
 definitions:
   Todo:
     type: object
