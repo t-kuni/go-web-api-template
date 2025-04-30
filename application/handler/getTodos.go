@@ -2,10 +2,12 @@ package handler
 
 import (
 	"github.com/go-openapi/runtime/middleware"
+	"github.com/go-openapi/strfmt"
 	"github.com/t-kuni/go-web-api-template/domain/infrastructure/db"
-	customErrors "github.com/t-kuni/go-web-api-template/errors"
+	"github.com/t-kuni/go-web-api-template/ent"
 	"github.com/t-kuni/go-web-api-template/ent/schema"
 	"github.com/t-kuni/go-web-api-template/ent/todo"
+	customErrors "github.com/t-kuni/go-web-api-template/errors"
 	"github.com/t-kuni/go-web-api-template/restapi/models"
 	"github.com/t-kuni/go-web-api-template/restapi/operations/todos"
 	"github.com/t-kuni/go-web-api-template/util"
@@ -22,7 +24,10 @@ func NewListTodos(conn db.IConnector) (*ListTodos, error) {
 }
 
 func (u ListTodos) Main(params todos.GetTodosParams) middleware.Responder {
-	todoQuery := u.DBConnector.GetEnt().Todo.Query()
+	// Todoクエリを作成し、所有者情報を取得
+	todoQuery := u.DBConnector.GetEnt().Todo.Query().WithOwner(func(query *ent.UserQuery) {
+		query.WithCompany() // 所有者の会社情報も取得
+	})
 
 	// Handle status filter
 	if params.Status != nil {
@@ -61,12 +66,47 @@ func (u ListTodos) Main(params todos.GetTodosParams) middleware.Responder {
 			return customErrors.NewErrorResponder(err)
 		}
 
+		// 所有者情報を設定
+		var owner *models.User
+		if entTodo.Edges.Owner != nil {
+			ownerID := strfmt.UUID(entTodo.Edges.Owner.ID)
+			ownerName := entTodo.Edges.Owner.Name
+			gender := entTodo.Edges.Owner.Gender
+			if gender == "" {
+				gender = "man" // デフォルト値
+			}
+
+			owner = &models.User{
+				ID:     &ownerID,
+				Name:   &ownerName,
+				Age:    util.Ptr(int64(entTodo.Edges.Owner.Age)),
+				Gender: &gender,
+			}
+
+			// 所有者の会社情報も設定（存在する場合）
+			if entTodo.Edges.Owner.Edges.Company != nil {
+				companyID := strfmt.UUID(entTodo.Edges.Owner.Edges.Company.ID)
+				companyName := entTodo.Edges.Owner.Edges.Company.Name
+				owner.Company = &models.Company{
+					ID:   &companyID,
+					Name: &companyName,
+				}
+			}
+		}
+
 		apiTodoList = append(apiTodoList, &models.Todo{
 			ID:          util.Ptr(id),
 			Title:       &entTodo.Title,
 			Description: &entTodo.Description,
 			Status:      util.Ptr(string(entTodo.Status)),
 			Completed:   entTodo.Completed,
+			CompletedAt: func() strfmt.DateTime {
+				if entTodo.CompletedAt != nil {
+					return strfmt.DateTime(*entTodo.CompletedAt)
+				}
+				return strfmt.DateTime{}
+			}(),
+			Owner: owner,
 		})
 	}
 

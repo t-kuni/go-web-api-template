@@ -31,5 +31,7 @@ func (User) Edges() []ent.Edge {
 		edge.From("company", Company.Type).
 			Ref("users").
 			Unique(),
+		edge.From("todos", Todo.Type).
+			Ref("owner"),
 	}
 }

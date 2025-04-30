@@ -25,9 +25,9 @@ func Test_GetUsers(t *testing.T) {
 		cont.SetTime("2020-04-10T00:00:00+09:00")
 
 		cont.PrepareTestData(func(db *ent.Client) {
-			company := db.Company.Create().SetID("UUID-1").SetName("テスト株式会社").SaveX(t.Context())
-			db.User.Create().SetID("UUID-2").SetName("山田太郎").SetAge(30).SetGender("man").SetCompany(company).SaveX(t.Context())
-			db.User.Create().SetID("UUID-3").SetName("佐藤花子").SetAge(25).SetGender("woman").SetCompany(company).SaveX(t.Context())
+			db.Company.Create().SetID("UUID-1").SetName("テスト株式会社").SaveX(t.Context())
+			db.User.Create().SetID("UUID-2").SetName("山田太郎").SetAge(30).SetGender("man").SetCompanyID("UUID-1").SaveX(t.Context())
+			db.User.Create().SetID("UUID-3").SetName("佐藤花子").SetAge(25).SetGender("woman").SetCompanyID("UUID-1").SaveX(t.Context())
 		})
 
 		cont.Exec(func(testee *handler.GetUsers) {

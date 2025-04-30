@@ -240,6 +240,8 @@ definitions:
           id: lb297jodx4ra3
         format: date-time
         readOnly: true
+      owner:
+        $ref: '#/definitions/User'
     required:
       - id
       - title
@@ -247,6 +249,7 @@ definitions:
       - status
       - completed
       - completed_at
+      - owner
   error:
     type: object
     required:

@@ -39,27 +39,32 @@ todos:
     status: "none"
     completed: false
     completed_at: null
+    todo_owner: UUID-1
   - id: UUID-2
     title: "Task 2"
     description: "Description for Task 2"
     status: "progress"
     completed: false
     completed_at: null
+    todo_owner: UUID-2
   - id: UUID-3
     title: "Task 3"
     description: "Description for Task 3"
     status: "pending"
     completed: false
     completed_at: null
+    todo_owner: UUID-3
   - id: UUID-4
     title: "Task 4"
     description: "Description for Task 4"
     status: "completed"
     completed: true
     completed_at: 2023-10-01 12:00:00
+    todo_owner: UUID-4
   - id: UUID-5
     title: "Task 5"
     description: "Description for Task 5"
     status: "none"
     completed: false
     completed_at: null
+    todo_owner: UUID-1
