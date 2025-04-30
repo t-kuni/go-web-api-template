@@ -3,13 +3,9 @@
 package handler_test
 
 import (
-	"bytes"
-	"encoding/json"
 	"net/http"
-	"net/http/httptest"
 	"testing"
 
-	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/strfmt"
 	"github.com/stretchr/testify/assert"
 	"github.com/t-kuni/go-web-api-template/application/handler"
@@ -40,38 +36,25 @@ func Test_PostUser(t *testing.T) {
 			//
 			// Act
 			//
-			requestBody := models.User{
-				Company: &models.Company{
-					ID:   util.Ptr(strfmt.UUID("UUID-1")),
-					Name: util.Ptr("テスト株式会社"),
-				},
-				Name:   util.Ptr("新規ユーザー"),
-				Age:    util.Ptr(int64(35)),
-				Gender: util.Ptr("man"),
-			}
-
-			bodyBytes, err := json.Marshal(requestBody)
-			assert.NoError(t, err)
-
-			req, err := http.NewRequest(http.MethodPost, "http://example.com/users", bytes.NewBuffer(bodyBytes))
-			assert.NoError(t, err)
-			req.Header.Set("Content-Type", "application/json")
-
 			params := user.PostUsersParams{
-				HTTPRequest: req,
-				Body:        &requestBody,
+				HTTPRequest: util.Ptr(http.Request{}),
+				Body: &models.User{
+					Company: &models.Company{
+						ID:   util.Ptr(strfmt.UUID("UUID-1")),
+						Name: util.Ptr("テスト株式会社"),
+					},
+					Name:   util.Ptr("新規ユーザー"),
+					Age:    util.Ptr(int64(35)),
+					Gender: util.Ptr("man"),
+				},
 			}
-
 			resp := testee.Main(params)
-
-			recorder := httptest.NewRecorder()
-			producer := runtime.JSONProducer()
-			resp.WriteResponse(recorder, producer)
 
 			//
 			// Assert
 			//
-			assert.Equal(t, http.StatusOK, recorder.Code)
+			_, ok := resp.(*user.PostUsersOK)
+			assert.True(t, ok)
 
 			db := conn.GetEnt()
 			users, err := db.User.Query().WithCompany().All(t.Context())
@@ -104,38 +87,25 @@ func Test_PostUser(t *testing.T) {
 			//
 			// Act
 			//
-			requestBody := models.User{
-				ID: util.Ptr(strfmt.UUID("UUID-2")),
-				Company: &models.Company{
-					ID: util.Ptr(strfmt.UUID("UUID-2")),
-				},
-				Name:   util.Ptr("更新後ユーザー"),
-				Age:    util.Ptr(int64(35)),
-				Gender: util.Ptr("woman"),
-			}
-
-			bodyBytes, err := json.Marshal(requestBody)
-			assert.NoError(t, err)
-
-			req, err := http.NewRequest(http.MethodPost, "http://example.com/users", bytes.NewBuffer(bodyBytes))
-			assert.NoError(t, err)
-			req.Header.Set("Content-Type", "application/json")
-
 			params := user.PostUsersParams{
-				HTTPRequest: req,
-				Body:        &requestBody,
+				HTTPRequest: util.Ptr(http.Request{}),
+				Body: &models.User{
+					ID: util.Ptr(strfmt.UUID("UUID-2")),
+					Company: &models.Company{
+						ID: util.Ptr(strfmt.UUID("UUID-2")),
+					},
+					Name:   util.Ptr("更新後ユーザー"),
+					Age:    util.Ptr(int64(35)),
+					Gender: util.Ptr("woman"),
+				},
 			}
-
 			resp := testee.Main(params)
-
-			recorder := httptest.NewRecorder()
-			producer := runtime.JSONProducer()
-			resp.WriteResponse(recorder, producer)
 
 			//
 			// Assert
 			//
-			assert.Equal(t, http.StatusOK, recorder.Code)
+			_, ok := resp.(*user.PostUsersOK)
+			assert.True(t, ok)
 
 			db := conn.GetEnt()
 			users, err := db.User.Query().WithCompany().All(t.Context())

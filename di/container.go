@@ -27,9 +27,11 @@ func NewApp(opts ...fx.Option) *fx.App {
 			middleware.NewAccessLog,
 
 			// Handler
-			handler.NewHelloHandler,
 			handler.NewGetUsers,
 			handler.NewPostUser,
+			handler.NewListTodos,
+			handler.NewGetCompanies,
+			handler.NewGetCompaniesUsers,
 
 			// Service
 			service.NewExampleService,
@@ -40,11 +42,6 @@ func NewApp(opts ...fx.Option) *fx.App {
 			system.NewTimer,
 			system.NewLogger,
 			system.NewUuidGenerator,
-
-			// UseCase
-			handler.NewListTodos,
-			handler.NewGetCompanies,
-			handler.NewGetCompaniesUsers,
 
 			// Others
 			customErrors.NewCustomServeError,

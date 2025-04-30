@@ -3,14 +3,13 @@
 package handler_test
 
 import (
-	"bytes"
+	"encoding/json"
+	"github.com/t-kuni/go-web-api-template/util"
 	"net/http"
-	"net/http/httptest"
 	"testing"
 
 	"github.com/t-kuni/go-web-api-template/application/handler"
 
-	"github.com/go-openapi/runtime"
 	"github.com/stretchr/testify/assert"
 	"github.com/t-kuni/go-web-api-template/ent"
 	"github.com/t-kuni/go-web-api-template/restapi/operations/companies"
@@ -36,23 +35,18 @@ func Test_GetCompanies(t *testing.T) {
 			//
 			// Act
 			//
-			body := `{
-		"key": "value"
-	}`
-			req, err := http.NewRequest(http.MethodPost, "http://example.com", bytes.NewBuffer([]byte(body)))
-			assert.NoError(t, err)
 			resp := testee.Main(companies.GetCompaniesParams{
-				HTTPRequest: req,
+				HTTPRequest: util.Ptr(http.Request{}),
 			})
-
-			recorder := httptest.NewRecorder()
-			producer := runtime.JSONProducer()
-			resp.WriteResponse(recorder, producer)
-			actualBody := recorder.Body.String()
 
 			//
 			// Assert
 			//
+			okResp, ok := resp.(*companies.GetCompaniesOK)
+			assert.True(t, ok)
+			actualBody, err := json.Marshal(okResp.Payload)
+			assert.NoError(t, err)
+
 			expectBody := `
 {
   "companies": [
@@ -62,8 +56,7 @@ func Test_GetCompanies(t *testing.T) {
     }
   ]
 }`
-			assert.Equal(t, http.StatusOK, recorder.Code)
-			assert.JSONEq(t, expectBody, actualBody)
+			assert.JSONEq(t, expectBody, string(actualBody))
 		})
 	})
 }
