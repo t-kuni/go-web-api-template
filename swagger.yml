@@ -199,6 +199,21 @@ paths:
       description: delete user
       tags:
         - user
+  '/users/{id}/todos':
+    parameters:
+      - type: string
+        name: id
+        in: path
+        required: true
+    post:
+      summary: ''
+      operationId: post-users-id-todos
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Todo'
+      description: Todoを作成します
 definitions:
   Todo:
     type: object
