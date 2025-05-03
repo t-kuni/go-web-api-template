@@ -9,7 +9,9 @@ import (
 	"github.com/t-kuni/go-web-api-template/ent"
 	"github.com/t-kuni/go-web-api-template/ent/user"
 	"github.com/t-kuni/go-web-api-template/ent/schema"
-	userOps "github.com/t-kuni/go-web-api-template/restapi/operations/user"
+	"github.com/t-kuni/go-web-api-template/restapi/models"
+	"github.com/t-kuni/go-web-api-template/restapi/operations/user"
+	"net/http"
 	"time"
 )
 
@@ -27,7 +29,21 @@ func NewPostUserTodos(dbConnector db.IConnector, uuidGenerator system.IUuidGener
 	}, nil
 }
 
-func (u PostUserTodos) Main(params userOps.PostUsersIDTodosParams) middleware.Responder {
+type PostUsersIDTodosParams struct {
+	HTTPRequest *http.Request
+
+	ID string
+
+	Body *models.Todo
+}
+
+func NewPostUsersIDTodosOK() middleware.Responder {
+	return middleware.ResponderFunc(func(rw http.ResponseWriter, p interface{}) {
+		rw.WriteHeader(200)
+	})
+}
+
+func (u PostUserTodos) Main(params user.PostUsersIDTodosParams) middleware.Responder {
 	ctx := params.HTTPRequest.Context()
 
 	err := u.dbConnector.Transaction(ctx, func(tx *ent.Client) error {
@@ -84,5 +100,5 @@ func (u PostUserTodos) Main(params userOps.PostUsersIDTodosParams) middleware.Re
 		return customErrors.NewErrorResponder(err)
 	}
 
-	return userOps.NewPostUsersIDTodosOK()
+	return NewPostUsersIDTodosOK()
 }
