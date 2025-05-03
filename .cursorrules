@@ -88,11 +88,3 @@
         * `//go:generate go tool mockgen -source=$GOFILE -destination=${GOFILE}_mock.go -package=$GOPACKAGE`
         * これにより make generate コマンドでモックファイルが生成されます
         * 主に `domain/infrastructure` と `domain/service` 配下のファイルに記載することになります
-
-# Devin固有の機能
-
-* セマンティック検索を活用して、コードベースの理解を深めてください
-* LSPコマンドを使用して、シンボルの定義や参照を調べてください
-* 複雑なタスクは小さな単位に分割して取り組んでください
-* 作業前に十分な情報収集を行い、計画を立ててから実装を開始してください
-* 作業中に不明点が生じた場合は、ユーザーに質問してください
