@@ -27,7 +27,7 @@ This repository is project template for Go Web API application.
 
 ```bash
 cp .env.example .env
-cp .env.feature.example .env.feature
+cp .env.testing.example .env.testing
 ```
 
 2-2. 各種ファイルを生成する

@@ -1,12 +1,12 @@
-name: Feature Test
+name: Test
 on:
   pull_request:
     types: [opened, synchronize]
   workflow_dispatch:
 
 jobs:
-  feature-test:
-    name: Feature Test
+  test:
+    name: Test
     runs-on: ubuntu-latest
     timeout-minutes: 10
     services:
@@ -31,7 +31,7 @@ jobs:
       - name: Download dependencies
         run: go mod download
       - name: Copy .env
-        run: cp .env.feature.example .env.feature
+        run: cp .env.testing.example .env.testing
       - name: Install tools
         run: |
           go install github.com/golang/mock/mockgen@v1.6.0

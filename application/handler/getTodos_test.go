@@ -1,5 +1,3 @@
-//go:build feature
-
 package handler_test
 
 import (

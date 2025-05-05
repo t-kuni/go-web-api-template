@@ -1,6 +1,6 @@
 /.idea
 .env
-.env.feature
+.env.testing
 *.log
 
 # go mock

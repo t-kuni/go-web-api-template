@@ -26,7 +26,7 @@ func TestMain(m *testing.M) {
 		panic("Could not get current file path")
 	}
 	directory := filepath.Dir(file)
-	godotenv.Load(filepath.Join(directory, "..", ".env.feature"))
+	godotenv.Load(filepath.Join(directory, "..", ".env.testing"))
 
 	dbImpl.RegisterTxdbDriver()
 

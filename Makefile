@@ -12,8 +12,8 @@ generate: clean
 	go generate ./...
 
 test: generate
-	go tool gotestsum --hide-summary=skipped -- -tags feature ./... -v
+	go tool gotestsum --hide-summary=skipped -- ./... -v
 
 coverage: generate
-	go test -tags feature -coverpkg=./... -coverprofile=coverage/coverage.o ./... > /dev/null
+	go test -coverpkg=./... -coverprofile=coverage/coverage.o ./... > /dev/null
 	go tool cover -html=coverage/coverage.o -o coverage/coverage.html

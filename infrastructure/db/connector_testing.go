@@ -1,5 +1,3 @@
-//go:build feature
-
 package db
 
 import (
