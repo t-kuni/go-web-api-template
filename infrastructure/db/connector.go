@@ -7,6 +7,7 @@ import (
 	"entgo.io/ent/dialect/sql/schema"
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/rotisserie/eris"
 	"github.com/t-kuni/go-web-api-template/domain/infrastructure/db"
 	"github.com/t-kuni/go-web-api-template/ent"
 	"go.uber.org/fx"
@@ -61,7 +62,7 @@ func (c Connector) Migrate(ctx context.Context, opts ...schema.MigrateOption) er
 func (c Connector) Transaction(ctx context.Context, fn func(tx *ent.Client) error) error {
 	tx, err := c.Client.Tx(ctx)
 	if err != nil {
-		return err
+		return eris.Wrap(err, "")
 	}
 	defer func() {
 		if v := recover(); v != nil {
@@ -74,7 +75,7 @@ func (c Connector) Transaction(ctx context.Context, fn func(tx *ent.Client) erro
 		if rerr := tx.Rollback(); rerr != nil {
 			err = fmt.Errorf("%w: rolling back transaction: %v", err, rerr)
 		}
-		return err
+		return eris.Wrap(err, "")
 	}
 	if err := tx.Commit(); err != nil {
 		return fmt.Errorf("committing transaction: %w", err)
