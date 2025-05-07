@@ -65,6 +65,7 @@ func configureAPI(api *operations.AppAPI) http.Handler {
 		getCompaniesUsers *useCaseCompanies.GetCompaniesUsers,
 		getUsers *useCaseCompanies.GetUsers,
 		postUser *useCaseCompanies.PostUser,
+		postUserTodos *useCaseCompanies.PostUserTodos,
 	) {
 		api.ServeError = customServeError
 		middlewares.recoverHandler = recoverHandler.Recover
@@ -75,6 +76,7 @@ func configureAPI(api *operations.AppAPI) http.Handler {
 		api.CompaniesGetCompaniesUsersHandler = companies.GetCompaniesUsersHandlerFunc(getCompaniesUsers.Main)
 		api.UserGetUsersHandler = user.GetUsersHandlerFunc(getUsers.Main)
 		api.UserPostUsersHandler = user.PostUsersHandlerFunc(postUser.Main)
+		api.UserPostUsersIDTodosHandler = user.PostUsersIDTodosHandlerFunc(postUserTodos.Main)
 	}))
 	err := app.Start(ctx)
 	if err != nil {
