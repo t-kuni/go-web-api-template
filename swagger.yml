@@ -300,7 +300,7 @@ definitions:
         type: string
         x-stoplight:
           id: rwsev9ipd0ium
-        minLength: 50
+        maxLength: 50
       gender:
         type: string
         x-stoplight:
@@ -342,7 +342,7 @@ definitions:
         type: string
         x-stoplight:
           id: rwsev9ipd0ium
-        minLength: 50
+        maxLength: 50
     required:
       - id
       - name
