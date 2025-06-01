@@ -13,7 +13,9 @@ This repository is project template for Go Web API application.
 * [Error Handling (Stack trace)](https://github.com/rotisserie/eris)
 * Dev Container
 * Seeder
-* Cline
+* AI Agent
+  * Cline
+  * Claude Code
 
 # Setup
 
