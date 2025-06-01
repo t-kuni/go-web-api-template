@@ -1,5 +1,13 @@
 FROM mcr.microsoft.com/devcontainers/go:1.24 AS dev
 
+# Install Node
+# Reference: https://deb.nodesource.com
+RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - && \
+    apt-get install -y nodejs
+
+# Install claude-code
+RUN npm install -g @anthropic-ai/claude-code
+
 USER vscode
 
 # Install air
