@@ -214,7 +214,9 @@ paths:
           schema:
             type: object
             properties: {}
-      description: Todoを作成します
+      description: |-
+        Todoを作成また更新します
+        idが指定されていない場合は新規で作成します。指定された場合は更新します。
       parameters:
         - in: body
           name: body
