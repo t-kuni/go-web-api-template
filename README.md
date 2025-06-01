@@ -14,8 +14,8 @@ This repository is project template for Go Web API application.
 * Dev Container
 * Seeder
 * AI Agent
-  * Cline
-  * Claude Code
+  * [Cline](./how-to-use-cline.md)
+  * [Claude Code](./how-to-use-claude-code.md)
 
 # Setup
 
