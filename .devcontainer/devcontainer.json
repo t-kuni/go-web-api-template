@@ -10,6 +10,7 @@
   "extensions": [
     "golang.go",
     "ms-vscode.go",
-    "saoudrizwan.claude-dev"
+    "saoudrizwan.claude-dev",
+    "Anthropic.claude-code"
   ]
 }
