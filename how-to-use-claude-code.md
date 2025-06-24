@@ -2,8 +2,9 @@
 
 ## 初期設定
 
-1. Terminal（`Ctrl+Shift+@`）を開き、`claude`を実行します  
+1. Terminal（`Ctrl+Shift+@`）を開き、`claude --dangerously-skip-permissions`を実行します  
    claudeの初期設定を行ってください  
+   `--dangerously-skip-permissions` はclaudeに全ての操作を許可します（Dev Container上で実行するため許容します）
   
 2. その他の使い方は以下を参照してください
    https://docs.anthropic.com/ja/docs/claude-code/cli-usage
