@@ -4,7 +4,7 @@
 * 言語： Go
 * アーキテクチャ： オニオンアーキテクチャ
 * ORM： ent
-* go-swaggerを使用してswagger.ymlからAPIのコードを生成
+* go-swaggerを使用してswagger.ymlからAPIのコードを生成する
 
 # コマンド
 

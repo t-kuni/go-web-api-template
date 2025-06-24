@@ -1,83 +1,98 @@
-# CLAUDE.md
+# 本リポジトリについて
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+* Web APIを開発している
+* 言語： Go
+* アーキテクチャ： オニオンアーキテクチャ
+* ORM： ent
+* go-swaggerを使用してswagger.ymlからAPIのコードを生成する
 
-## Essential Commands
+# コマンド
 
-**Core Development Workflow:**
-- `make generate` - Regenerates all code from Ent schemas and OpenAPI spec. **Always run this before starting work.**
-- `make test` - Runs all tests with gotestsum
-- `make coverage` - Generates HTML coverage reports in coverage/coverage.html
-- `make build` - Builds the application (runs generate first)
+* `make generate`
+  * ent/schema内の*.goに基づいて、entフォルダ配下にコードを生成します。
+  * swagger.ymlに基づいてrestapiフォルダ配下にコードを生成します
+  * モックファイルの作成
+* `make test`
+    * テストコードを実行します
+* `git add -A && GIT_PAGER=cat git diff HEAD`
+    * 現在の変更状態を確認する
 
-**Database Commands:**
-- `go run commands/migrate/main.go --reset` - Drops and recreates database with fresh schema
-- `go run commands/seed/main.go --seed=basic` - Seeds database with basic test data
-- `git add -A && GIT_PAGER=cat git diff HEAD` - Review current changes
+# フォルダ構成
 
-## Architecture Overview
+* application/handler
+    * APIのハンドラーが格納されています。
+    * 各APIのドメインロジックをここに記述します
+    * ファイル名と構造体名は `メソッド + エンドポイント` とする
+        * 例
+            * `GET /v1/companies/{id}/users` なら `getCompaniesUsers`
+            * `POST /v1/companies/{id}/users/{id}` なら `postCompaniesUser`
+    * フォルダを作成せず、フラットに配置してください
+* domain/service
+    * 複数のAPIで共有するドメインロジックをここに記述します
+    * interfaceもセットで定義します（必要に応じてモックに差し替えられるようにするため）
+    * ファイル名と構造体名は `操作対象のリソース名 + 動詞 + Service` とする
+        * 例
+            * userRegisterService
+            * emailSendService
+        * 目的：責務を明確にするため
+    * interfaceのコメントgo docに以下を記載すること
+        * 何に対してどういう処理を行うサービス、メソッドなのか
+        * どういうときに使うことを想定しているのか
+* infrastructure
+    * 副作用を扱う実装をここに配置します。
+    * ドメインロジックは含めないこと
+* domain/infrastructure
+    * 前述のinfrastructureのインターフェースをここに配置します
+* ent/schema
+  * DBのスキーマ定義が格納されています。
+* resetapi/configure_app.go
+  * APIのハンドラーとswagger.ymlに基づいて生成されたコードをマッピングします。
+* swagger.yml
+  * OpenAPI定義です。この定義に従ってAPIを実装してください。
 
-**Onion Architecture Implementation:**
-- `application/handler/` - HTTP handlers (API layer) - contains DB access as exception to onion rules
-- `domain/service/` - Business logic services with interfaces for mocking
-- `domain/infrastructure/` - Infrastructure interfaces (for dependency inversion)
-- `infrastructure/` - Infrastructure implementations (databases, APIs, etc.)
-- `ent/schema/` - Database entity definitions (generates type-safe ORM code)
-- `restapi/` - Auto-generated OpenAPI server code
+# 作業基本方針
 
-**Code Generation Strategy:**
-This project heavily relies on code generation. The `make generate` command:
-1. Generates Ent ORM code from `/ent/schema/*.go` files
-2. Generates OpenAPI server code from `swagger.yml`
-3. Generates mocks for interfaces with `//go:generate` directives
+* 作業の計画を立てる前にmake generateを実行してください。
+    * エラーが発生する場合は、作業を中断し指示者に確認してください。
+* swagger.ymlとent/schema配下は、特に指定が無い場合は参照のみとし、編集しないでください（指示者が編集します）
+    * 編集する必要が発生した場合は、作業を中断し指示者に確認してください。
+* swagger.ymlとent/schemaの間で矛盾を発見した場合は作業を中断し支持者に確認してください
 
-**Dependency Injection:**
-Uses Uber FX framework in `/di/container.go`. All dependencies are wired through this container, making the application highly testable.
+# コーディングルール
 
-## File Naming Conventions
+* コードを書く際は各レイヤの類似のファイルを参考にすること
+* 数値型には精度を明示すること
+* entを用いたDBアクセスは副作用であるが、例外的にapplication/handlerに記述してよい
+    * 但し、DBアクセス部分は関数に切り出すこと（１つのSQL文に対して１つの関数を定義する）
+    * 理由： テストコードを書く際に、DBアクセスをモック化しないため
+* 指示と関係のないリファクタリングはしないでください
 
-**Handlers:** `{method}{endpoint}` format
-- Example: `GET /companies/{id}/users` → `getCompaniesUsers.go`
-- Keep files flat in `application/handler/`, no subfolders
+# バリデーション
 
-**Services:** `{resource}{action}Service` format  
-- Example: `userRegisterService.go`, `emailSendService.go`
-- Always include interface definitions for mockability
+* 項目毎のシンプルなバリデーションはswagger.ymlに記述されており、go-swaggerによって自動的に生成されるためhandlerで実装する必要はありません。
+    * 例：文字列の長さ、数値の範囲、必須項目のチェックなど
+* 以下のような複雑なバリデーションは、application/handler内のAPIハンドラーで行います。
+    * 複数のフィールドを組み合わせてのバリデーション
+    * DBの状態に依存するバリデーション
 
-## Testing Approach
+# エラーハンドリング
 
-**Test Structure:**
-- Tests are end-to-end through all layers (no layer mocking)
-- Database transactions auto-rollback (using go-txdb)
-- External services are mocked via generated interfaces
-- Use `testUtil.TestMain(m)` and `testUtil.Prepare(t)` for setup
+* 基本的には発生したerrorをeris.Wrapして返すだけで良いです
+* eris.Wrapの第二引数は空文字で良いです
 
-**Mock Generation:**
-Add this directive to interface files:
-```go
-//go:generate go tool mockgen -source=$GOFILE -destination=${GOFILE}_mock.go -package=$GOPACKAGE
-```
+# テストガイドライン
 
-## Critical Development Rules
-
-1. **Always run `make generate` before starting work** - errors here require consultation
-2. **Do not edit `swagger.yml` or `ent/schema/` files** without explicit instruction
-3. **DB access is allowed in handlers as exception** - but extract to single-purpose functions
-4. **Validation:** Simple validation in OpenAPI spec, complex validation in handlers
-5. **Error handling:** Use `eris.Wrap(err, "")` for error propagation
-6. **Precision for numbers:** Always specify precision for numeric types
-
-## Key Architectural Decisions
-
-**Database Access Pattern:**
-Unlike pure onion architecture, DB access via Ent is permitted directly in handlers for simplicity, but must be extracted into dedicated functions (one function per SQL operation).
-
-**Validation Strategy:**
-- Field-level validation: Handled by generated OpenAPI code
-- Business logic validation: Implemented in handlers
-- Cross-field/DB-dependent validation: Custom validation in handlers
-
-**Testing Philosophy:**
-- Full integration testing through all layers
-- Mock only external dependencies, not internal layers
-- Prioritize test readability over DRY principles
+* テストコードはDRYにしなくてよいです
+    * 例：変数に入れて使いまわすよりリテラル値で書かれていた方が読みやすい
+* APIを追加した場合、最低限、正常系１パターンのテストコードを作成すること
+* application/handlerにテストコードを作成し、すべてのレイヤを一気通貫でテストする
+    * e2eチックにAPIの振る舞いを検証する
+    * DBはモック化しない(docker-composeによってテスト用DBをが起動しています)
+    * DIによって自動的にテスト用の接続が使われます（テストケース終了時に自動的にロールバックされる）
+    * DB接続以外の副作用はモック化する
+* モックの作り方
+    * domain/infrastructureのファイルには以下を含めること（モックを生成するのに必要）
+    * interfaceを記述したファイルには以下のコメントを含めること
+        * `//go:generate go tool mockgen -source=$GOFILE -destination=${GOFILE}_mock.go -package=$GOPACKAGE`
+        * これにより make generate コマンドでモックファイルが生成されます
+        * 主に `domain/infrastructure` と `domain/service` 配下のファイルに記載することになります
