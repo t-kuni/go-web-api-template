@@ -19,33 +19,36 @@ This repository is project template for Go Web API application.
 
 # Setup
 
-1. VSCodeで本リポジトリを開くと画面右下に以下のポップアップが表示されるので `Reopen in Container` をクリックする  
-   （Clineも同時にインストールされます。Clineの使い方は[こちら](./how-to-use-cline.md)を参照）　　
-   ![image](https://github.com/user-attachments/assets/fc32e2ec-ffbc-403b-a14f-5abd88e26d87)
+1. VSCodeまたはCursorで本リポジトリを開きます
 
-2. Terminalを開き（`Ctrl + Shift + @`）、以下のコマンドを実行します
+2. `Ctrl + Shift + P` でコマンドパレットを開き `Dev Containers: Reopen in Container` を実行する
 
-2-1. envファイルを生成する
+Dev Container上でエディタが開き直します  
+[docker-compose.yml](./docker-compose.yml) で使用しているポートが既に利用されていると起動に失敗するので注意してください
+
+3. Terminalを開き（`Ctrl + Shift + @`）、以下のコマンドを実行します
+
+3-1. envファイルを生成する
 
 ```bash
 cp .env.example .env
 cp .env.testing.example .env.testing
 ```
 
-2-2. 各種ファイルを生成する
+3-2. 各種ファイルを生成する
 
 ```bash
 make generate
 ```
 
-2-3. DBを構築＆レコードを登録する
+3-3. DBを構築＆レコードを登録する
 
 ```bash
 go run commands/migrate/main.go --reset
 go run commands/seed/main.go
 ```
 
-2-4. 疎通確認
+3-4. 疎通確認
 
 ```bash
 curl -i "http://localhost/companies"
@@ -53,6 +56,13 @@ curl -i "http://localhost/companies/UUID-1/users"
 curl -i "http://localhost/users"
 curl -i "http://localhost/todos"
 ```
+
+# AIにタスクを依頼する
+
+* Claude Codeを使用する場合
+  * [how-to-use-claude-code.md](./how-to-use-claude-code.md)
+* Clineを使用する場合
+  * [how-to-use-cline.md](./how-to-use-cline.md)
 
 # テストを実行する
 
